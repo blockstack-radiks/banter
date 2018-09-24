@@ -6,8 +6,20 @@
   "author": "Hank Stoever",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
     "next": "^7.0.0",
+    "radiks": "file:../radiks",
+    "radiks-server": "file:../server",
     "react": "^16.5.2",
     "react-dom": "^16.5.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "^9.0.0",
+    "eslint": "^5.6.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.1"
   }
 }
