@@ -28,7 +28,7 @@ app.prepare().then(async () => {
   });
 
   server.get('/manifest.json', (req, res) => {
-    res.sendFile(path.join(__dirname, 'static', 'manifest.json'));
+    res.sendFile(path.join(__dirname, '..', 'static', 'manifest.json'));
   });
 
   server.use('/api', makeApiController(RadiksController.db));

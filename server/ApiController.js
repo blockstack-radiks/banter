@@ -8,7 +8,6 @@ const makeApiController = (db) => {
   Router.getAsync('/avatar/:username', async (req, res) => {
     const { username } = req.params;
     const user = await db.findOne({ _id: username });
-    console.log(user);
     let image;
     if (user.profile.image) {
       [image] = user.profile.image;

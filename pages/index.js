@@ -66,21 +66,7 @@ class Home extends React.Component {
       <>
         <Flex>
           <Box width={[1, 3 / 4]} mx="auto">
-            <Text.h1 textAlign="center">
-              Banter
-            </Text.h1>
-            {currentUser ? (
-              <>
-                <Text.small textAlign="center" display="block">
-                  Logged in as
-                  {' '}
-                  {currentUser.username}
-                  {'. '}
-                  <a href="javascript:void(0)" onClick={this.logout}>Log Out</a>
-                </Text.small>
-                <Feed messages={this.props.messages} />
-              </>
-            ) : (
+            {!currentUser && (
               <>
                 <Text.p textAlign="center">
                   Log in with Blockstack to get started.
@@ -91,6 +77,7 @@ class Home extends React.Component {
                 </Button>
               </>
             )}
+            <Feed messages={this.props.messages} />
           </Box>
         </Flex>
       </>

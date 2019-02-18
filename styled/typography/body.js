@@ -41,6 +41,12 @@ const Small = styled.small`
   ${({ theme }) => baseProps(theme)};
 `;
 
+const A = styled.a`
+  text-decoration: underline;
+  color: #546de5;
+  ${({ theme }) => baseProps(theme)};
+`;
+
 Body.p = P;
 Body.span = Span;
 Body.strong = Strong;
@@ -51,5 +57,6 @@ Body.li = Li;
 Body.oli = Li;
 Body.pre = Pre;
 Body.small = Small;
+Body.a = A;
 
 export default Body;

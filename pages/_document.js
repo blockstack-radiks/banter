@@ -9,6 +9,7 @@ import { normalize } from 'polished';
 injectGlobal`
   ${normalize()}
   body, html{
+    background-color: rgb(230, 236, 240);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   }
 `;

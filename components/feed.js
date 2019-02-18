@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Box, Button } from 'rebass';
+import { Flex, Box } from 'blockstack-ui';
 import PropTypes from 'prop-types';
 import { User } from 'radiks';
 
@@ -7,6 +7,7 @@ import Text from '../styled/typography';
 import Input from '../styled/input';
 import Message from '../models/Message';
 import MessageComponent from './message';
+import Button from '../styled/button';
 
 export default class Feed extends React.Component {
   static propTypes = {
@@ -64,22 +65,21 @@ export default class Feed extends React.Component {
   render() {
     return (
       <Flex>
-        <Box width={[1, 1 / 2]} mx="auto" textAlign="center">
-          <Text.p textAlign="center">
-            Create a post:
-          </Text.p>
+        <Box width={[1, 1 / 2]} mx="auto" background="white" my={2}>
+          <Box width={1}>
+            <Box px={4} py={4}>
+              <Input
+                width={1}
+                placeholder="What do you have to say?"
+                value={this.state.newMessage}
+                onChange={evt => this.setState({ newMessage: evt.target.value })}
+              />
 
-          <Input
-            mt={3}
-            width={1}
-            placeholder="What do you have to say?"
-            value={this.state.newMessage}
-            onChange={evt => this.setState({ newMessage: evt.target.value })}
-          />
-
-          <Button onClick={() => this.submit()} mt={2}>
-            Submit
-          </Button>
+              <Button onClick={() => this.submit()} mt={3}>
+                Submit
+              </Button>
+            </Box>
+          </Box>
 
           {this.messages()}
 

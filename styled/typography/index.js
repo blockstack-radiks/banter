@@ -25,6 +25,7 @@ Type.li = Body.li;
 Type.oli = Body.oli;
 Type.pre = Body.pre;
 Type.small = Body.small;
+Type.a = Body.a;
 
 const basePropTypes = {
   sub: PropTypes.bool,
@@ -79,6 +80,9 @@ Type.oli.propTypes = {
   ...basePropTypes,
 };
 Type.pre.propTypes = {
+  ...basePropTypes,
+};
+Type.a.propTypes = {
   ...basePropTypes,
 };
 

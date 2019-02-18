@@ -4,6 +4,8 @@ import { ThemeProvider } from 'styled-components';
 import { UserSession, AppConfig } from 'blockstack';
 import { configure } from 'radiks';
 
+import Nav from '../components/nav';
+
 const appConfig = new AppConfig(['store_write', 'publish_data'], 'http://localhost:5000');
 const userSession = new UserSession({ appConfig });
 
@@ -40,6 +42,7 @@ class MyApp extends App {
     return (
       <ThemeProvider theme={{}}>
         <Container>
+          <Nav />
           <Component {...pageProps} serverCookies={this.props.cookies} />
         </Container>
       </ThemeProvider>
