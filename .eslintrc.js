@@ -9,7 +9,8 @@ module.exports = {
     "react/forbid-prop-types": [0],
     "no-console": [0],
     "jsx-a11y/anchor-is-valid": [0],
-    "no-param-reassign": [0]
+    "no-param-reassign": [0],
+    "no-script-url": [0]
   },
   parser: "babel-eslint",
   env: {

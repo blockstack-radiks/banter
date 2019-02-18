@@ -6,13 +6,22 @@
   "author": "Hank Stoever",
   "license": "MIT",
   "dependencies": {
+    "blockstack": "19.0.0-alpha.3",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
-    "next": "^7.0.0",
+    "express-ws": "^4.0.0",
+    "grid-styled": "^5.0.2",
+    "moment": "^2.22.2",
+    "next": "^8.0.0",
+    "polished": "^2.1.1",
+    "prop-types": "^15.6.2",
     "radiks": "file:../radiks",
     "radiks-server": "file:../server",
     "react": "^16.5.2",
-    "react-dom": "^16.5.2"
+    "react-dom": "^16.5.2",
+    "rebass": "^2.3.4",
+    "styled-components": "^3.4.9",
+    "styled-system": "^3.1.6"
   },
   "devDependencies": {
     "babel-eslint": "^9.0.0",
@@ -21,5 +30,20 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1"
+  },
+  "nodemonConfig": {
+    "verbose": true,
+    "watch": [
+      "./",
+      "../radiks/src",
+      "../server"
+    ],
+    "ignore": [
+      ".next/*",
+      ".next",
+      "pages/*",
+      "components/*",
+      "styled/*"
+    ]
   }
 }
