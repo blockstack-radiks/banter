@@ -32,12 +32,7 @@ class Home extends React.Component {
     const { userSession } = getConfig();
     if (userSession.isUserSignedIn()) {
       const currentUser = userSession.loadUserData();
-      const user = await User.createWithCurrentUser();
-      console.log(currentUser);
-      console.log(user);
-      // const privateKey = '476055baaef9224ad0f9d082696a35b03f0a75100948d8b76ae1e859946297fs';
-      // const publicKey = getPublicKeyFromPrivate(privateKey);
-      // console.log(publicKey);
+      await User.createWithCurrentUser();
       this.setState({ currentUser });
     } else if (userSession.isSignInPending()) {
       const currentUser = await userSession.handlePendingSignIn();
@@ -47,7 +42,6 @@ class Home extends React.Component {
   }
 
   login = () => {
-    console.log('log in');
     const scopes = [
       'store_write',
       'publish_data',

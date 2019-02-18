@@ -30,21 +30,9 @@ export default class Feed extends React.Component {
       currentUser: User.currentUser(),
     });
     Message.addStreamListener(this.newMessageListener.bind(this));
-    // const db = Message.db();
-    // const changes = db.changes({
-    //   live: true,
-    //   since: 'now',
-    //   include_docs: true,
-    // });
-
-    // changes.on('change', this.onNewMessage);
-    // changes.on('error', (err) => {
-    //   console.error(err);
-    // });
   }
 
   newMessageListener(message) {
-    console.log(message);
     const { messages } = this.state;
     if (!this.state.createdMessageIDs[message._id]) {
       // const message = new Message(message);
@@ -52,17 +40,6 @@ export default class Feed extends React.Component {
       this.setState({ messages });
     }
   }
-
-  // onNewMessage = (change) => {
-  //   console.log(change);
-  //   const { doc } = change;
-  //   const { messages } = this.state;
-  //   if (!this.state.createdMessageIDs[doc._id]) {
-  //     const message = new Message(doc);
-  //     messages.unshift(message);
-  //     this.setState({ messages });
-  //   }
-  // }
 
   async submit() {
     const { newMessage } = this.state;
