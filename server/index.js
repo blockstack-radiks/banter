@@ -5,6 +5,7 @@ const expressWS = require('express-ws');
 require('dotenv').config();
 
 const { setup } = require('radiks-server');
+const makeApiController = require('./ApiController');
 
 const dev = process.env.NODE_ENV !== 'production';
 
@@ -29,6 +30,8 @@ app.prepare().then(async () => {
   server.get('/manifest.json', (req, res) => {
     res.sendFile(path.join(__dirname, 'static', 'manifest.json'));
   });
+
+  server.use('/api', makeApiController(RadiksController.db));
 
   server.get('*', (req, res) => handle(req, res));
 

@@ -6,6 +6,7 @@ import { User } from 'radiks';
 import Text from '../styled/typography';
 import Input from '../styled/input';
 import Message from '../models/Message';
+import MessageComponent from './message';
 
 export default class Feed extends React.Component {
   static propTypes = {
@@ -56,15 +57,7 @@ export default class Feed extends React.Component {
 
   messages() {
     return this.state.messages.map(message => (
-      <div key={message._id}>
-        <Text.p mt={4} mb={1}>
-          {message.attrs.createdBy}
-          {' '}
-          says:
-        </Text.p>
-        <Text.em>{message.attrs.content}</Text.em>
-        <Text.small display="block" mt={1}>{message.ago()}</Text.small>
-      </div>
+      <MessageComponent key={message._id} message={message} />
     ));
   }
 

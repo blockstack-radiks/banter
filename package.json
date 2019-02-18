@@ -6,6 +6,7 @@
   "author": "Hank Stoever",
   "license": "MIT",
   "dependencies": {
+    "@awaitjs/express": "^0.3.0",
     "blockstack": "19.0.0-alpha.3",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
