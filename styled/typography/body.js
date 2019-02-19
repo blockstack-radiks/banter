@@ -42,7 +42,7 @@ const Small = styled.small`
 `;
 
 const A = styled.a`
-  text-decoration: underline;
+  text-decoration: ${({ textDecoration }) => textDecoration || 'underline'};
   color: #546de5;
   ${({ theme }) => baseProps(theme)};
 `;

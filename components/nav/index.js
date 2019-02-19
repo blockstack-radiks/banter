@@ -37,8 +37,10 @@ class Nav extends React.Component {
         <Container>
           <Box width={1 / 4}>
             <Text.h1 mt="9px" ml={4} fontSize="28px" color="#574b90" display="inline-block">
-              <FontAwesomeIcon icon={faCat} />
-              <Text.span ml={3}>Banter</Text.span>
+              <Text.a href="/" color="#574b90" textDecoration="none">
+                <FontAwesomeIcon icon={faCat} />
+                <Text.span ml={3}>Banter</Text.span>
+              </Text.a>
             </Text.h1>
             {/* <Text.span display="inline-block" ml={4} color="#574b90" fontWeight="500" style={{ position: 'relative', top: '-4px' }}>
               A place for
@@ -50,6 +52,9 @@ class Nav extends React.Component {
             {currentUser && (
               <Text.span color="#574b90" mt="14px" fontWeight="500" display="inline-block">
                 {currentUser.username}
+                <Text.a href="settings" ml={2}>
+                  Settings
+                </Text.a>
                 <Text.a href="javascript:void(0)" ml={2} onClick={this.logout}>
                   Log Out
                 </Text.a>

@@ -26,7 +26,7 @@ export default class MyDocument extends Document {
     return (
       <html lang="en">
         <Head>
-          <title>Banter - An app to demo Radiks</title>
+          <title>Banter</title>
           {this.props.styleTags}
         </Head>
         <body className="custom">
