@@ -5,6 +5,10 @@
   "main": "index.js",
   "author": "Hank Stoever",
   "license": "MIT",
+  "scripts": {
+    "start": "node server",
+    "heroku-postbuild": "next build"
+  },
   "dependencies": {
     "@awaitjs/express": "^0.3.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.15",
