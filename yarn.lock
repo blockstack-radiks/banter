@@ -2580,7 +2580,7 @@ eslint-visitor-keys@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#3f3180fb2e291017716acb4c9d6d5b5c34a6a81d"
 
-eslint@^5.3.0, eslint@^5.6.0:
+eslint@^5.6.0:
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.6.0.tgz#b6f7806041af01f71b3f1895cbb20971ea4b6223"
   dependencies:
@@ -4866,16 +4866,15 @@ querystring@0.2.0, querystring@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
 
-radiks-server@0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/radiks-server/-/radiks-server-0.1.4.tgz#e30618a51a4fb8d54bab939f30df98d0d6a42568"
-  integrity sha512-dEUEGFvtKw9ftDPrJQ2pXbsA38evwHdGWFV7Cdvl/oEcMBEpU4/IaF/NNGLv87XDa2FDdjA0vsfGmFK+cnig+A==
+radiks-server@0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/radiks-server/-/radiks-server-0.1.5.tgz#f7f08f12093d02e349ace94de456aac810bbd130"
+  integrity sha512-bUf7mIZavdAqDHQ+iu//C5o2UEXFcu78/AE7IIkkx28K0HSfglpOEx+wOV5pnfmkOlIPpR1e88kWm173zhWrTQ==
   dependencies:
     "@awaitjs/express" "^0.1.4"
     blockstack "^18.0.4"
     body-parser "^1.18.3"
     elliptic "^6.4.1"
-    eslint "^5.3.0"
     eslint-config-airbnb-base "^13.1.0"
     eslint-plugin-import "^2.14.0"
     express "^4.16.3"
@@ -4889,10 +4888,10 @@ radiks-server@0.1.4:
     wolfy87-eventemitter "^5.2.5"
     yargs "^12.0.1"
 
-radiks@0.2.0-alpha.3:
-  version "0.2.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/radiks/-/radiks-0.2.0-alpha.3.tgz#019ae7afc562c4bac6149b10f64f6824e1428155"
-  integrity sha512-l2bkURzL6+v1qwMuHaBlYyxBkLgf6V8sHZj1v4sPzbZ1hYFzcmlDrHWErFTzcCeRU6Mt5vCd5ror1KWkMU65Ug==
+radiks@0.2.0-alpha.4:
+  version "0.2.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/radiks/-/radiks-0.2.0-alpha.4.tgz#0d0d0c7de669ddc565b034b8c943029ba36fa480"
+  integrity sha512-n7NpB561ZQsZZWTfDPfHhlozTYX6jaSDXxifN51Ia3y6uWzaaeDl1MglBWqll8qTdw+7MGV8uRnGrsWtkLEe4Q==
   dependencies:
     blockstack "19.0.0-alpha.3"
     faker "^4.1.0"
