@@ -19,12 +19,8 @@ const Message = ({ message }) => (
       <Text.em>
         <Linkify
           options={{
-            format: (value, type) => {
-              console.log(value, type);
-              return value;
-            },
+            format: value => value,
             formatHref: (href, type) => {
-              console.log('href', href, type);
               if (type === 'mention') {
                 return `/users${href}`;
               }

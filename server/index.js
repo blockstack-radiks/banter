@@ -2,6 +2,7 @@ const express = require('express');
 const next = require('next');
 const path = require('path');
 const expressWS = require('express-ws');
+const secure = require('express-force-https');
 require('dotenv').config();
 
 const { setup } = require('radiks-server');
@@ -16,10 +17,21 @@ const port = parseInt(process.env.PORT, 10) || 5000;
 
 app.prepare().then(async () => {
   const server = express();
+  if (!dev) {
+    express.use(secure);
+  }
   expressWS(server);
 
   const RadiksController = await setup();
   server.use('/radiks', RadiksController);
+
+  server.use((req, res, _next) => {
+    if (!dev && req.host !== 'banter.pub') {
+      console.log(req.host);
+      return res.redirect('https://banter.pub');
+    }
+    return _next();
+  });
 
   server.use((req, res, _next) => {
     res.header('Access-Control-Allow-Origin', '*');
