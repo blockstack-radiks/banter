@@ -18,7 +18,6 @@ class Settings extends React.Component {
   async componentDidMount() {
     NProgress.start();
     const value = await Central.get('UserSettings');
-    console.log(value);
     if (value) {
       this.setState(value);
     }
@@ -46,8 +45,7 @@ class Settings extends React.Component {
     const value = this.state;
     const key = 'UserSettings';
 
-    const success = await Central.save(key, value);
-    console.log(success);
+    await Central.save(key, value);
     NProgress.done();
   }
 

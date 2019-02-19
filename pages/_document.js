@@ -29,6 +29,7 @@ export default class MyDocument extends Document {
           <title>Banter</title>
           {this.props.styleTags}
           <link rel="stylesheet" href="/static/nprogress.css" />
+          <link rel="icon" href="/static/cat.png" type="image/png" />
           <script src="/static/nprogress.js" />
         </Head>
         <body className="custom">
