@@ -5,6 +5,7 @@ import { UserSession, AppConfig } from 'blockstack';
 import { configure } from 'radiks';
 
 import Nav from '../components/nav';
+import Footer from '../components/footer';
 
 const appConfig = new AppConfig(['store_write', 'publish_data'], process.env.RADIKS_API_SERVER);
 const userSession = new UserSession({ appConfig });
@@ -46,6 +47,7 @@ class MyApp extends App {
         <Container>
           <Nav />
           <Component {...pageProps} serverCookies={this.props.cookies} />
+          <Footer />
         </Container>
       </ThemeProvider>
     );

@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node server",
+    "build": "next build",
     "heroku-postbuild": "next build"
   },
   "dependencies": {

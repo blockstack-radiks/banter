@@ -40,11 +40,11 @@ class Nav extends React.Component {
               <FontAwesomeIcon icon={faCat} />
               <Text.span ml={3}>Banter</Text.span>
             </Text.h1>
-            <Text.span display="inline-block" ml={4} color="#574b90" fontWeight="500" style={{ position: 'relative', top: '-4px' }}>
+            {/* <Text.span display="inline-block" ml={4} color="#574b90" fontWeight="500" style={{ position: 'relative', top: '-4px' }}>
               A place for
               {' '}
               <span role="img" aria-label="poo">💩</span>
-            </Text.span>
+            </Text.span> */}
           </Box>
           <Box ml="auto" mr={4}>
             {currentUser && (
