@@ -17,9 +17,8 @@ const port = parseInt(process.env.PORT, 10) || 5000;
 
 app.prepare().then(async () => {
   const server = express();
-  if (!dev) {
-    express.use(secure);
-  }
+  server.use(secure);
+
   expressWS(server);
 
   const RadiksController = await setup();
@@ -27,7 +26,7 @@ app.prepare().then(async () => {
 
   server.use((req, res, _next) => {
     if (!dev && req.host !== 'banter.pub') {
-      console.log(req.host);
+      console.log('Redirecting from non-production URL:', req.host);
       return res.redirect('https://banter.pub');
     }
     return _next();
