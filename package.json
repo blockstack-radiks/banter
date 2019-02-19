@@ -24,7 +24,7 @@
     "next": "^8.0.0",
     "polished": "^2.1.1",
     "prop-types": "^15.6.2",
-    "radiks": "0.2.0-alpha.2",
+    "radiks": "0.2.0-alpha.3",
     "radiks-server": "0.1.4",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
