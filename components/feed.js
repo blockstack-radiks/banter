@@ -64,6 +64,7 @@ export default class Feed extends React.Component {
   }
 
   async submit() {
+    NProgress.start();
     const { newMessage } = this.state;
     const message = new Message({
       content: newMessage,
@@ -73,7 +74,9 @@ export default class Feed extends React.Component {
     createdMessageIDs[message._id] = true;
     await message.save();
     messages.unshift(message);
-    this.setState({ messages, createdMessageIDs, newMessage: '' });
+    this.setState({ messages, createdMessageIDs, newMessage: '' }, () => {
+      NProgress.done();
+    });
   }
 
   messages() {
@@ -83,6 +86,7 @@ export default class Feed extends React.Component {
   }
 
   loadMoreMessages() {
+    NProgress.start();
     let { messages } = this.state;
     this.setState({
       isLoadingMore: true,
@@ -101,6 +105,8 @@ export default class Feed extends React.Component {
         isLoadingMore: false,
         hasMoreMessages,
         messages,
+      }, () => {
+        NProgress.done();
       });
     });
   }

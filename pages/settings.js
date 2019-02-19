@@ -16,11 +16,13 @@ class Settings extends React.Component {
   }
 
   async componentDidMount() {
+    NProgress.start();
     const value = await Central.get('UserSettings');
     console.log(value);
     if (value) {
       this.setState(value);
     }
+    NProgress.done();
   }
 
   updateNotifyMentioned = (event) => {
@@ -40,11 +42,13 @@ class Settings extends React.Component {
   }
 
   saveData = async () => {
+    NProgress.start();
     const value = this.state;
     const key = 'UserSettings';
 
     const success = await Central.save(key, value);
     console.log(success);
+    NProgress.done();
   }
 
   render() {
