@@ -6,7 +6,7 @@ import { configure } from 'radiks';
 
 import Nav from '../components/nav';
 
-const appConfig = new AppConfig(['store_write', 'publish_data'], 'http://localhost:5000');
+const appConfig = new AppConfig(['store_write', 'publish_data'], process.env.RADIKS_API_SERVER);
 const userSession = new UserSession({ appConfig });
 
 class MyApp extends App {
