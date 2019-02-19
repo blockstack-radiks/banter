@@ -1,5 +1,6 @@
 import React from 'react';
 import { Flex, Box } from 'blockstack-ui';
+import Linkify from 'linkifyjs/react';
 
 import Text from '../../styled/typography';
 import Avatar from '../avatar';
@@ -15,7 +16,26 @@ const Message = ({ message }) => (
         {' '}
         says:
       </Text.p>
-      <Text.em>{message.attrs.content}</Text.em>
+      <Text.em>
+        <Linkify
+          options={{
+            format: (value, type) => {
+              console.log(value, type);
+              return value;
+            },
+            formatHref: (href, type) => {
+              console.log('href', href, type);
+              if (type === 'mention') {
+                return `/users${href}`;
+              }
+              return href;
+            },
+            defaultProtocol: 'https',
+          }}
+        >
+          {message.attrs.content}
+        </Linkify>
+      </Text.em>
       <Text.small display="block" mt={1}>{message.ago()}</Text.small>
     </Box>
   </Flex>

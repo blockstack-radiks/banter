@@ -3,9 +3,13 @@ import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { UserSession, AppConfig } from 'blockstack';
 import { configure } from 'radiks';
+import * as linkify from 'linkifyjs';
+import mentionPlugin from 'linkifyjs/plugins/mention';
 
 import Nav from '../components/nav';
 import Footer from '../components/footer';
+
+mentionPlugin(linkify);
 
 const appConfig = new AppConfig(['store_write', 'publish_data'], process.env.RADIKS_API_SERVER);
 const userSession = new UserSession({ appConfig });

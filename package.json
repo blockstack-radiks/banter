@@ -21,6 +21,7 @@
     "express": "^4.16.3",
     "express-ws": "^4.0.0",
     "grid-styled": "^5.0.2",
+    "linkifyjs": "^2.1.8",
     "moment": "^2.22.2",
     "next": "^8.0.0",
     "polished": "^2.1.1",
