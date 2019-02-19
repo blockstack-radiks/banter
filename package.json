@@ -24,6 +24,7 @@
     "radiks-server": "file:../server",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-visibility-sensor": "^5.0.2",
     "rebass": "^2.3.4",
     "styled-components": "^3.4.9",
     "styled-system": "^3.1.6"

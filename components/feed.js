@@ -1,7 +1,8 @@
 import React from 'react';
 import { Flex, Box } from 'blockstack-ui';
 import PropTypes from 'prop-types';
-import { User } from 'radiks';
+import { User, getConfig } from 'radiks';
+import VisibilitySensor from 'react-visibility-sensor';
 
 import Text from '../styled/typography';
 import Input from '../styled/input';
@@ -19,6 +20,8 @@ export default class Feed extends React.Component {
     createdMessageIDs: {},
     messages: [],
     currentUser: null,
+    isLoadingMore: false,
+    hasMoreMessages: true,
   }
 
   componentWillMount() {
@@ -27,11 +30,28 @@ export default class Feed extends React.Component {
     this.setState({ messages });
   }
 
-  componentDidMount() {
-    this.setState({
-      currentUser: User.currentUser(),
-    });
+  async componentDidMount() {
+    const { userSession } = getConfig();
+    if (userSession.isUserSignedIn()) {
+      const currentUser = await User.currentUser();
+      this.setState({ currentUser });
+    } else if (userSession.isSignInPending()) {
+      await userSession.handlePendingSignIn();
+      const currentUser = await User.createWithCurrentUser();
+      this.setState({ currentUser });
+    }
     Message.addStreamListener(this.newMessageListener.bind(this));
+  }
+
+  login = () => {
+    const scopes = [
+      'store_write',
+      'publish_data',
+    ];
+    const redirect = window.location.origin;
+    const manifest = `${window.location.origin}/manifest.json`;
+    const { userSession } = getConfig();
+    userSession.redirectToSignIn(redirect, manifest, scopes);
   }
 
   newMessageListener(message) {
@@ -62,34 +82,88 @@ export default class Feed extends React.Component {
     ));
   }
 
+  loadMoreMessages() {
+    let { messages } = this.state;
+    this.setState({
+      isLoadingMore: true,
+    }, async () => {
+      const lastMessage = messages[messages.length - 1];
+      const newMessages = await Message.fetchList({
+        createdAt: {
+          $lt: lastMessage.attrs.createdAt,
+        },
+        limit: 10,
+        sort: '-createdAt',
+      }, { decrypt: false });
+      messages = messages.concat(newMessages);
+      const hasMoreMessages = newMessages.length !== 0;
+      this.setState({
+        isLoadingMore: false,
+        hasMoreMessages,
+        messages,
+      });
+    });
+  }
+
   render() {
+    const { currentUser, isLoadingMore, hasMoreMessages } = this.state;
     return (
       <Flex>
         <Box width={[1, 1 / 2]} mx="auto" background="white" my={2}>
           <Box width={1}>
             <Box px={4} py={4}>
-              <Input
-                width={1}
-                placeholder="What do you have to say?"
-                value={this.state.newMessage}
-                onChange={evt => this.setState({ newMessage: evt.target.value })}
-              />
+              {currentUser ? (
+                <>
+                  <Input
+                    width={1}
+                    placeholder="What do you have to say?"
+                    value={this.state.newMessage}
+                    onChange={evt => this.setState({ newMessage: evt.target.value })}
+                  />
 
-              <Button onClick={() => this.submit()} mt={3}>
-                Submit
-              </Button>
+                  <Button onClick={() => this.submit()} mt={3}>
+                    Submit
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Text.p textAlign="center">
+                    Log in with Blockstack to get started.
+                  </Text.p>
+
+                  <Button mt={3} onClick={this.login} mx="auto" style={{ display: 'block' }}>
+                    Log In
+                  </Button>
+                </>
+              )}
             </Box>
           </Box>
 
           {this.messages()}
 
-          <Text.p textAlign="center">
-            Only showing the most recent
-            {' '}
-            {this.state.messages.length}
-            {' '}
-            messages.
-          </Text.p>
+          {isLoadingMore ? (
+            <Text.p textAlign="center">
+              Fetching older messages...
+            </Text.p>
+          ) : (
+            <>
+              {hasMoreMessages ? (
+                <VisibilitySensor onChange={() => this.loadMoreMessages()}>
+                  <Text.p textAlign="center">
+                    Only showing the most recent
+                    {' '}
+                    {this.state.messages.length}
+                    {' '}
+                    messages.
+                  </Text.p>
+                </VisibilitySensor>
+              ) : (
+                <Text.p textAlign="center">
+                  No more messages to show!
+                </Text.p>
+              )}
+            </>
+          )}
         </Box>
       </Flex>
     );
