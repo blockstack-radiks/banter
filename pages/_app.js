@@ -15,6 +15,7 @@ class MyApp extends App {
       userSession,
     };
 
+    console.log(process.env.RADIKS_API_SERVER);
     configure({
       apiServer: process.env.RADIKS_API_SERVER,
       userSession,
@@ -28,6 +29,7 @@ class MyApp extends App {
   }
 
   componentWillMount() {
+    console.log(process.env.RADIKS_API_SERVER);
     configure({
       apiServer: process.env.RADIKS_API_SERVER,
       userSession,
