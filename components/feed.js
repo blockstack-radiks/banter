@@ -34,10 +34,12 @@ export default class Feed extends React.Component {
     const { userSession } = getConfig();
     if (userSession.isUserSignedIn()) {
       const currentUser = await User.currentUser();
+      console.log('existing user', currentUser);
       this.setState({ currentUser });
     } else if (userSession.isSignInPending()) {
       await userSession.handlePendingSignIn();
       const currentUser = await User.createWithCurrentUser();
+      console.log('new user', currentUser);
       this.setState({ currentUser });
     }
     Message.addStreamListener(this.newMessageListener.bind(this));
