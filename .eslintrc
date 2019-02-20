@@ -65,6 +65,7 @@
     }
   },
   "globals": {
-    "gtag": true
+    "gtag": true,
+    "NProgress": true
   }
 }
