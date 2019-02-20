@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useContext } from 'react'
-import { AppContext } from '../common/context/app-context'
-import { Flex, Box, Type } from 'blockstack-ui'
-import NProgress from 'nprogress'
-import { getConfig } from 'radiks'
-import Input from '../styled/input'
-import Message from '../models/Message'
-import MessageComponent from './message'
-import { Button } from './button'
-import { Login } from './login'
+import React, { useEffect, useState, useContext } from 'react';
+import { AppContext } from '../common/context/app-context';
+import { Flex, Box, Type } from 'blockstack-ui';
+import NProgress from 'nprogress';
+import { getConfig } from 'radiks';
+import Input from '../styled/input';
+import Message from '../models/Message';
+import MessageComponent from './message';
+import { Button } from './button';
+import { Login } from './login';
 
 const Compose = ({ handleSubmit, value, handleValueChange, disabled, ...rest }) => (
   <Box p={4} {...rest}>
@@ -26,61 +26,61 @@ const Compose = ({ handleSubmit, value, handleValueChange, disabled, ...rest }) 
       </Button>
     </Flex>
   </Box>
-)
+);
 
 const login = () => {
-  const scopes = ['store_write', 'publish_data']
-  const redirect = window.location.origin
-  const manifest = `${window.location.origin}/manifest.json`
-  const { userSession } = getConfig()
-  userSession.redirectToSignIn(redirect, manifest, scopes)
-}
+  const scopes = ['store_write', 'publish_data'];
+  const redirect = window.location.origin;
+  const manifest = `${window.location.origin}/manifest.json`;
+  const { userSession } = getConfig();
+  userSession.redirectToSignIn(redirect, manifest, scopes);
+};
 
 const fetchMoreMessages = async (messages) => {
-  const lastMessage = messages && messages.length && messages[messages.length - 1]
+  const lastMessage = messages && messages.length && messages[messages.length - 1];
   const newMessages = await Message.fetchList(
     {
       createdAt: {
-        $lt: lastMessage && lastMessage.attrs.createdAt
+        $lt: lastMessage && lastMessage.attrs.createdAt,
       },
       limit: 10,
-      sort: '-createdAt'
+      sort: '-createdAt',
     },
-    { decrypt: false }
-  )
-  const newmessages = messages && messages.concat(newMessages)
-  const hasMoreMessages = newMessages.length !== 0
+    { decrypt: false },
+  );
+  const newmessages = messages && messages.concat(newMessages);
+  const hasMoreMessages = newMessages.length !== 0;
   return {
     hasMoreMessages,
-    messages: newmessages
-  }
-}
+    messages: newmessages,
+  };
+};
 
 const TopArea = (props) => {
-  const { isLoggedIn, user, isSigningIn } = useContext(AppContext)
-  const [content, setContent] = useState('')
+  const { isLoggedIn, user, isSigningIn } = useContext(AppContext);
+  const [content, setContent] = useState('');
 
   const handleSubmit = async (e) => {
     if (e && e.preventDefault) {
-      e.preventDefault()
+      e.preventDefault();
     }
     if (content === '') {
-      return null
+      return null;
     }
-    NProgress.start()
+    NProgress.start();
     const message = new Message({
       content,
-      createdBy: user._id
-    })
+      createdBy: user._id,
+    });
     try {
-      await message.save()
-      setContent('')
-      NProgress.done()
+      await message.save();
+      setContent('');
+      NProgress.done();
     } catch (e) {
-      console.log(e)
-      NProgress.done()
+      console.log(e);
+      NProgress.done();
     }
-  }
+  };
 
   return !isLoggedIn ? (
     <Login px={4} handleLogin={login} />
@@ -91,46 +91,46 @@ const TopArea = (props) => {
       value={content}
       disabled={content === '' || !user}
     />
-  )
-}
+  );
+};
 
-const Messages = ({ messages }) => messages.map((message) => <MessageComponent key={message._id} message={message} />)
+const Messages = ({ messages }) => messages.map((message) => <MessageComponent key={message._id} message={message} />);
 
 const Feed = ({ messages, rawMessages, ...rest }) => {
-  const [liveMessages, setLiveMessages] = useState(rawMessages.map((m) => new Message(m.attrs)))
-  const [loading, setLoading] = useState(false)
-  const [viewingAll, setViewingAll] = useState(false)
+  const [liveMessages, setLiveMessages] = useState(rawMessages.map((m) => new Message(m.attrs)));
+  const [loading, setLoading] = useState(false);
+  const [viewingAll, setViewingAll] = useState(false);
 
   const newMessageListener = (message) => {
     if (liveMessages.find((m) => m._id === message._id)) {
-      return null
+      return null;
     }
-    setLiveMessages([...new Set([message, ...liveMessages])])
-  }
+    setLiveMessages([...new Set([message, ...liveMessages])]);
+  };
 
-  const subscribe = () => Message.addStreamListener(newMessageListener)
-  const unsubscribe = () => Message.removeStreamListener(newMessageListener)
+  const subscribe = () => Message.addStreamListener(newMessageListener);
+  const unsubscribe = () => Message.removeStreamListener(newMessageListener);
 
   useEffect(() => {
-    subscribe()
-    return unsubscribe
-  })
+    subscribe();
+    return unsubscribe;
+  });
 
   const loadMoreMessages = () => {
-    NProgress.start()
-    setLoading(true)
+    NProgress.start();
+    setLoading(true);
     fetchMoreMessages(liveMessages).then(({ hasMoreMessages, messages }) => {
       if (hasMoreMessages) {
-        setLiveMessages(messages)
-        setLoading(false)
-        NProgress.done()
+        setLiveMessages(messages);
+        setLoading(false);
+        NProgress.done();
       } else {
-        NProgress.done()
-        setLoading(false)
-        setViewingAll(true)
+        NProgress.done();
+        setLoading(false);
+        setViewingAll(true);
       }
-    })
-  }
+    });
+  };
 
   return (
     <Box
@@ -155,7 +155,7 @@ const Feed = ({ messages, rawMessages, ...rest }) => {
         )}
       </Flex>
     </Box>
-  )
-}
+  );
+};
 
-export default Feed
+export default Feed;
