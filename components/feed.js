@@ -57,7 +57,7 @@ const fetchMoreMessages = async (messages) => {
 };
 
 const TopArea = (props) => {
-  const { isLoggedIn, user, isSigningIn } = useContext(AppContext);
+  const { isLoggedIn, user } = useContext(AppContext);
   const [content, setContent] = useState('');
 
   const handleSubmit = async (e) => {
