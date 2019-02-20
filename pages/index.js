@@ -1,20 +1,19 @@
 import React from 'react';
-import { Flex, Box, } from 'rebass';
+import { Flex, Box } from 'rebass';
 import PropTypes from 'prop-types';
-import { User, getConfig, } from 'radiks';
+import Head from 'next/head';
 import Message from '../models/Message';
 import Feed from '../components/feed';
-import { AppContext, } from '../common/context/app-context';
+import { AppContext } from '../common/context/app-context';
 
 class Home extends React.Component {
-
   static propTypes = {
     messages: PropTypes.array.isRequired,
-  }
+  };
 
   state = {
     user: null,
-  }
+  };
 
   static getInitialProps = async () => {
     const rawMessages = await Message.fetchList(
@@ -22,18 +21,21 @@ class Home extends React.Component {
         sort: '-createdAt',
         limit: 10,
       },
-      { decrypt: false, }
+      { decrypt: false },
     );
 
     return {
       rawMessages,
     };
-  }
+  };
 
   render() {
     return (
       <Flex>
-        <Box width={[1, 3 / 4,]} mx="auto">
+        <Head>
+          <title>Banter</title>
+        </Head>
+        <Box width={[1, 3 / 4]} mx="auto">
           <Feed rawMessages={this.props.rawMessages} />
         </Box>
       </Flex>
