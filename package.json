@@ -10,7 +10,8 @@
     "start": "NODE_ENV=production node server",
     "build": "next build",
     "heroku-postbuild": "next build",
-    "lint": "eslint ./common/**/*.js ./components/**/*.js ./pages/**/*.js --fix"
+    "lint": "eslint ./common/**/*.js ./components/**/*.js ./pages/**/*.js --fix",
+    "prettier": "prettier --config .prettierrc ./common/**/*.js ./components/**/*.js ./pages/**/*.js"
   },
   "dependencies": {
     "@awaitjs/express": "^0.3.0",

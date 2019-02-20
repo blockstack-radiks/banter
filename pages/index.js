@@ -21,7 +21,7 @@ class Home extends React.Component {
         sort: '-createdAt',
         limit: 10,
       },
-      { decrypt: false },
+      { decrypt: false }
     );
 
     return {
