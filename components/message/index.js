@@ -3,7 +3,7 @@ import { Flex, Box, Type } from 'blockstack-ui';
 import Linkify from 'linkifyjs/react';
 import DownvoteEmptyIcon from 'mdi-react/EmoticonPoopOutlineIcon';
 import DownvoteFilledIcon from 'mdi-react/EmoticonPoopIcon';
-
+import { Hover, Active } from 'react-powerplug';
 const Avatar = ({ username, ...rest }) => (
   <Box
     size="42px"
@@ -55,6 +55,26 @@ const Container = ({ ...rest }) => (
   <Flex px={3} py={3} alignItems="flex-start" borderTop="1px solid rgb(230, 236, 240)" {...rest} />
 );
 
+const IconButton = ({ active, ...rest }) => (
+  <Active>
+    {({ active: pressed, bind: pressedBind }) => (
+      <Hover>
+        {({ hovered, bind }) => (
+          <Box
+            opacity={active ? '1' : hovered ? 0.75 : 0.5}
+            cursor={hovered ? 'pointer' : 'unset'}
+            transform={pressed ? 'translateY(2px)' : 'none'}
+            transition="0.1s all ease-in-out"
+            {...bind}
+            {...pressedBind}
+            {...rest}
+          />
+        )}
+      </Hover>
+    )}
+  </Active>
+);
+
 const FooterUI = ({ ...rest }) => {
   const [voted, setVoted] = useState(false);
   const [count, setCount] = useState(0);
@@ -64,10 +84,10 @@ const FooterUI = ({ ...rest }) => {
   };
   const Icon = voted ? DownvoteFilledIcon : DownvoteEmptyIcon;
   return (
-    <Flex style={{userSelect: 'none'}} pt={2} color="purple">
-      <Box opacity={voted ? '1' : 0.5} onClick={toggleVote}>
+    <Flex style={{ userSelect: 'none' }} pt={2} color="purple">
+      <IconButton active={voted} onClick={toggleVote}>
         <Icon size={20} />
-      </Box>
+      </IconButton>
       <Box pl={1}>
         <Type fontSize={0} fontWeight="bold">
           {count}
