@@ -3,7 +3,6 @@ import { Box, Flex, Type } from 'blockstack-ui';
 import { Hover } from 'react-powerplug';
 import Link from 'next/link';
 
-import { Container } from './styled';
 import { AppContext } from '../../common/context/app-context';
 
 const Logo = ({ width = '28px', height = '28px' }) => (
@@ -23,7 +22,7 @@ const Logo = ({ width = '28px', height = '28px' }) => (
   </svg>
 );
 
-const UserArea = ({ ...rest }) => {
+const UserArea = () => {
   const { logout, isSigningIn, username } = useContext(AppContext);
 
   const color = 'purple';

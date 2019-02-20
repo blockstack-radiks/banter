@@ -16,8 +16,11 @@ import { theme } from '../common/theme';
 
 mentionPlugin(linkify);
 
-const appConfig = new AppConfig(['store_write', 'publish_data'], process.env.RADIKS_API_SERVER);
-const userSession = new UserSession({ appConfig });
+const makeUserSession = () => {
+  const appConfig = new AppConfig(['store_write', 'publish_data'], process.env.RADIKS_API_SERVER);
+  const userSession = new UserSession({ appConfig });
+  return userSession;
+};
 
 const GlobalStyles = createGlobalStyle`
   ${normalize()};
@@ -35,17 +38,17 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 const Wrapper = withRouter(
-  ({ children, username: usernameProps, cookies, router, handleStateUsernameUpdate, ...rest }) => {
+  ({ children, username: usernameProps, cookies, router, handleStateUsernameUpdate }) => {
     const [user, setUser] = useState(null);
     const [username, setUsername] = useState(usernameProps);
     const { query } = router;
     const [isSigningIn, setSigningIn] = useState(!!query.authResponse);
 
-    const logout = (cookies) => {
+    const logout = (_cookies) => {
       const { userSession } = getConfig();
       userSession.signUserOut();
       window.location = '/';
-      cookies.remove('username');
+      _cookies.remove('username');
       handleStateUsernameUpdate({ username: null });
     };
 
@@ -62,7 +65,7 @@ const Wrapper = withRouter(
       if (user) return null;
       if (userSession.isUserSignedIn()) {
         const currentUser = await User.currentUser();
-        !username && cookies.set('username', JSON.stringify(currentUser.attrs.username), { path: '/' });
+        if (username) cookies.set('username', JSON.stringify(currentUser.attrs.username), { path: '/' });
         setUsername(currentUser.attrs.username);
         handleStateUsernameUpdate(currentUser.attrs.username);
         setUser(currentUser);
@@ -70,7 +73,7 @@ const Wrapper = withRouter(
       } else if (userSession.isSignInPending()) {
         await userSession.handlePendingSignIn();
         const currentUser = await User.createWithCurrentUser();
-        !username && cookies.set('username', JSON.stringify(currentUser.attrs.username), { path: '/' });
+        if (username) cookies.set('username', JSON.stringify(currentUser.attrs.username), { path: '/' });
         setUsername(currentUser.attrs.username);
         handleStateUsernameUpdate(currentUser.attrs.username);
         setUser(currentUser);
@@ -78,6 +81,7 @@ const Wrapper = withRouter(
       } else if (cookies.get('username')) {
         cookies.remove('username');
       }
+      return true;
     };
 
     useEffect(() => {
@@ -106,6 +110,7 @@ const Wrapper = withRouter(
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
+    const userSession = makeUserSession();
     let pageProps = {
       userSession,
     };
@@ -123,7 +128,7 @@ class MyApp extends App {
     let username = null;
 
     if (ctx.req) {
-      universalCookies = ctx.req.universalCookies;
+      ({ universalCookies } = ctx.req);
       if (universalCookies && universalCookies.cookies && universalCookies.cookies.username) {
         username = JSON.parse(universalCookies.cookies.username);
       }
@@ -136,6 +141,7 @@ class MyApp extends App {
   };
 
   componentWillMount() {
+    const userSession = makeUserSession();
     configure({
       apiServer: process.env.RADIKS_API_SERVER,
       userSession,

@@ -8,11 +8,7 @@ import { AppContext } from '../common/context/app-context';
 
 class Home extends React.Component {
   static propTypes = {
-    messages: PropTypes.array.isRequired,
-  };
-
-  state = {
-    user: null,
+    rawMessages: PropTypes.array.isRequired,
   };
 
   static getInitialProps = async () => {
@@ -30,13 +26,14 @@ class Home extends React.Component {
   };
 
   render() {
+    const { rawMessages } = this.props;
     return (
       <Flex>
         <Head>
           <title>Banter</title>
         </Head>
         <Box width={[1, 3 / 4]} mx="auto">
-          <Feed rawMessages={this.props.rawMessages} />
+          <Feed rawMessages={rawMessages} />
         </Box>
       </Flex>
     );
