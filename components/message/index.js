@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import Linkify from 'linkifyjs/react';
+import DownvoteEmptyIcon from 'mdi-react/EmoticonPoopOutlineIcon';
+import DownvoteFilledIcon from 'mdi-react/EmoticonPoopIcon';
 
 const Avatar = ({ username, ...rest }) => (
   <Box
@@ -50,8 +52,30 @@ const MessageContent = ({ content, ...rest }) => (
 const Details = ({ ...rest }) => <Box ml={3} width={7 / 8} {...rest} />;
 
 const Container = ({ ...rest }) => (
-  <Flex px={3} py={3} alignItems="center" borderTop="1px solid rgb(230, 236, 240)" {...rest} />
+  <Flex px={3} py={3} alignItems="flex-start" borderTop="1px solid rgb(230, 236, 240)" {...rest} />
 );
+
+const FooterUI = ({ ...rest }) => {
+  const [voted, setVoted] = useState(false);
+  const [count, setCount] = useState(0);
+  const toggleVote = () => {
+    setVoted((s) => !s);
+    setCount((s) => s + 1);
+  };
+  const Icon = voted ? DownvoteFilledIcon : DownvoteEmptyIcon;
+  return (
+    <Flex style={{userSelect: 'none'}} pt={2} color="purple">
+      <Box opacity={voted ? '1' : 0.5} onClick={toggleVote}>
+        <Icon size={20} />
+      </Box>
+      <Box pl={1}>
+        <Type fontSize={0} fontWeight="bold">
+          {count}
+        </Type>
+      </Box>
+    </Flex>
+  );
+};
 
 const Message = ({ message }) => (
   <Container>
@@ -59,6 +83,7 @@ const Message = ({ message }) => (
     <Details>
       <Meta username={message.attrs.createdBy} timeago={message.ago()} />
       <MessageContent content={message.attrs.content} />
+      <FooterUI />
     </Details>
   </Container>
 );
