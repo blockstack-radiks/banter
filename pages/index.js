@@ -1,46 +1,46 @@
-import React from 'react'
-import { Flex, Box } from 'rebass'
-import PropTypes from 'prop-types'
-import { User, getConfig } from 'radiks'
-import Message from '../models/Message'
-import Feed from '../components/feed'
-import { AppContext } from '../common/context/app-context'
+import React from 'react';
+import { Flex, Box, } from 'rebass';
+import PropTypes from 'prop-types';
+import { User, getConfig, } from 'radiks';
+import Message from '../models/Message';
+import Feed from '../components/feed';
+import { AppContext, } from '../common/context/app-context';
 
 class Home extends React.Component {
 
   static propTypes = {
-    messages: PropTypes.array.isRequired
+    messages: PropTypes.array.isRequired,
   }
 
   state = {
-    user: null
+    user: null,
   }
 
   static getInitialProps = async () => {
     const rawMessages = await Message.fetchList(
       {
         sort: '-createdAt',
-        limit: 10
+        limit: 10,
       },
-      { decrypt: false }
-    )
+      { decrypt: false, }
+    );
 
     return {
-      rawMessages
-    }
+      rawMessages,
+    };
   }
 
   render() {
     return (
       <Flex>
-        <Box width={[1, 3 / 4]} mx="auto">
+        <Box width={[1, 3 / 4,]} mx="auto">
           <Feed rawMessages={this.props.rawMessages} />
         </Box>
       </Flex>
-    )
+    );
   }
 }
 
-Home.contextType = AppContext
+Home.contextType = AppContext;
 
-export default Home
+export default Home;

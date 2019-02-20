@@ -1,10 +1,9 @@
-import React from 'react'
-import { Flex, Box, Type } from 'blockstack-ui'
-import Linkify from 'linkifyjs/react'
+import React from 'react';
+import { Flex, Box, Type, } from 'blockstack-ui';
+import Linkify from 'linkifyjs/react';
 
-const Message = ({ message }) => {
-  return (
-    <Flex px={3} py={3} alignItems="center" style={{ borderTop: '1px solid rgb(230, 236, 240)' }}>
+const Message = ({ message, }) => (
+    <Flex px={3} py={3} alignItems="center" style={{ borderTop: '1px solid rgb(230, 236, 240)', }}>
       <Box
         size="42px"
         display="block"
@@ -13,7 +12,7 @@ const Message = ({ message }) => {
         borderRadius="100%"
         overflow="hidden"
         style={{
-          backgroundSize: 'cover'
+          backgroundSize: 'cover',
         }}
       />
       <Box ml={3} width={7 / 8}>
@@ -29,11 +28,11 @@ const Message = ({ message }) => {
               format: (value) => value,
               formatHref: (href, type) => {
                 if (type === 'mention') {
-                  return `/users${href}`
+                  return `/users${href}`;
                 }
-                return href
+                return href;
               },
-              defaultProtocol: 'https'
+              defaultProtocol: 'https',
             }}
           >
             {message.attrs.content}
@@ -41,7 +40,6 @@ const Message = ({ message }) => {
         </Type>
       </Box>
     </Flex>
-  )
-}
+  );
 
-export default Message
+export default Message;

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Flex, Box } from 'blockstack-ui';
-import { Central } from 'radiks';
+import { Flex, Box, } from 'blockstack-ui';
+import { Central, } from 'radiks';
 
 import Type from '../styled/typography';
 import Input from '../styled/input';
@@ -25,19 +25,19 @@ class Settings extends React.Component {
   }
 
   updateNotifyMentioned = (event) => {
-    this.setState({ notifyMentioned: event.target.checked });
+    this.setState({ notifyMentioned: event.target.checked, });
   }
 
   updateSendUpdates = (event) => {
-    this.setState({ sendUpdates: event.target.checked });
+    this.setState({ sendUpdates: event.target.checked, });
   }
 
   updateFrequencyChanged = (event) => {
-    this.setState({ updateFrequency: event.target.value });
+    this.setState({ updateFrequency: event.target.value, });
   }
 
   updateEmail = (event) => {
-    this.setState({ email: event.target.value });
+    this.setState({ email: event.target.value, });
   }
 
   saveData = async () => {
@@ -55,7 +55,7 @@ class Settings extends React.Component {
     } = this.state;
     return (
       <Flex>
-        <Box width={[1, 1 / 2]} mx="auto" background="white" p={4} my={2}>
+        <Box width={[1, 1 / 2,]} mx="auto" background="white" p={4} my={2}>
           <Type.h2 mt={0}>Settings</Type.h2>
           <Type.h3 mt={0}>Notifications</Type.h3>
 

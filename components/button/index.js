@@ -1,11 +1,10 @@
 import React from 'react';
-import { Flex, Box, Type } from 'blockstack-ui';
-import { Hover } from 'react-powerplug';
+import { Flex, Box, Type, } from 'blockstack-ui';
+import { Hover, } from 'react-powerplug';
 
-const Button = ({ children, ...rest }) => {
-  return (
+const Button = ({ children, ...rest }) => (
     <Hover>
-      {({ hovered, bind }) => (
+      {({ hovered, bind, }) => (
         <Flex
           border="0"
           px={3}
@@ -15,7 +14,7 @@ const Button = ({ children, ...rest }) => {
           color={hovered ? 'white' : 'purple'}
           cursor={hovered ? 'pointer' : 'unset'}
           transition="0.08s all ease-in-out"
-          borderRadius={'3px'}
+          borderRadius="3px"
           alignItems="center"
           justifyContent="center"
           {...bind}
@@ -28,6 +27,5 @@ const Button = ({ children, ...rest }) => {
       )}
     </Hover>
   );
-};
 
-export { Button };
+export { Button, };

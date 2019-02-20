@@ -1,3 +1,3 @@
-import React, { createContext } from 'react'
+import React, { createContext, } from 'react';
 
-export const AppContext = createContext({ user: null, isLoggedIn: false })
+export const AppContext = createContext({ user: null, isLoggedIn: false, });

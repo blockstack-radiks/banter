@@ -1,12 +1,12 @@
-import React, { useContext, useState } from 'react'
-import { Box, Flex, Type } from 'blockstack-ui'
-import { Button } from '../button'
-import { AppContext } from '../../common/context/app-context'
+import React, { useContext, useState, } from 'react';
+import { Box, Flex, Type, } from 'blockstack-ui';
+import { Button, } from '../button';
+import { AppContext, } from '../../common/context/app-context';
 
 const Login = ({ handleLogin, ...rest }) => {
-  const { isSigningIn } = useContext(AppContext)
+  const { isSigningIn, } = useContext(AppContext);
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading,] = useState(false);
 
   return (
     <Flex alignItems="center" justifyContent="space-between" py={3} px={3} textAlign="center" {...rest}>
@@ -27,8 +27,8 @@ const Login = ({ handleLogin, ...rest }) => {
             <Button
               minWidth={120}
               onClick={() => {
-                handleLogin()
-                setLoading(true)
+                handleLogin();
+                setLoading(true);
               }}
             >
               {loading ? 'Loading...' : 'Login'}
@@ -37,7 +37,7 @@ const Login = ({ handleLogin, ...rest }) => {
         </>
       )}
     </Flex>
-  )
-}
+  );
+};
 
-export { Login }
+export { Login, };

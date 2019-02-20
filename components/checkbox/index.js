@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from 'blockstack-ui';
+import { Box, } from 'blockstack-ui';
 import Type from '../../styled/typography';
 
 import {
@@ -24,7 +24,7 @@ const Checkbox = ({
     <label htmlFor="">
       {/* <InnerCheckbox checked={checked} onChange={onChange} /> */}
       <input type="checkbox" checked={checked} onChange={onChange} />
-      <Type.span ml={2} style={{ position: 'relative', top: '2px' }}>{children}</Type.span>
+      <Type.span ml={2} style={{ position: 'relative', top: '2px', }}>{children}</Type.span>
     </label>
   </Box>
 );

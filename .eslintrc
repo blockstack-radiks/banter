@@ -8,7 +8,7 @@
     "node": true
   },
   "rules": {
-    "comma-dangle": ["always"],
+    "comma-dangle": [1, "always"],
     "quotes": 0,
     "eol-last": 2,
     "no-debugger": 1,
@@ -26,7 +26,7 @@
     "prefer-const": 2,
     "new-cap": 0,
     "camelcase": 2,
-    "semi": ["always"],
+    "semi": [1, "always"],
     "react/jsx-uses-react": 2,
     "react/jsx-uses-vars": 2,
     "react/react-in-jsx-scope": 2,
