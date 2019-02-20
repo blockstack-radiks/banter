@@ -1,12 +1,12 @@
-import React, { useContext, } from 'react';
-import { Box, Type, } from 'blockstack-ui';
+import React, { useContext } from 'react';
+import { Box, Type } from 'blockstack-ui';
 
 import Link from 'next/link';
 
-import { Container, } from './styled';
-import { AppContext, } from '../../common/context/app-context';
+import { Container } from './styled';
+import { AppContext } from '../../common/context/app-context';
 
-const Logo = ({ width = '28px', height = '28px', }) => (
+const Logo = ({ width = '28px', height = '28px' }) => (
   <svg
     focusable="false"
     role="img"
@@ -24,7 +24,7 @@ const Logo = ({ width = '28px', height = '28px', }) => (
 );
 
 const UserArea = ({ ...rest }) => {
-  const { logout, isSigningIn, username, } = useContext(AppContext);
+  const { logout, isSigningIn, username } = useContext(AppContext);
 
   return isSigningIn ? (
     <Type color="purple" mt="14px" fontWeight="bold" display="inline-block">
@@ -44,20 +44,22 @@ const UserArea = ({ ...rest }) => {
 };
 
 const Nav = ({ ...rest }) => (
-    <Box is="nav" {...rest}>
-      <Container>
-        <Box width={1 / 4}>
-          <Type is="h1" mt="9px" ml={4} fontSize="28px" color="#574b90" display="inline-block">
-            <Type is="a" href="/" color="#574b90" textDecoration="none">
-              <Logo />
-              <Type ml={2}>Banter</Type>
+  <Box is="nav" {...rest}>
+    <Container>
+      <Box width={1 / 4}>
+        <Type is="h1" mt="9px" ml={4} fontSize="28px" color="#574b90" display="inline-block">
+          <Type is="a" href="/" color="#574b90" textDecoration="none">
+            <Logo />
+            <Type display={['none', 'inline-block']} ml={2}>
+              Banter
             </Type>
           </Type>
-        </Box>
-        <Box ml="auto" mr={4}>
-          <UserArea />
-        </Box>
-      </Container>
-    </Box>
-  );
+        </Type>
+      </Box>
+      <Box ml="auto" mr={4}>
+        <UserArea />
+      </Box>
+    </Container>
+  </Box>
+);
 export default Nav;

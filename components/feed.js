@@ -135,8 +135,8 @@ const Feed = ({ messages, rawMessages, ...rest }) => {
   return (
     <Box
       border="1px solid rgb(230, 236, 240)"
-      my={4}
-      mx="auto"
+      my={[2, 4]}
+      mx={[2, 'auto']}
       maxWidth={600}
       bg="white"
       borderRadius={2}
