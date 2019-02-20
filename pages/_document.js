@@ -1,15 +1,13 @@
 import React from 'react';
-import Document, { Head, Main, NextScript, } from 'next/document';
-import { injectGlobal, ServerStyleSheet, } from 'styled-components';
-
-
+import Document, { Head, Main, NextScript } from 'next/document';
+import { injectGlobal, ServerStyleSheet } from 'styled-components';
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const initialProps = await Document.getInitialProps(ctx);
     const sheet = new ServerStyleSheet();
     const styleTags = sheet.getStyleElement();
-    return { ...initialProps, styleTags, };
+    return { ...initialProps, styleTags };
   }
 
   render() {

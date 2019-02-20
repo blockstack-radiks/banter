@@ -29,11 +29,15 @@ const UserArea = ({ ...rest }) => {
   const color = 'purple';
   const hover = 'white';
 
-  return isSigningIn ? (
-    <Type color={color} fontWeight="bold" display="inline-block">
-      Signing In...
-    </Type>
-  ) : username ? (
+  if (isSigningIn) {
+    return (
+      <Type color={color} fontWeight="bold" display="inline-block">
+        Signing In...
+      </Type>
+    );
+  }
+
+  return username ? (
     <Type color={color} fontWeight="bold" display="inline-block">
       {username}
 

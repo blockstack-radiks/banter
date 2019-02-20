@@ -1,23 +1,23 @@
-import App, { Container, } from 'next/app';
-import React, { useState, useEffect, } from 'react';
-import { ThemeProvider, createGlobalStyle, } from 'styled-components';
-import { UserSession, AppConfig, } from 'blockstack';
-import { configure, getConfig, User, } from 'radiks';
+import App, { Container } from 'next/app';
+import React, { useState, useEffect } from 'react';
+import { ThemeProvider, createGlobalStyle } from 'styled-components';
+import { UserSession, AppConfig } from 'blockstack';
+import { configure, getConfig, User } from 'radiks';
 import * as linkify from 'linkifyjs';
 import mentionPlugin from 'linkifyjs/plugins/mention';
-import { CookiesProvider, withCookies, Cookies, } from 'react-cookie';
-import { instanceOf, } from 'prop-types';
-import { normalize, } from 'polished';
-import { withRouter, } from 'next/router';
-import { AppContext, } from '../common/context/app-context';
+import { CookiesProvider, withCookies, Cookies } from 'react-cookie';
+import { instanceOf } from 'prop-types';
+import { normalize } from 'polished';
+import { withRouter } from 'next/router';
+import { AppContext } from '../common/context/app-context';
 import Nav from '../components/nav';
 import Footer from '../components/footer';
-import { theme, } from '../common/theme';
+import { theme } from '../common/theme';
 
 mentionPlugin(linkify);
 
-const appConfig = new AppConfig(['store_write', 'publish_data',], process.env.RADIKS_API_SERVER);
-const userSession = new UserSession({ appConfig, });
+const appConfig = new AppConfig(['store_write', 'publish_data'], process.env.RADIKS_API_SERVER);
+const userSession = new UserSession({ appConfig });
 
 const GlobalStyles = createGlobalStyle`
   ${normalize()};
@@ -36,33 +36,33 @@ const GlobalStyles = createGlobalStyle`
 
 const Wrapper = withRouter(
   ({ children, username: usernameProps, cookies, router, handleStateUsernameUpdate, ...rest }) => {
-    const [user, setUser,] = useState(null);
-    const [username, setUsername,] = useState(usernameProps);
-    const { query, } = router;
-    const [isSigningIn, setSigningIn,] = useState(!!query.authResponse);
+    const [user, setUser] = useState(null);
+    const [username, setUsername] = useState(usernameProps);
+    const { query } = router;
+    const [isSigningIn, setSigningIn] = useState(!!query.authResponse);
 
     const logout = (cookies) => {
-      const { userSession, } = getConfig();
+      const { userSession } = getConfig();
       userSession.signUserOut();
       window.location = '/';
       cookies.remove('username');
-      handleStateUsernameUpdate({ username: null, });
+      handleStateUsernameUpdate({ username: null });
     };
 
     const handleRemoveQuery = () => {
       window.history.pushState(
         null,
         'Banter',
-        `/${  window.location.href.substring(window.location.href.lastIndexOf('/') + 1).split('?')[0]}`,
+        `/${window.location.href.substring(window.location.href.lastIndexOf('/') + 1).split('?')[0]}`
       );
     };
 
     const getCurrentUser = async () => {
-      const { userSession, } = getConfig();
+      const { userSession } = getConfig();
       if (user) return null;
       if (userSession.isUserSignedIn()) {
         const currentUser = await User.currentUser();
-        !username && cookies.set('username', JSON.stringify(currentUser.attrs.username), { path: '/', });
+        !username && cookies.set('username', JSON.stringify(currentUser.attrs.username), { path: '/' });
         setUsername(currentUser.attrs.username);
         handleStateUsernameUpdate(currentUser.attrs.username);
         setUser(currentUser);
@@ -70,7 +70,7 @@ const Wrapper = withRouter(
       } else if (userSession.isSignInPending()) {
         await userSession.handlePendingSignIn();
         const currentUser = await User.createWithCurrentUser();
-        !username && cookies.set('username', JSON.stringify(currentUser.attrs.username), { path: '/', });
+        !username && cookies.set('username', JSON.stringify(currentUser.attrs.username), { path: '/' });
         setUsername(currentUser.attrs.username);
         handleStateUsernameUpdate(currentUser.attrs.username);
         setUser(currentUser);
@@ -101,11 +101,11 @@ const Wrapper = withRouter(
         {children}
       </AppContext.Provider>
     );
-  },
+  }
 );
 
 class MyApp extends App {
-  static async getInitialProps({ Component, ctx, }) {
+  static async getInitialProps({ Component, ctx }) {
     let pageProps = {
       userSession,
     };
@@ -128,7 +128,7 @@ class MyApp extends App {
         username = JSON.parse(universalCookies.cookies.username);
       }
     }
-    return { pageProps: { ...pageProps, userSession, username, }, username, universalCookies, };
+    return { pageProps: { ...pageProps, userSession, username }, username, universalCookies };
   }
 
   state = {
@@ -147,10 +147,10 @@ class MyApp extends App {
     }
   }
 
-  handleStateUsernameUpdate = (username) => this.setState({ username, });
+  handleStateUsernameUpdate = (username) => this.setState({ username });
 
   render() {
-    const { Component, pageProps, universalCookies, } = this.props;
+    const { Component, pageProps, universalCookies } = this.props;
 
     return (
       <ThemeProvider theme={theme}>

@@ -1,5 +1,5 @@
 import Styled from 'styled-components';
-import { Flex, Box, } from 'rebass';
+import { Flex, Box } from 'rebass';
 
 export const Container = Styled(Flex)`
   height: 50px;

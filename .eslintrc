@@ -8,7 +8,13 @@
     "node": true
   },
   "rules": {
-    "comma-dangle": [1, "always"],
+    "comma-dangle": [1, {
+      "imports": "never",
+      "exports": "never",
+      "objects": "only-multiline",
+      "arrays": "only-multiline",
+      "functions": "never"
+    }],
     "quotes": 0,
     "eol-last": 2,
     "no-debugger": 1,
@@ -59,6 +65,7 @@
     }
   },
   "globals": {
-    "gtag": true
+    "gtag": true,
+    "NProgress": true
   }
 }
