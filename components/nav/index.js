@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Box, Type } from 'blockstack-ui';
+import { Box, Flex, Type } from 'blockstack-ui';
 import { Hover } from 'react-powerplug';
 import Link from 'next/link';
 
@@ -26,18 +26,21 @@ const Logo = ({ width = '28px', height = '28px' }) => (
 const UserArea = ({ ...rest }) => {
   const { logout, isSigningIn, username } = useContext(AppContext);
 
+  const color = 'purple';
+  const hover = 'white';
+
   return isSigningIn ? (
-    <Type color="purple" mt="14px" fontWeight="bold" display="inline-block">
+    <Type color={color} fontWeight="bold" display="inline-block">
       Signing In...
     </Type>
   ) : username ? (
-    <Type color="purple" mt="14px" fontWeight="bold" display="inline-block">
+    <Type color={color} fontWeight="bold" display="inline-block">
       {username}
 
       <Hover>
         {({ hovered, bind }) => (
           <Link href="/settings">
-            <Type cursor={hovered ? 'pointer' : 'unset'} {...bind} ml={2}>
+            <Type color={hovered ? hover : color} cursor={hovered ? 'pointer' : 'unset'} {...bind} ml={2}>
               Settings
             </Type>
           </Link>
@@ -45,7 +48,13 @@ const UserArea = ({ ...rest }) => {
       </Hover>
       <Hover>
         {({ hovered, bind }) => (
-          <Type cursor={hovered ? 'pointer' : 'unset'} onClick={logout} ml={2} {...bind}>
+          <Type
+            color={hovered ? hover : color}
+            cursor={hovered ? 'pointer' : 'unset'}
+            onClick={logout}
+            ml={2}
+            {...bind}
+          >
             Log Out
           </Type>
         )}
@@ -55,22 +64,24 @@ const UserArea = ({ ...rest }) => {
 };
 
 const Nav = ({ ...rest }) => (
-  <Box is="nav" {...rest}>
-    <Container>
-      <Box width={1 / 4}>
-        <Type is="h1" mt="9px" ml={4} fontSize="28px" color="#574b90" display="inline-block">
-          <Type is="a" href="/" color="#574b90" textDecoration="none">
-            <Logo />
-            <Type display={['none', 'inline-block']} ml={2}>
-              Banter
+  <Flex px={4} py={2} alignItems="center" is="nav" bg="pink" {...rest}>
+    <Hover>
+      {({ hovered, bind }) => (
+        <Box width={1 / 4}>
+          <Type is="h1" m={0} fontSize="28px" display="inline-block" {...bind}>
+            <Type is="a" href="/" color={hovered ? 'white' : 'purple'} textDecoration="none">
+              <Logo />
+              <Type display={['none', 'inline-block']} ml={2}>
+                Banter
+              </Type>
             </Type>
           </Type>
-        </Type>
-      </Box>
-      <Box ml="auto" mr={4}>
-        <UserArea />
-      </Box>
-    </Container>
-  </Box>
+        </Box>
+      )}
+    </Hover>
+    <Box ml="auto">
+      <UserArea />
+    </Box>
+  </Flex>
 );
 export default Nav;
