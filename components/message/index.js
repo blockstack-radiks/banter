@@ -22,14 +22,14 @@ const Username = ({ ...rest }) => <Type mt={0} fontWeight={600} {...rest} />;
 const TimeAgo = ({ ...rest }) => <Type fontSize={0} {...rest} />;
 
 const Meta = ({ username, timeago, ...rest }) => (
-  <Flex pb={1} alignItems="flex-end" justifyContent="space-between" {...rest}>
+  <Flex pb={1} alignItems="flex-end" justifyContent="space-between" color="gray" {...rest}>
     <Username>{username}</Username>
     <TimeAgo>{timeago}</TimeAgo>
   </Flex>
 );
 
 const MessageContent = ({ content, ...rest }) => (
-  <Type {...rest}>
+  <Type {...rest} color="gray">
     <Linkify
       options={{
         format: (value) => value,
