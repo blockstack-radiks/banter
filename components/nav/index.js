@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Box, Type } from 'blockstack-ui';
-
+import { Hover } from 'react-powerplug';
 import Link from 'next/link';
 
 import { Container } from './styled';
@@ -33,12 +33,23 @@ const UserArea = ({ ...rest }) => {
   ) : username ? (
     <Type color="purple" mt="14px" fontWeight="bold" display="inline-block">
       {username}
-      <Link href="/settings">
-        <Type ml={2}>Settings</Type>
-      </Link>
-      <Type onClick={logout} ml={2}>
-        Log Out
-      </Type>
+
+      <Hover>
+        {({ hovered, bind }) => (
+          <Link href="/settings">
+            <Type cursor={hovered ? 'pointer' : 'unset'} {...bind} ml={2}>
+              Settings
+            </Type>
+          </Link>
+        )}
+      </Hover>
+      <Hover>
+        {({ hovered, bind }) => (
+          <Type cursor={hovered ? 'pointer' : 'unset'} onClick={logout} ml={2} {...bind}>
+            Log Out
+          </Type>
+        )}
+      </Hover>
     </Type>
   ) : null;
 };
