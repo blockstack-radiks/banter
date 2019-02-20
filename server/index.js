@@ -3,6 +3,7 @@ const next = require('next');
 const path = require('path');
 const expressWS = require('express-ws');
 const secure = require('express-force-https');
+const cookiesMiddleware = require('universal-cookie-express');
 require('dotenv').config();
 
 const { setup } = require('radiks-server');
@@ -17,6 +18,7 @@ const port = parseInt(process.env.PORT, 10) || 5000;
 
 app.prepare().then(async () => {
   const server = express();
+  server.use(cookiesMiddleware());
   server.use(secure);
 
   expressWS(server);

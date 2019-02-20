@@ -13,7 +13,7 @@ class Settings extends React.Component {
     sendUpdates: false,
     updateFrequency: 'daily',
     email: '',
-  }
+  };
 
   async componentDidMount() {
     NProgress.start();
@@ -26,19 +26,19 @@ class Settings extends React.Component {
 
   updateNotifyMentioned = (event) => {
     this.setState({ notifyMentioned: event.target.checked });
-  }
+  };
 
   updateSendUpdates = (event) => {
     this.setState({ sendUpdates: event.target.checked });
-  }
+  };
 
   updateFrequencyChanged = (event) => {
     this.setState({ updateFrequency: event.target.value });
-  }
+  };
 
   updateEmail = (event) => {
     this.setState({ email: event.target.value });
-  }
+  };
 
   saveData = async () => {
     NProgress.start();
@@ -47,12 +47,10 @@ class Settings extends React.Component {
 
     await Central.save(key, value);
     NProgress.done();
-  }
+  };
 
   render() {
-    const {
-      notifyMentioned, sendUpdates, updateFrequency, email,
-    } = this.state;
+    const { notifyMentioned, sendUpdates, updateFrequency, email } = this.state;
     return (
       <Flex>
         <Box width={[1, 1 / 2]} mx="auto" background="white" p={4} my={2}>
@@ -60,16 +58,11 @@ class Settings extends React.Component {
           <Type.h3 mt={0}>Notifications</Type.h3>
 
           <Type.strong>Email Address</Type.strong>
-          <Input
-            placeholder="Your Email"
-            mt={2}
-            onChange={this.updateEmail}
-            value={email}
-          />
-          <Checkbox mt={3} onChange={this.updateNotifyMentioned} checked={notifyMentioned}>
-            Notify me when I'm mentioned
+          <Input placeholder="Your Email" mt={2} onChange={this.updateEmail} value={email} />
+          <Checkbox mt={3} onChange={this.updateNotifyMentioned} checked={notifyMentioned} name="notifyMentioned">
+            Notify me when I&apos;m mentioned
           </Checkbox>
-          <Checkbox mt={3} onChange={this.updateSendUpdates} checked={sendUpdates}>
+          <Checkbox mt={3} onChange={this.updateSendUpdates} checked={sendUpdates} name="sendUpdated">
             Send me updates with new posts
             <Type.span ml={2}>
               <select value={updateFrequency} onChange={this.updateFrequencyChanged}>
