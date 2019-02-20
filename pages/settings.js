@@ -59,10 +59,10 @@ class Settings extends React.Component {
 
           <Type.strong>Email Address</Type.strong>
           <Input placeholder="Your Email" mt={2} onChange={this.updateEmail} value={email} />
-          <Checkbox mt={3} onChange={this.updateNotifyMentioned} checked={notifyMentioned}>
-            Notify me when I'm mentioned
+          <Checkbox mt={3} onChange={this.updateNotifyMentioned} checked={notifyMentioned} name="notifyMentioned">
+            Notify me when I&apos;m mentioned
           </Checkbox>
-          <Checkbox mt={3} onChange={this.updateSendUpdates} checked={sendUpdates}>
+          <Checkbox mt={3} onChange={this.updateSendUpdates} checked={sendUpdates} name="sendUpdated">
             Send me updates with new posts
             <Type.span ml={2}>
               <select value={updateFrequency} onChange={this.updateFrequencyChanged}>

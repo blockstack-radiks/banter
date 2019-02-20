@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { AppContext } from '../common/context/app-context';
 import { Flex, Box, Type } from 'blockstack-ui';
 import NProgress from 'nprogress';
 import { getConfig } from 'radiks';
+
+import { AppContext } from '../common/context/app-context';
 import Input from '../styled/input';
 import Message from '../models/Message';
 import MessageComponent from './message';
@@ -46,7 +47,7 @@ const fetchMoreMessages = async (messages) => {
       limit: 10,
       sort: '-createdAt',
     },
-    { decrypt: false },
+    { decrypt: false }
   );
   const newmessages = messages && messages.concat(newMessages);
   const hasMoreMessages = newMessages.length !== 0;
