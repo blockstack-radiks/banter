@@ -1,6 +1,6 @@
-import React from 'react'
-import { Flex, Box, Type } from 'blockstack-ui'
-import { Hover } from 'react-powerplug'
+import React from 'react';
+import { Flex, Box, Type } from 'blockstack-ui';
+import { Hover } from 'react-powerplug';
 
 const Button = ({ children, ...rest }) => {
   return (
@@ -27,7 +27,7 @@ const Button = ({ children, ...rest }) => {
         </Flex>
       )}
     </Hover>
-  )
-}
+  );
+};
 
-export { Button }
+export { Button };
