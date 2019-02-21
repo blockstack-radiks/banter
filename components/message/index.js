@@ -1,6 +1,7 @@
 import React from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import Linkify from 'linkifyjs/react';
+import Link from 'next/link';
 
 const Avatar = ({ username, ...rest }) => (
   <Box
@@ -21,10 +22,25 @@ const Username = ({ ...rest }) => <Type mt={0} fontWeight={600} {...rest} />;
 
 const TimeAgo = ({ ...rest }) => <Type fontSize={0} {...rest} />;
 
-const Meta = ({ username, timeago, ...rest }) => (
+const Meta = ({ username, timeago, id, ...rest }) => (
   <Flex pb={1} alignItems="flex-end" justifyContent="space-between" color="gray" {...rest}>
     <Username>{username}</Username>
-    <TimeAgo>{timeago}</TimeAgo>
+    <TimeAgo>
+      <Link
+        href={{
+          pathname: '/message',
+          query: {
+            id,
+          }
+        }}
+        as={`/messages/${id}`}
+        passHref
+      >
+        <Type.a fontSize={0} color='gray' style={{ textDecoration: 'none' }}>
+          {timeago}
+        </Type.a>
+      </Link>
+    </TimeAgo>
   </Flex>
 );
 
@@ -57,7 +73,7 @@ const Message = ({ message }) => (
   <Container>
     <Avatar username={message.attrs.createdBy} />
     <Details>
-      <Meta username={message.attrs.createdBy} timeago={message.ago()} />
+      <Meta username={message.attrs.createdBy} timeago={message.ago()} id={message._id} />
       <MessageContent content={message.attrs.content} />
     </Details>
   </Container>
