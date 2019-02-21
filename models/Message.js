@@ -9,6 +9,10 @@ export default class Message extends Model {
       type: String,
       decrypted: true,
     },
+    createdBy: {
+      type: String,
+      decrypted: true,
+    }
   }
 
   ago() {
