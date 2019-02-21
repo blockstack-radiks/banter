@@ -38,7 +38,7 @@
     "polished": "^3.0.0",
     "prop-types": "^15.6.2",
     "radiks": "0.2.0-alpha.4",
-    "radiks-server": "0.1.5",
+    "radiks-server": "0.1.6",
     "react": "^16.8.2",
     "react-cookie": "^3.0.8",
     "react-dom": "^16.8.2",
