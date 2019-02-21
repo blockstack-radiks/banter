@@ -44,6 +44,11 @@ app.prepare().then(async () => {
 
   server.use('/api', makeApiController(RadiksController.db));
 
+  server.get('/messages/:id', (req, res) => {
+    const { id } = req.params;
+    app.render(req, res, '/message', { id });
+  });
+
   server.get('*', (req, res) => handle(req, res));
 
   RadiksController.emitter.on(STREAM_CRAWL_EVENT, ([attrs]) => {
