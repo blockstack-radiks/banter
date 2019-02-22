@@ -35,7 +35,7 @@ const Meta = ({ createdBy, username, timeago, id, ...rest }) => (
           username,
         },
       }}
-      as={`[::]${username}`}
+      as={`/[::]${username}`}
       passHref
     >
       <Username hoverable={!createdBy}>{username}</Username>
