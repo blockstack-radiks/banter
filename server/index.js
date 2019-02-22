@@ -29,9 +29,16 @@ app.prepare().then(async () => {
   server.use('/radiks', RadiksController);
 
   server.use((req, res, _next) => {
-    if (!dev && req.host !== 'banter.pub') {
+    if (dev) {
+      return _next();
+    }
+    const isStaging = !!process.env.STAGING;
+    if (!isStaging && req.hostname !== 'banter.pub') {
       console.log('Redirecting from non-production URL:', req.host);
       return res.redirect('https://banter.pub');
+    } else if (isStaging && req.hostname !== 'staging.banter.pub') {
+      console.log('Redirecting from non-staging URL:', req.host);
+      return res.redirect('https://staging.banter.pub');
     }
     return _next();
   });
