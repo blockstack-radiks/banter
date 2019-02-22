@@ -32,6 +32,10 @@ app.prepare().then(async () => {
     if (dev) {
       return _next();
     }
+    if (!!process.env.HEROKU_APP_NAME) {
+      // this is a PR, continue
+      return _next();
+    }
     const isStaging = !!process.env.STAGING;
     if (!isStaging && req.hostname !== 'banter.pub') {
       console.log('Redirecting from non-production URL:', req.host);
