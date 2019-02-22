@@ -1,16 +1,15 @@
 import React from 'react';
-import { Flex, Box } from 'blockstack-ui';
+import { Flex, Box, Type } from 'blockstack-ui';
 import { Central } from 'radiks';
-
-import Type from '../styled/typography';
+import { Card } from '../components/card';
 import Input from '../styled/input';
 import Checkbox from '../components/checkbox';
 import Button from '../styled/button';
 
 class Settings extends React.Component {
   state = {
-    notifyMentioned: false,
-    sendUpdates: false,
+    notifyMentioned: true,
+    sendUpdates: true,
     updateFrequency: 'daily',
     email: '',
   };
@@ -52,31 +51,39 @@ class Settings extends React.Component {
   render() {
     const { notifyMentioned, sendUpdates, updateFrequency, email } = this.state;
     return (
-      <Flex>
-        <Box width={[1, 1 / 2]} mx="auto" background="white" p={4} my={2}>
-          <Type.h2 mt={0}>Settings</Type.h2>
-          <Type.h3 mt={0}>Notifications</Type.h3>
-
-          <Type.strong>Email Address</Type.strong>
-          <Input placeholder="Your Email" mt={2} onChange={this.updateEmail} value={email} />
-          <Checkbox mt={3} onChange={this.updateNotifyMentioned} checked={notifyMentioned} name="notifyMentioned">
-            Notify me when I&apos;m mentioned
-          </Checkbox>
-          <Checkbox mt={3} onChange={this.updateSendUpdates} checked={sendUpdates} name="sendUpdated">
-            Send me updates with new posts
-            <Type.span ml={2}>
-              <select value={updateFrequency} onChange={this.updateFrequencyChanged}>
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-              </select>
-            </Type.span>
-          </Checkbox>
-
-          <Button mt={3} onClick={this.saveData}>
-            Save
-          </Button>
+      <Card width={[1, 1 / 2]} mx="auto" background="white" p={4} my={2}>
+        <Box pb={4}>
+          <Type is="h2" color="purple" mt={0}>
+            Settings
+          </Type>
         </Box>
-      </Flex>
+        <Box>
+          <Type color="purple" is="h3" mt={0}>
+            Notifications
+          </Type>
+        </Box>
+
+        <Type color="purple" fontWeight="bold" fontSize={1}>
+          Email Address
+        </Type>
+        <Input placeholder="Your Email" mt={2} onChange={this.updateEmail} value={email} />
+        <Checkbox mt={3} onChange={this.updateNotifyMentioned} checked={notifyMentioned} name="notifyMentioned">
+          Notify me when I&apos;m mentioned
+        </Checkbox>
+        <Checkbox mt={3} onChange={this.updateSendUpdates} checked={sendUpdates} name="sendUpdated">
+          Send me updates with new posts
+          <Type.span ml={2}>
+            <select value={updateFrequency} onChange={this.updateFrequencyChanged}>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+            </select>
+          </Type.span>
+        </Checkbox>
+
+        <Button mt={3} onClick={this.saveData}>
+          Save
+        </Button>
+      </Card>
     );
   }
 }
