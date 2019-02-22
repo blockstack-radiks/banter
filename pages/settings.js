@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Flex, Box, Type } from 'blockstack-ui';
+import Head from 'next/head';
+import { Box, Type } from 'blockstack-ui';
 import { Central } from 'radiks';
 import { Card } from '../components/card';
 import Input from '../styled/input';
@@ -34,24 +35,27 @@ const SettingsPage = ({ ...rest }) => {
     }
   }, []);
 
-  const updateNotifyMentioned = (event) => {
+  const handleValueChange = (key, value) => {
+    setState((s) => ({
+      ...s,
+      [key]: value,
+    }));
     setEdited(true);
-    setState({ notifyMentioned: event.target.checked });
+  };
+  const updateNotifyMentioned = (event) => {
+    handleValueChange('notifyMentioned', event.target.checked);
   };
 
   const updateSendUpdates = (event) => {
-    setEdited(true);
-    setState({ sendUpdates: event.target.checked });
+    handleValueChange('sendUpdates', event.target.checked);
   };
 
   const updateFrequencyChanged = (event) => {
-    setEdited(true);
-    setState({ updateFrequency: event.target.value });
+    handleValueChange('updateFrequency', event.target.value);
   };
 
   const updateEmail = (event) => {
-    setEdited(true);
-    setState({ email: event.target.value });
+    handleValueChange('email', event.target.value);
   };
 
   const saveData = async (e) => {
@@ -77,47 +81,52 @@ const SettingsPage = ({ ...rest }) => {
   const { notifyMentioned, sendUpdates, updateFrequency, email } = state;
 
   return (
-    <Card width={[1, 1 / 2]} mx="auto" background="white" p={4} my={2} {...rest}>
-      <Box pb={4}>
-        <Type is="h2" color="purple" mt={0}>
-          Settings
-        </Type>
-      </Box>
-      <Box>
-        <Type color="purple" is="h3" mt={0}>
-          Notifications
-        </Type>
-      </Box>
+    <>
+      <Head>
+        <title>Settings - Banter</title>
+      </Head>
+      <Card width={[1, 1 / 2]} mx="auto" background="white" p={4} my={2} {...rest}>
+        <Box pb={4}>
+          <Type is="h2" color="purple" mt={0}>
+            Settings
+          </Type>
+        </Box>
+        <Box>
+          <Type color="purple" is="h3" mt={0}>
+            Notifications
+          </Type>
+        </Box>
 
-      <Box is="form" onSubmit={saveData}>
-        <Type color="purple" fontWeight="bold" fontSize={1}>
-          Email Address
-        </Type>
-        <Input
-          placeholder={loading ? 'Loading...' : 'Your Email'}
-          mt={2}
-          onChange={updateEmail}
-          type="email"
-          value={email}
-        />
-        <Checkbox mt={3} onChange={updateNotifyMentioned} checked={notifyMentioned} name="notifyMentioned">
-          Notify me when I&apos;m mentioned
-        </Checkbox>
-        <Checkbox mt={3} onChange={updateSendUpdates} checked={sendUpdates} name="sendUpdated">
-          Send me updates with new posts
-          <Type.span ml={2}>
-            <select value={updateFrequency} onChange={updateFrequencyChanged}>
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-            </select>
-          </Type.span>
-        </Checkbox>
+        <Box is="form" onSubmit={saveData}>
+          <Type color="purple" fontWeight="bold" fontSize={1}>
+            Email Address
+          </Type>
+          <Input
+            placeholder={loading ? 'Loading...' : 'Your Email'}
+            mt={2}
+            onChange={updateEmail}
+            type="email"
+            value={email}
+          />
+          <Checkbox mt={3} onChange={updateNotifyMentioned} checked={notifyMentioned} name="notifyMentioned">
+            Notify me when I&apos;m mentioned
+          </Checkbox>
+          <Checkbox mt={3} onChange={updateSendUpdates} checked={sendUpdates} name="sendUpdated">
+            Send me updates with new posts
+            <Type.span ml={2}>
+              <select value={updateFrequency} onChange={updateFrequencyChanged}>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+              </select>
+            </Type.span>
+          </Checkbox>
 
-        <Button mt={3} disabled={!edited} onClick={saveData} type="submit">
-          Save{saved ? 'd!' : ''}
-        </Button>
-      </Box>
-    </Card>
+          <Button mt={3} disabled={!edited} onClick={saveData} type="submit">
+            Save{saved ? 'd!' : ''}
+          </Button>
+        </Box>
+      </Card>
+    </>
   );
 };
 
