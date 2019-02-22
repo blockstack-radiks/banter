@@ -4,6 +4,7 @@ import Linkify from 'linkifyjs/react';
 import Link from 'next/link';
 import { Hover } from 'react-powerplug';
 import { Avatar } from '../avatar';
+import { MessageContent as StyledMessageContent } from './styled';
 
 const Username = ({ hoverable, ...rest }) => (
   <Hover>
@@ -60,13 +61,13 @@ const Meta = ({ createdBy, username, timeago, id, ...rest }) => (
 );
 
 const MessageContent = ({ content, ...rest }) => (
-  <Type {...rest} color="gray">
+  <StyledMessageContent {...rest} color="gray">
     <Linkify
       options={{
         format: (value) => value,
         formatHref: (href, type) => {
           if (type === 'mention') {
-            return `/users${href}`;
+            return `/[::]${href.slice(1)}`;
           }
           return href;
         },
@@ -75,7 +76,7 @@ const MessageContent = ({ content, ...rest }) => (
     >
       {content}
     </Linkify>
-  </Type>
+  </StyledMessageContent>
 );
 
 const Details = ({ ...rest }) => <Box ml={3} width={7 / 8} {...rest} />;
