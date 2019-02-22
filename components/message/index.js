@@ -8,9 +8,12 @@ const Username = ({ ...rest }) => <Type is="a" mt={0} fontWeight={600} {...rest}
 
 const TimeAgo = ({ ...rest }) => <Type fontSize={0} {...rest} />;
 
+const ConditionalLink = ({ condition, children, ...rest }) =>
+  condition ? children : <Link {...rest}>{children}</Link>;
 const Meta = ({ createdBy, username, timeago, id, ...rest }) => (
   <Flex pb={1} alignItems="flex-end" justifyContent="space-between" color="gray" {...rest}>
-    <Link
+    <ConditionalLink
+      condition={createdBy}
       href={{
         pathname: '/user',
         query: {
@@ -21,7 +24,7 @@ const Meta = ({ createdBy, username, timeago, id, ...rest }) => (
       passHref
     >
       <Username>{username}</Username>
-    </Link>
+    </ConditionalLink>
     <TimeAgo>
       <Link
         href={{
