@@ -1,7 +1,7 @@
 {
   "name": "banter",
   "scripts": {
-    "postdeploy": "yarn build"
+    "postdeploy": "next build"
   },
   "env": {
     "HEROKU_APP_NAME": {
