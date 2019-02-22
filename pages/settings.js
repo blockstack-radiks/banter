@@ -71,11 +71,12 @@ const SettingsPage = ({ ...rest }) => {
       await Central.save(key, state);
       setSaved(true);
       NProgress.done();
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
       setSaved(false);
       NProgress.done();
     }
+    return true;
   };
 
   const { notifyMentioned, sendUpdates, updateFrequency, email } = state;

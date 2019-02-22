@@ -58,7 +58,7 @@ const fetchMoreMessages = async (messages, createdBy) => {
   };
 };
 
-const TopArea = (props) => {
+const TopArea = () => {
   const { isLoggedIn, user } = useContext(AppContext);
   const [content, setContent] = useState('');
 
@@ -78,10 +78,11 @@ const TopArea = (props) => {
       await message.save();
       setContent('');
       NProgress.done();
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
       NProgress.done();
     }
+    return true;
   };
 
   return !isLoggedIn ? (
@@ -107,7 +108,7 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
     if (liveMessages.find((m) => m._id === message._id)) {
       return null;
     }
-    setLiveMessages([...new Set([message, ...liveMessages])]);
+    return setLiveMessages([...new Set([message, ...liveMessages])]);
   };
 
   const subscribe = () => Message.addStreamListener(newMessageListener);
@@ -121,9 +122,9 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
   const loadMoreMessages = () => {
     NProgress.start();
     setLoading(true);
-    fetchMoreMessages(liveMessages, createdBy).then(({ hasMoreMessages, messages }) => {
+    fetchMoreMessages(liveMessages, createdBy).then(({ hasMoreMessages, _messages }) => {
       if (hasMoreMessages) {
-        setLiveMessages(messages);
+        setLiveMessages(_messages);
         setLoading(false);
         NProgress.done();
       } else {
@@ -132,6 +133,13 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
         setViewingAll(true);
       }
     });
+  };
+
+  const onLoadMoreClick = () => {
+    if (loading) {
+      return false;
+    }
+    return loadMoreMessages();
   };
 
   return (
@@ -150,10 +158,10 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
       <Flex borderTop="1px solid rgb(230, 236, 240)" alignItems="center" justifyContent="center" p={4}>
         {viewingAll ? (
           <Type color="purple" fontWeight="bold">
-            You've reached the end of the line!
+            You&apos;ve reached the end of the line!
           </Type>
         ) : (
-          <Button onClick={!loading && loadMoreMessages}>{loading ? 'Loading...' : 'Load more'}</Button>
+          <Button onClick={onLoadMoreClick}>{loading ? 'Loading...' : 'Load more'}</Button>
         )}
       </Flex>
     </Box>

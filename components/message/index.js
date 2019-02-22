@@ -2,8 +2,8 @@ import React from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import Linkify from 'linkifyjs/react';
 import Link from 'next/link';
-import { Avatar } from '../avatar';
 import { Hover } from 'react-powerplug';
+import { Avatar } from '../avatar';
 
 const Username = ({ hoverable, ...rest }) => (
   <Hover>

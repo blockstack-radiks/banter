@@ -17,4 +17,4 @@ const Avatar = ({ username, ...rest }) => (
   />
 );
 
-export {Avatar}
+export {Avatar};
