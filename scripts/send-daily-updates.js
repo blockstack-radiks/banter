@@ -17,6 +17,11 @@ const sendUpdates = async () => {
     hours: 1000 * 60 * 60 * 4, // every 4 hours
   };
 
+  const timeSinceLastSend = updateTimes[frequency];
+  if (!timeSinceLastSend) {
+    throw new Error('Invalid FREQUENCY argument');
+  }
+
   if (frequency === 'hours') {
     const now = moment();
     const beginOfDay = moment().startOf('day');
@@ -37,13 +42,16 @@ const sendUpdates = async () => {
     }
   }
 
-  const timeSinceLastSend = updateTimes[frequency];
-  if (!timeSinceLastSend) {
-    throw new Error('Invalid FREQUENCY argument');
-  }
+  const nowTime = new Date().getTime();
+  const sinceTime = nowTime - timeSinceLastSend;
+  // console.log(new Date());
+  // console.log(new Date(sinceTime));
 
   const recentMessages = await radiksCollection.find({
-    radiksType: 'Message'
+    radiksType: 'Message',
+    createdAt: {
+      $gte: new Date(sinceTime).getTime(),
+    }
   }, {
     limit: 20,
     sort: { createdAt: -1 }
