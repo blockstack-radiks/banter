@@ -49,6 +49,11 @@ app.prepare().then(async () => {
     app.render(req, res, '/message', { id });
   });
 
+  server.get(`/[\\[::\\]]:username`, (req, res) => {
+    const { username } = req.params;
+    app.render(req, res, '/user', { username });
+  });
+
   server.get('*', (req, res) => handle(req, res));
 
   RadiksController.emitter.on(STREAM_CRAWL_EVENT, ([attrs]) => {

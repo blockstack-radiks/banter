@@ -97,7 +97,7 @@ const TopArea = (props) => {
 
 const Messages = ({ messages }) => messages.map((message) => <MessageComponent key={message._id} message={message} />);
 
-const Feed = ({ messages, rawMessages, ...rest }) => {
+const Feed = ({ hideCompose, messages, rawMessages, ...rest }) => {
   const [liveMessages, setLiveMessages] = useState(rawMessages.map((m) => new Message(m.attrs)));
   const [loading, setLoading] = useState(false);
   const [viewingAll, setViewingAll] = useState(false);
@@ -144,7 +144,7 @@ const Feed = ({ messages, rawMessages, ...rest }) => {
       boxShadow="card"
       {...rest}
     >
-      <TopArea />
+      {hideCompose ? null : <TopArea />}
       <Messages messages={liveMessages} />
       <Flex borderTop="1px solid rgb(230, 236, 240)" alignItems="center" justifyContent="center" p={4}>
         {viewingAll ? (
