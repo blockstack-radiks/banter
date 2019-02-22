@@ -96,7 +96,7 @@ const TopArea = (props) => {
   );
 };
 
-const Messages = ({ messages }) => messages.map((message) => <MessageComponent key={message._id} message={message} />);
+const Messages = ({ messages, createdBy }) => messages.map((message) => <MessageComponent key={message._id} createdBy={!!createdBy} message={message} />);
 
 const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
   const [liveMessages, setLiveMessages] = useState(rawMessages.map((m) => new Message(m.attrs)));
@@ -146,7 +146,7 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
       {...rest}
     >
       {hideCompose ? null : <TopArea />}
-      <Messages messages={liveMessages} />
+      <Messages messages={liveMessages} createdBy={createdBy} />
       <Flex borderTop="1px solid rgb(230, 236, 240)" alignItems="center" justifyContent="center" p={4}>
         {viewingAll ? (
           <Type color="purple" fontWeight="bold">

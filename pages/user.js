@@ -15,9 +15,9 @@ class Home extends React.Component {
   };
 
   static getInitialProps = async (ctx) => {
-    const {
-      params: { username },
-    } = ctx.req;
+    console.log(ctx);
+
+    const username = ctx.req ? ctx.req.params.username : ctx.query.username;
 
     const createdBy = username.replace('::]', '');
     const user = await User.findById(createdBy, { decrypt: false });
@@ -50,7 +50,7 @@ class Home extends React.Component {
                 <Avatar username={user.attrs.username} size={96} mx="auto" />
               </Box>
               <Box pt={4} fontWeight="bold" textAlign="center">
-                <Type color="purple">{user.attrs.username}</Type>
+                <Type color="purple">{user.attrs.username.split('.')[0]}</Type>
               </Box>
             </Card>
           </Box>
