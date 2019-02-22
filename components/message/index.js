@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Avatar } from '../avatar';
 import { Hover } from 'react-powerplug';
 
-const Username = ({ ...rest }) => (
+const Username = ({ hoverable, ...rest }) => (
   <Hover>
     {({ hovered, bind }) => (
       <Type
@@ -13,7 +13,7 @@ const Username = ({ ...rest }) => (
         mt={0}
         fontWeight={600}
         color="purple"
-        style={{ textDecoration: hovered ? 'underline' : 'none' }}
+        style={{ textDecoration: hoverable && hovered ? 'underline' : 'none' }}
         {...rest}
         {...bind}
       />
@@ -38,7 +38,7 @@ const Meta = ({ createdBy, username, timeago, id, ...rest }) => (
       as={`[::]${username}`}
       passHref
     >
-      <Username>{username}</Username>
+      <Username hoverable={!createdBy}>{username}</Username>
     </ConditionalLink>
     <TimeAgo>
       <Link
