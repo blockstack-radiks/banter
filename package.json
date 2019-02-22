@@ -77,7 +77,8 @@
       ".next",
       "pages/*",
       "components/*",
-      "styled/*"
+      "styled/*",
+      "scripts/*"
     ]
   }
 }
