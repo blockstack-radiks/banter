@@ -1,8 +1,5 @@
 {
   "name": "banter",
-  "scripts": {
-    "postdeploy": "yarn build"
-  },
   "env": {
     "HEROKU_APP_NAME": {
       "required": true
