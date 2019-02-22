@@ -3,8 +3,23 @@ import { Flex, Box, Type } from 'blockstack-ui';
 import Linkify from 'linkifyjs/react';
 import Link from 'next/link';
 import { Avatar } from '../avatar';
+import { Hover } from 'react-powerplug';
 
-const Username = ({ ...rest }) => <Type is="a" mt={0} fontWeight={600} {...rest} />;
+const Username = ({ ...rest }) => (
+  <Hover>
+    {({ hovered, bind }) => (
+      <Type
+        is="a"
+        mt={0}
+        fontWeight={600}
+        color="purple"
+        style={{ textDecoration: hovered ? 'underline' : 'none' }}
+        {...rest}
+        {...bind}
+      />
+    )}
+  </Hover>
+);
 
 const TimeAgo = ({ ...rest }) => <Type fontSize={0} {...rest} />;
 
