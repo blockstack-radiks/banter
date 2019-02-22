@@ -54,7 +54,7 @@ const updatesEmail = (user, messages) => {
     ${messageLines.join('\n\n')}\n
     Happy Banting!\n\n
 
-    You can get rid of this 💩on your settings page:\n
+    You can get rid of this 💩in your settings page:\n
     ${url}/settings
     `,
   };

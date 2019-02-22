@@ -117,6 +117,7 @@ const SettingsPage = ({ ...rest }) => {
               <select value={updateFrequency} onChange={updateFrequencyChanged}>
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
+                <option value="hours">Every few hours</option>
               </select>
             </Type.span>
           </Checkbox>
