@@ -37,13 +37,14 @@ const login = () => {
   userSession.redirectToSignIn(redirect, manifest, scopes);
 };
 
-const fetchMoreMessages = async (messages) => {
+const fetchMoreMessages = async (messages, createdBy) => {
   const lastMessage = messages && messages.length && messages[messages.length - 1];
   const newMessages = await Message.fetchList(
     {
       createdAt: {
         $lt: lastMessage && lastMessage.attrs.createdAt,
       },
+      createdBy,
       limit: 10,
       sort: '-createdAt',
     },
@@ -97,7 +98,7 @@ const TopArea = (props) => {
 
 const Messages = ({ messages }) => messages.map((message) => <MessageComponent key={message._id} message={message} />);
 
-const Feed = ({ hideCompose, messages, rawMessages, ...rest }) => {
+const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
   const [liveMessages, setLiveMessages] = useState(rawMessages.map((m) => new Message(m.attrs)));
   const [loading, setLoading] = useState(false);
   const [viewingAll, setViewingAll] = useState(false);
@@ -120,7 +121,7 @@ const Feed = ({ hideCompose, messages, rawMessages, ...rest }) => {
   const loadMoreMessages = () => {
     NProgress.start();
     setLoading(true);
-    fetchMoreMessages(liveMessages).then(({ hasMoreMessages, messages }) => {
+    fetchMoreMessages(liveMessages, createdBy).then(({ hasMoreMessages, messages }) => {
       if (hasMoreMessages) {
         setLiveMessages(messages);
         setLoading(false);

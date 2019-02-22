@@ -2,21 +2,8 @@ import React from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import Linkify from 'linkifyjs/react';
 import Link from 'next/link';
+import {Avatar} from '../avatar';
 
-const Avatar = ({ username, ...rest }) => (
-  <Box
-    size="42px"
-    display="block"
-    width="100%"
-    background={`#f8a5c2 url(${`/api/avatar/${username}`}) center center no-repeat`}
-    borderRadius="100%"
-    overflow="hidden"
-    style={{
-      backgroundSize: 'cover',
-    }}
-    {...rest}
-  />
-);
 
 const Username = ({ ...rest }) => <Type mt={0} fontWeight={600} {...rest} />;
 

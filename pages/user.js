@@ -1,11 +1,14 @@
 import React from 'react';
-import { Flex, Box } from 'rebass';
+import { Box, Flex, Type } from 'blockstack-ui';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import Message from '../models/Message';
 import { User } from 'radiks';
+import { Card } from '../components/card';
 import Feed from '../components/feed';
 import { AppContext } from '../common/context/app-context';
+import { Avatar } from '../components/avatar';
+
 class Home extends React.Component {
   static propTypes = {
     rawMessages: PropTypes.array.isRequired,
@@ -16,10 +19,11 @@ class Home extends React.Component {
       params: { username },
     } = ctx.req;
 
-    const user = username.replace('::]', '');
+    const createdBy = username.replace('::]', '');
+    const user = await User.findById(createdBy, { decrypt: false });
     const rawMessages = await Message.fetchList(
       {
-        createdBy: user,
+        createdBy,
         sort: '-createdAt',
         limit: 10,
       },
@@ -28,20 +32,33 @@ class Home extends React.Component {
 
     return {
       rawMessages,
+      user,
     };
   };
 
   render() {
-    const { rawMessages } = this.props;
+    const { rawMessages, user } = this.props;
     return (
-      <Flex>
+      <>
         <Head>
-          <title>Banter</title>
+          <title>{user.attrs.username} - Banter</title>
         </Head>
-        <Box width={[1, 3 / 4]} mx="auto">
-          <Feed borderTop={0} hideCompose rawMessages={rawMessages} />
-        </Box>
-      </Flex>
+        <Flex maxWidth={700} width={1} mx="auto" flexDirection={['column', 'row']}>
+          <Box>
+            <Card width={['100%', 200]} mx={0} p={4}>
+              <Box>
+                <Avatar username={user.attrs.username} size={96} mx="auto" />
+              </Box>
+              <Box pt={4} fontWeight="bold" textAlign="center">
+                <Type color="purple">{user.attrs.username}</Type>
+              </Box>
+            </Card>
+          </Box>
+          <Box ml={[0, 3]} width={1} flexGrow={1}>
+            <Feed borderTop={0} hideCompose rawMessages={rawMessages} createdBy={user.attrs.username} />
+          </Box>
+        </Flex>
+      </>
     );
   }
 }
