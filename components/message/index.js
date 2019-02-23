@@ -120,7 +120,7 @@ const FooterUI = ({ messageId, hasVoted, votes }) => {
   }
 
   const toggleVote = async () => {
-    if (!voted) {
+    if (!voted && user) {
       setVoted(true);
       setCount((s) => s + 1);
       const vote = new Vote({
