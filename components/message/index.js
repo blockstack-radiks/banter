@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import Linkify from 'linkifyjs/react';
 import DownvoteEmptyIcon from 'mdi-react/EmoticonPoopOutlineIcon';
 import DownvoteFilledIcon from 'mdi-react/EmoticonPoopIcon';
 import { Hover, Active } from 'react-powerplug';
 import Link from 'next/link';
+
+import Vote from '../../models/Vote';
+import { AppContext } from '../../common/context/app-context';
 
 const Avatar = ({ username, ...rest }) => (
   <Box
@@ -92,13 +95,59 @@ const IconButton = ({ active, ...rest }) => (
   </Active>
 );
 
-const FooterUI = ({ ...rest }) => {
+const FooterUI = ({ messageId }) => {
   const [voted, setVoted] = useState(false);
   const [count, setCount] = useState(0);
-  const toggleVote = () => {
-    setVoted((s) => !s);
-    setCount((s) => s + 1);
+  const { user } = useContext(AppContext);
+
+  const toggleVote = async () => {
+    if (!voted) {
+      setVoted(true);
+      setCount((s) => s + 1);
+      const vote = new Vote({
+        messageId,
+        username: user._id,
+      });
+      await vote.save();
+    }
   };
+
+  // const newVoteListener = (vote) => {
+  //   console.log(vote);
+  //   if ((vote.attrs.messageId === messageId) && (!user || vote.attrs.username !== user._id)) {
+  //     setCount((s) => s + 1);
+  //   }
+  // };
+
+  // const subscribe = () => Vote.addStreamListener(newVoteListener);
+  // const unsubscribe = () => Vote.removeStreamListener(newVoteListener);
+
+  const fetchVotes = async () => {
+    const votes = await Vote.fetchList({
+      messageId
+    });
+    setCount(votes.length);
+    if (user) {
+      let hasUser = false;
+      votes.forEach((vote) => {
+        console.log(vote.attrs.username, user._id);
+        if (vote.attrs.username === user._id) {
+          hasUser = true;
+        }
+      });
+      setVoted(hasUser);
+    }
+  };
+  useEffect(() => {
+    fetchVotes();
+  }, [user && user._id]);
+
+  // useEffect(() => {
+  //   console.log('subscribing');
+  //   subscribe();
+  //   return unsubscribe;
+  // }, []);
+
   const Icon = voted ? DownvoteFilledIcon : DownvoteEmptyIcon;
   return (
     <Flex style={{ userSelect: 'none' }} pt={2} color="purple">
@@ -120,7 +169,7 @@ const Message = ({ message }) => (
     <Details>
       <Meta username={message.attrs.createdBy} timeago={message.ago()} id={message._id} />
       <MessageContent content={message.attrs.content} />
-      <FooterUI />
+      <FooterUI messageId={message._id} />
     </Details>
   </Container>
 );
