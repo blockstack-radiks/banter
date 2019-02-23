@@ -17,6 +17,7 @@ class Home extends React.Component {
       query.fetcher = req.universalCookies.cookies.username;
     }
     const rawMessages = await fetchMessages(query);
+    console.log(rawMessages[0]);
 
     return {
       rawMessages,

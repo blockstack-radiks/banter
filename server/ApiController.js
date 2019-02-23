@@ -40,13 +40,13 @@ const makeApiController = (db) => {
 
     const messages = await radiksData.aggregate(pipeline).toArray();
 
-    const username = req.query.fetcher || req.universalCookies.get('username');
-    messages.forEach((message, index) => {
+    const username = (req.query.fetcher || req.universalCookies.get('username')).replace(/"/g, '');
+    messages.forEach((message) => {
       message.hasVoted = false;
       if (username) {
         message.votes.forEach((vote) => {
           if (vote.username === username) {
-            messages[index].hasVoted = true;
+            message.hasVoted = true;
           }
         });
       }
