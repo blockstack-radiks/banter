@@ -5,44 +5,58 @@ import DownvoteEmptyIcon from 'mdi-react/EmoticonPoopOutlineIcon';
 import DownvoteFilledIcon from 'mdi-react/EmoticonPoopIcon';
 import { Hover, Active } from 'react-powerplug';
 import Link from 'next/link';
-
 import Vote from '../../models/Vote';
 import { AppContext } from '../../common/context/app-context';
+import { Avatar } from '../avatar';
+import { MessageContent as StyledMessageContent } from './styled';
 
-const Avatar = ({ username, ...rest }) => (
-  <Box
-    size="42px"
-    display="block"
-    width="100%"
-    background={`#f8a5c2 url(${`/api/avatar/${username}`}) center center no-repeat`}
-    borderRadius="100%"
-    overflow="hidden"
-    style={{
-      backgroundSize: 'cover',
-    }}
-    {...rest}
-  />
+const Username = ({ hoverable, ...rest }) => (
+  <Hover>
+    {({ hovered, bind }) => (
+      <Type
+        is="a"
+        mt={0}
+        fontWeight={600}
+        color="purple"
+        style={{ textDecoration: hoverable && hovered ? 'underline' : 'none' }}
+        {...rest}
+        {...bind}
+      />
+    )}
+  </Hover>
 );
-
-const Username = ({ ...rest }) => <Type mt={0} fontWeight={600} {...rest} />;
 
 const TimeAgo = ({ ...rest }) => <Type fontSize={0} {...rest} />;
 
-const Meta = ({ username, timeago, id, ...rest }) => (
+const ConditionalLink = ({ condition, children, ...rest }) =>
+  condition ? children : <Link {...rest}>{children}</Link>;
+const Meta = ({ createdBy, username, timeago, id, ...rest }) => (
   <Flex pb={1} alignItems="flex-end" justifyContent="space-between" color="gray" {...rest}>
-    <Username>{username}</Username>
+    <ConditionalLink
+      condition={createdBy}
+      href={{
+        pathname: '/user',
+        query: {
+          username,
+        },
+      }}
+      as={`/[::]${username}`}
+      passHref
+    >
+      <Username hoverable={!createdBy}>{username}</Username>
+    </ConditionalLink>
     <TimeAgo>
       <Link
         href={{
           pathname: '/message',
           query: {
             id,
-          }
+          },
         }}
         as={`/messages/${id}`}
         passHref
       >
-        <Type.a fontSize={0} color='gray' style={{ textDecoration: 'none' }}>
+        <Type.a fontSize={0} color="gray" style={{ textDecoration: 'none' }}>
           {timeago}
         </Type.a>
       </Link>
@@ -51,13 +65,13 @@ const Meta = ({ username, timeago, id, ...rest }) => (
 );
 
 const MessageContent = ({ content, ...rest }) => (
-  <Type {...rest} color="gray">
+  <StyledMessageContent {...rest} color="gray">
     <Linkify
       options={{
         format: (value) => value,
         formatHref: (href, type) => {
           if (type === 'mention') {
-            return `/users${href}`;
+            return `/[::]${href.slice(1)}`;
           }
           return href;
         },
@@ -66,7 +80,7 @@ const MessageContent = ({ content, ...rest }) => (
     >
       {content}
     </Linkify>
-  </Type>
+  </StyledMessageContent>
 );
 
 const Details = ({ ...rest }) => <Box ml={3} width={7 / 8} {...rest} />;
@@ -106,7 +120,7 @@ const FooterUI = ({ messageId, hasVoted, votes }) => {
   }
 
   const toggleVote = async () => {
-    if (!voted) {
+    if (!voted && user) {
       setVoted(true);
       setCount((s) => s + 1);
       const vote = new Vote({
@@ -132,11 +146,11 @@ const FooterUI = ({ messageId, hasVoted, votes }) => {
   );
 };
 
-const Message = ({ message }) => (
+const Message = ({ message, createdBy }) => (
   <Container>
     <Avatar username={message.attrs.createdBy} />
     <Details>
-      <Meta username={message.attrs.createdBy} timeago={message.ago()} id={message._id} />
+      <Meta createdBy={createdBy} username={message.attrs.createdBy} timeago={message.ago()} id={message._id} />
       <MessageContent content={message.attrs.content} />
       <FooterUI messageId={message._id} hasVoted={message.attrs.hasVoted} votes={message.attrs.votes} />
     </Details>

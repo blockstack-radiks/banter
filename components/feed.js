@@ -39,9 +39,12 @@ const login = () => {
   userSession.redirectToSignIn(redirect, manifest, scopes);
 };
 
-const fetchMoreMessages = async (messages) => {
+const fetchMoreMessages = async (messages, createdBy) => {
   const lastMessage = messages && messages.length && messages[messages.length - 1];
-  const newMessagesAttrs = await fetchMessages({ lt: lastMessage && lastMessage.attrs.createdAt });
+  const newMessagesAttrs = await fetchMessages({ 
+    lt: lastMessage && lastMessage.attrs.createdAt,
+    createdBy,
+  });
   const newMessages = newMessagesAttrs.map((attrs) => new Message(attrs));
 
   const newmessages = messages && messages.concat(newMessages);
@@ -52,7 +55,7 @@ const fetchMoreMessages = async (messages) => {
   };
 };
 
-const TopArea = (props) => {
+const TopArea = () => {
   const { isLoggedIn, user } = useContext(AppContext);
   const [content, setContent] = useState('');
 
@@ -72,10 +75,11 @@ const TopArea = (props) => {
       await message.save();
       setContent('');
       NProgress.done();
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
       NProgress.done();
     }
+    return true;
   };
 
   return !isLoggedIn ? (
@@ -90,9 +94,9 @@ const TopArea = (props) => {
   );
 };
 
-const Messages = ({ messages }) => messages.map((message) => <MessageComponent key={message._id} message={message} />);
+const Messages = ({ messages, createdBy }) => messages.map((message) => <MessageComponent key={message._id} createdBy={!!createdBy} message={message} />);
 
-const Feed = ({ messages, rawMessages, ...rest }) => {
+const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
   const [liveMessages, setLiveMessages] = useState(rawMessages.map((m) => new Message(m)));
   const [loading, setLoading] = useState(false);
   const [viewingAll, setViewingAll] = useState(false);
@@ -101,7 +105,7 @@ const Feed = ({ messages, rawMessages, ...rest }) => {
     if (liveMessages.find((m) => m._id === message._id)) {
       return null;
     }
-    setLiveMessages([...new Set([message, ...liveMessages])]);
+    return setLiveMessages([...new Set([message, ...liveMessages])]);
   };
 
   const subscribe = () => Message.addStreamListener(newMessageListener);
@@ -139,9 +143,9 @@ const Feed = ({ messages, rawMessages, ...rest }) => {
   const loadMoreMessages = () => {
     NProgress.start();
     setLoading(true);
-    fetchMoreMessages(liveMessages).then(({ hasMoreMessages, messages }) => {
+    fetchMoreMessages(liveMessages, createdBy).then(({ hasMoreMessages, _messages }) => {
       if (hasMoreMessages) {
-        setLiveMessages(messages);
+        setLiveMessages(_messages);
         setLoading(false);
         NProgress.done();
       } else {
@@ -150,6 +154,13 @@ const Feed = ({ messages, rawMessages, ...rest }) => {
         setViewingAll(true);
       }
     });
+  };
+
+  const onLoadMoreClick = () => {
+    if (loading) {
+      return false;
+    }
+    return loadMoreMessages();
   };
 
   return (
@@ -163,15 +174,15 @@ const Feed = ({ messages, rawMessages, ...rest }) => {
       boxShadow="card"
       {...rest}
     >
-      <TopArea />
-      <Messages messages={liveMessages} />
+      {hideCompose ? null : <TopArea />}
+      <Messages messages={liveMessages} createdBy={createdBy} />
       <Flex borderTop="1px solid rgb(230, 236, 240)" alignItems="center" justifyContent="center" p={4}>
         {viewingAll ? (
           <Type color="purple" fontWeight="bold">
-            You've reached the end of the line!
+            You&apos;ve reached the end of the line!
           </Type>
         ) : (
-          <Button onClick={!loading && loadMoreMessages}>{loading ? 'Loading...' : 'Load more'}</Button>
+          <Button onClick={onLoadMoreClick}>{loading ? 'Loading...' : 'Load more'}</Button>
         )}
       </Flex>
     </Box>
