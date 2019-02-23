@@ -42,7 +42,26 @@ const mentionedEmail = (user, message) => {
   };
 };
 
+const updatesEmail = (user, messages) => {
+  const messageLines = messages.map((message) => `@${message.createdBy}: ${message.content}`);
+  const url = process.env.STAGING ? 'https://staging.banter.pub' : 'https://banter.pub';
+  return {
+    from: 'hello@banter.pub',
+    to: 'hello@banter.pub',
+    subject: `Some 💩from Banter`,
+    text: `
+    Hey ${user.username}! Here's a few recent posts on Banter.\n\n
+    ${messageLines.join('\n\n')}\n
+    Happy Banting!\n\n
+
+    You can get rid of this 💩in your settings page:\n
+    ${url}/settings
+    `,
+  };
+};
+
 module.exports = {
   sendMail,
   mentionedEmail,
+  updatesEmail,
 };
