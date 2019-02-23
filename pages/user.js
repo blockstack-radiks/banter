@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { User } from 'radiks';
 
-import Message from '../models/Message';
 import { Card } from '../components/card';
 import Feed from '../components/feed';
 import { AppContext } from '../common/context/app-context';
 import { Avatar } from '../components/avatar';
 import SocialAccounts from '../components/social-accounts';
+import { fetchMessages } from '../common/lib/api';
 
 class UserPage extends React.Component {
   static propTypes = {
@@ -18,20 +18,17 @@ class UserPage extends React.Component {
   };
 
   static getInitialProps = async (ctx) => {
-    console.log(ctx);
-
     const username = ctx.req ? ctx.req.params.username : ctx.query.username;
 
     const createdBy = username.replace('::]', '');
     const user = await User.findById(createdBy, { decrypt: false });
-    const rawMessages = await Message.fetchList(
-      {
-        createdBy,
-        sort: '-createdAt',
-        limit: 10,
-      },
-      { decrypt: false }
-    );
+
+    const query = { fetcher: null, createdBy };
+    const { req } = ctx;
+    if (req && req.universalCookies && req.universalCookies.cookies && req.universalCookies.cookies.username) {
+      query.fetcher = req.universalCookies.cookies.username;
+    }
+    const rawMessages = await fetchMessages(query);
 
     return {
       rawMessages,
