@@ -1,8 +1,15 @@
 import Styled from 'styled-components';
 
-import { Button } from 'rebass';
+import { Button as RebassButton } from 'rebass';
 
-export default Styled(Button)`
+export const Button = Styled(RebassButton)`
   background-color: #f8a5c2;
   color: #574b90;
 `;
+
+export const SecondaryButton = Styled(RebassButton)`
+  background-color: gray;
+  color: #574b90;
+`;
+
+export default Button;
