@@ -1,5 +1,6 @@
 import React from 'react';
-import { TwitterIcon, GithubCircleIcon } from 'mdi-react';
+import TwitterIcon from 'mdi-react/TwitterIcon';
+import GithubCircleIcon from 'mdi-react/GithubCircleIcon';
 import { Type } from 'blockstack-ui';
 
 import { StyleWrapper } from './styled';
