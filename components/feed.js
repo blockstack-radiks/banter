@@ -143,7 +143,8 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
   const loadMoreMessages = () => {
     NProgress.start();
     setLoading(true);
-    fetchMoreMessages(liveMessages, createdBy).then(({ hasMoreMessages, _messages }) => {
+    fetchMoreMessages(liveMessages, createdBy).then(({ hasMoreMessages, ...data }) => {
+      const _messages = data.messages;
       if (hasMoreMessages) {
         setLiveMessages(_messages);
         setLoading(false);
