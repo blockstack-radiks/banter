@@ -1,84 +1,133 @@
-import React from 'react';
-import { Flex, Box } from 'blockstack-ui';
+import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
+import { Box, Type } from 'blockstack-ui';
 import { Central } from 'radiks';
-
-import Type from '../styled/typography';
+import { Card } from '../components/card';
 import Input from '../styled/input';
 import Checkbox from '../components/checkbox';
-import Button from '../styled/button';
+import { Button } from '../components/button';
 
-class Settings extends React.Component {
-  state = {
-    notifyMentioned: false,
-    sendUpdates: false,
+const SettingsPage = ({ ...rest }) => {
+  const [state, setState] = useState({
+    notifyMentioned: true,
+    sendUpdates: true,
     updateFrequency: 'daily',
     email: '',
-  };
+  });
 
-  async componentDidMount() {
-    NProgress.start();
-    const value = await Central.get('UserSettings');
-    if (value) {
-      this.setState(value);
+  const [initialLoad, setIntialLoad] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saved, setSaved] = useState(false);
+  const [edited, setEdited] = useState(false);
+
+  useEffect(() => {
+    if (!initialLoad) {
+      setLoading(true);
+      NProgress.start();
+      Central.get('UserSettings').then((value) => {
+        if (value) {
+          setState(value);
+        }
+        setIntialLoad(true);
+        setLoading(false);
+        NProgress.done();
+      });
     }
-    NProgress.done();
-  }
+  }, []);
 
-  updateNotifyMentioned = (event) => {
-    this.setState({ notifyMentioned: event.target.checked });
+  const handleValueChange = (key, value) => {
+    setState((s) => ({
+      ...s,
+      [key]: value,
+    }));
+    setEdited(true);
+  };
+  const updateNotifyMentioned = (event) => {
+    handleValueChange('notifyMentioned', event.target.checked);
   };
 
-  updateSendUpdates = (event) => {
-    this.setState({ sendUpdates: event.target.checked });
+  const updateSendUpdates = (event) => {
+    handleValueChange('sendUpdates', event.target.checked);
   };
 
-  updateFrequencyChanged = (event) => {
-    this.setState({ updateFrequency: event.target.value });
+  const updateFrequencyChanged = (event) => {
+    handleValueChange('updateFrequency', event.target.value);
   };
 
-  updateEmail = (event) => {
-    this.setState({ email: event.target.value });
+  const updateEmail = (event) => {
+    handleValueChange('email', event.target.value);
   };
 
-  saveData = async () => {
+  const saveData = async (e) => {
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+    if (!edited) {
+      return null;
+    }
     NProgress.start();
-    const value = this.state;
     const key = 'UserSettings';
-
-    await Central.save(key, value);
-    NProgress.done();
+    try {
+      await Central.save(key, state);
+      setSaved(true);
+      NProgress.done();
+    } catch (e) {
+      console.error(e);
+      setSaved(false);
+      NProgress.done();
+    }
   };
 
-  render() {
-    const { notifyMentioned, sendUpdates, updateFrequency, email } = this.state;
-    return (
-      <Flex>
-        <Box width={[1, 1 / 2]} mx="auto" background="white" p={4} my={2}>
-          <Type.h2 mt={0}>Settings</Type.h2>
-          <Type.h3 mt={0}>Notifications</Type.h3>
+  const { notifyMentioned, sendUpdates, updateFrequency, email } = state;
 
-          <Type.strong>Email Address</Type.strong>
-          <Input placeholder="Your Email" mt={2} onChange={this.updateEmail} value={email} />
-          <Checkbox mt={3} onChange={this.updateNotifyMentioned} checked={notifyMentioned} name="notifyMentioned">
+  return (
+    <>
+      <Head>
+        <title>Settings - Banter</title>
+      </Head>
+      <Card width={[1, 1 / 2]} mx="auto" background="white" p={4} my={2} {...rest}>
+        <Box pb={4}>
+          <Type is="h2" color="purple" mt={0}>
+            Settings
+          </Type>
+        </Box>
+        <Box>
+          <Type color="purple" is="h3" mt={0}>
+            Notifications
+          </Type>
+        </Box>
+
+        <Box is="form" onSubmit={saveData}>
+          <Type color="purple" fontWeight="bold" fontSize={1}>
+            Email Address
+          </Type>
+          <Input
+            placeholder={loading ? 'Loading...' : 'Your Email'}
+            mt={2}
+            onChange={updateEmail}
+            type="email"
+            value={email}
+          />
+          <Checkbox mt={3} onChange={updateNotifyMentioned} checked={notifyMentioned} name="notifyMentioned">
             Notify me when I&apos;m mentioned
           </Checkbox>
-          <Checkbox mt={3} onChange={this.updateSendUpdates} checked={sendUpdates} name="sendUpdated">
+          <Checkbox mt={3} onChange={updateSendUpdates} checked={sendUpdates} name="sendUpdated">
             Send me updates with new posts
             <Type.span ml={2}>
-              <select value={updateFrequency} onChange={this.updateFrequencyChanged}>
+              <select value={updateFrequency} onChange={updateFrequencyChanged}>
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
               </select>
             </Type.span>
           </Checkbox>
 
-          <Button mt={3} onClick={this.saveData}>
-            Save
+          <Button mt={3} disabled={!edited} onClick={saveData} type="submit">
+            Save{saved ? 'd!' : ''}
           </Button>
         </Box>
-      </Flex>
-    );
-  }
-}
+      </Card>
+    </>
+  );
+};
 
-export default Settings;
+export default SettingsPage;

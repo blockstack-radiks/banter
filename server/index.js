@@ -7,7 +7,9 @@ const cookiesMiddleware = require('universal-cookie-express');
 require('dotenv').config();
 
 const { setup } = require('radiks-server');
+const { STREAM_CRAWL_EVENT } = require('radiks-server/app/lib/constants');
 const makeApiController = require('./ApiController');
+const notifier = require('../common/lib/notifier');
 
 const dev = process.env.NODE_ENV !== 'production';
 
@@ -27,26 +29,42 @@ app.prepare().then(async () => {
   server.use('/radiks', RadiksController);
 
   server.use((req, res, _next) => {
-    if (!dev && req.host !== 'banter.pub') {
+    if (dev) {
+      return _next();
+    }
+    if (!!process.env.HEROKU_APP_NAME) {
+      // this is a PR, continue
+      return _next();
+    }
+    const isStaging = !!process.env.STAGING;
+    if (!isStaging && req.hostname !== 'banter.pub') {
       console.log('Redirecting from non-production URL:', req.host);
       return res.redirect('https://banter.pub');
+    } else if (isStaging && req.hostname !== 'staging.banter.pub') {
+      console.log('Redirecting from non-staging URL:', req.host);
+      return res.redirect('https://staging.banter.pub');
     }
     return _next();
   });
 
-  server.use((req, res, _next) => {
+  server.get('/manifest.json', (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', '*');
-    _next();
-  });
-
-  server.get('/manifest.json', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'static', 'manifest.json'));
   });
 
   server.use('/api', makeApiController(RadiksController.db));
 
+  server.get('/messages/:id', (req, res) => {
+    const { id } = req.params;
+    app.render(req, res, '/message', { id });
+  });
+
   server.get('*', (req, res) => handle(req, res));
+
+  RadiksController.emitter.on(STREAM_CRAWL_EVENT, ([attrs]) => {
+    notifier(RadiksController.DB, attrs);
+  });
 
   server.listen(port, (err) => {
     if (err) throw err;
