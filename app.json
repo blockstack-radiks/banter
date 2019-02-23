@@ -5,13 +5,13 @@
       "required": true
     },
     "AWS_ACCESS_KEY_ID": {
-      "required": true
+      "required": false
     },
     "AWS_SECRET_KEY": {
-      "required": true
+      "required": false
     },
     "AWS_BUCKET": {
-      "required": true
+      "required": false
     }
   },
   "formation": {
