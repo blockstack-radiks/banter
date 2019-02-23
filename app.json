@@ -3,6 +3,15 @@
   "env": {
     "HEROKU_APP_NAME": {
       "required": true
+    },
+    "AWS_ACCESS_KEY_ID": {
+      "required": true
+    },
+    "AWS_SECRET_KEY": {
+      "required": true
+    },
+    "AWS_BUCKET": {
+      "required": true
     }
   },
   "formation": {
