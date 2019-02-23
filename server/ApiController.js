@@ -10,7 +10,7 @@ const makeApiController = (db) => {
     const match = {
       $match: {
         radiksType: 'Message',
-      }
+      },
     };
     if (req.query.lt) {
       match.$match.createdAt = {
@@ -21,10 +21,10 @@ const makeApiController = (db) => {
       match.$match.createdBy = req.query.createdBy;
     }
     const sort = {
-      $sort: { createdAt: -1 }
+      $sort: { createdAt: -1 },
     };
     const limit = {
-      $limit: 10
+      $limit: 10,
     };
 
     const votesLookup = {
@@ -32,15 +32,16 @@ const makeApiController = (db) => {
         from: COLLECTION,
         localField: '_id',
         foreignField: 'messageId',
-        as: 'votes'
-      }
+        as: 'votes',
+      },
     };
 
     const pipeline = [match, sort, limit, votesLookup];
 
     const messages = await radiksData.aggregate(pipeline).toArray();
 
-    const username = (req.query.fetcher || req.universalCookies.get('username')).replace(/"/g, '');
+    let username = (req.query.fetcher || req.universalCookies.get('username'));
+    if (username) username = username.replace(/"/g, '');
     messages.forEach((message) => {
       message.hasVoted = false;
       if (username) {
