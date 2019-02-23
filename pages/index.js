@@ -2,23 +2,22 @@ import React from 'react';
 import { Flex, Box } from 'rebass';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import Message from '../models/Message';
 import Feed from '../components/feed';
 import { AppContext } from '../common/context/app-context';
+import { fetchMessages } from '../common/lib/api';
 
 class Home extends React.Component {
   static propTypes = {
     rawMessages: PropTypes.array.isRequired,
   };
 
-  static getInitialProps = async () => {
-    const rawMessages = await Message.fetchList(
-      {
-        sort: '-createdAt',
-        limit: 10,
-      },
-      { decrypt: false }
-    );
+  static getInitialProps = async ({ req }) => {
+    const query = { fetcher: null };
+    if (req && req.universalCookies && req.universalCookies.cookies && req.universalCookies.cookies.username) {
+      query.fetcher = req.universalCookies.cookies.username;
+    }
+    const rawMessages = await fetchMessages(query);
+    console.log(rawMessages[0]);
 
     return {
       rawMessages,

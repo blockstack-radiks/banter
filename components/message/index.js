@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import Linkify from 'linkifyjs/react';
+import DownvoteEmptyIcon from 'mdi-react/EmoticonPoopOutlineIcon';
+import DownvoteFilledIcon from 'mdi-react/EmoticonPoopIcon';
+import { Hover, Active } from 'react-powerplug';
 import Link from 'next/link';
+
+import Vote from '../../models/Vote';
+import { AppContext } from '../../common/context/app-context';
 
 const Avatar = ({ username, ...rest }) => (
   <Box
@@ -66,8 +72,65 @@ const MessageContent = ({ content, ...rest }) => (
 const Details = ({ ...rest }) => <Box ml={3} width={7 / 8} {...rest} />;
 
 const Container = ({ ...rest }) => (
-  <Flex px={3} py={3} alignItems="center" borderTop="1px solid rgb(230, 236, 240)" {...rest} />
+  <Flex px={3} py={3} alignItems="flex-start" borderTop="1px solid rgb(230, 236, 240)" {...rest} />
 );
+
+const IconButton = ({ active, ...rest }) => (
+  <Active>
+    {({ active: pressed, bind: pressedBind }) => (
+      <Hover>
+        {({ hovered, bind }) => (
+          <Box
+            opacity={active ? '1' : hovered ? 0.75 : 0.5}
+            cursor={hovered ? 'pointer' : 'unset'}
+            transform={pressed ? 'translateY(2px)' : 'none'}
+            transition="0.1s all ease-in-out"
+            {...bind}
+            {...pressedBind}
+            {...rest}
+          />
+        )}
+      </Hover>
+    )}
+  </Active>
+);
+
+const FooterUI = ({ messageId, hasVoted, votes }) => {
+  const [voted, setVoted] = useState(hasVoted);
+  const [count, setCount] = useState(votes);
+  const { user } = useContext(AppContext);
+  
+  if (votes > count) {
+    // a new vote was found in real-time
+    setCount(votes);
+  }
+
+  const toggleVote = async () => {
+    if (!voted) {
+      setVoted(true);
+      setCount((s) => s + 1);
+      const vote = new Vote({
+        messageId,
+        username: user._id,
+      });
+      await vote.save();
+    }
+  };
+
+  const Icon = voted ? DownvoteFilledIcon : DownvoteEmptyIcon;
+  return (
+    <Flex style={{ userSelect: 'none' }} pt={2} color="purple">
+      <IconButton active={voted} onClick={toggleVote}>
+        <Icon size={20} />
+      </IconButton>
+      <Box pl={1}>
+        <Type fontSize={0} fontWeight="bold">
+          {count}
+        </Type>
+      </Box>
+    </Flex>
+  );
+};
 
 const Message = ({ message }) => (
   <Container>
@@ -75,6 +138,7 @@ const Message = ({ message }) => (
     <Details>
       <Meta username={message.attrs.createdBy} timeago={message.ago()} id={message._id} />
       <MessageContent content={message.attrs.content} />
+      <FooterUI messageId={message._id} hasVoted={message.attrs.hasVoted} votes={message.attrs.votes} />
     </Details>
   </Container>
 );
