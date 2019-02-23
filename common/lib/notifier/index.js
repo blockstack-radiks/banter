@@ -8,7 +8,7 @@ const { sendMail, mentionedEmail } = require('../mailer');
 mentionPlugin(linkify);
 
 const handleNewModel = async (db, attrs) => {
-  console.log('emitter', attrs);
+  // console.log('emitter', attrs);
   if (attrs.radiksType !== 'Message') {
     return true;
   }
