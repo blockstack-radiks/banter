@@ -99,6 +99,11 @@ const FooterUI = ({ messageId, hasVoted, votes }) => {
   const [voted, setVoted] = useState(hasVoted);
   const [count, setCount] = useState(votes);
   const { user } = useContext(AppContext);
+  
+  if (votes > count) {
+    // a new vote was found in real-time
+    setCount(votes);
+  }
 
   const toggleVote = async () => {
     if (!voted) {

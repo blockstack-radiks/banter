@@ -10,6 +10,7 @@ import MessageComponent from './message';
 import { Button } from './button';
 import { Login } from './login';
 import { fetchMessages } from '../common/lib/api';
+import Vote from '../models/Vote';
 
 const Compose = ({ handleSubmit, value, handleValueChange, disabled, ...rest }) => (
   <Box p={4} {...rest}>
@@ -110,6 +111,30 @@ const Feed = ({ messages, rawMessages, ...rest }) => {
     subscribe();
     return unsubscribe;
   });
+
+  const newVoteListener = (vote) => {
+    console.log('new vote', vote);
+    let foundMessage = false;
+    liveMessages.forEach((message, index) => {
+      if (message.attrs._id === vote.attrs.messageId) {
+        console.log('vote in the feed');
+        message.attrs.votes += 1;
+        liveMessages[index] = message;
+        foundMessage = true;
+      }
+    });
+    if (foundMessage) {
+      setLiveMessages([...new Set([...liveMessages])]);
+    }
+  };
+
+  const subscribeVotes = () => Vote.addStreamListener(newVoteListener);
+  const unsubscribeVotes = () => Vote.removeStreamListener(newVoteListener);
+
+  useEffect(() => {
+    subscribeVotes();
+    return unsubscribeVotes;
+  }, []);
 
   const loadMoreMessages = () => {
     NProgress.start();
