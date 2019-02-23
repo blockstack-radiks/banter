@@ -11,8 +11,8 @@
     "comma-dangle": [1, {
       "imports": "never",
       "exports": "never",
-      "objects": "only-multiline",
-      "arrays": "only-multiline",
+      "objects": "always-multiline",
+      "arrays": "always-multiline",
       "functions": "never"
     }],
     "quotes": 0,

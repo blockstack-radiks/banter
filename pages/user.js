@@ -3,15 +3,18 @@ import { Box, Flex, Type } from 'blockstack-ui';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { User } from 'radiks';
+
 import Message from '../models/Message';
 import { Card } from '../components/card';
 import Feed from '../components/feed';
 import { AppContext } from '../common/context/app-context';
 import { Avatar } from '../components/avatar';
+import SocialAccounts from '../components/social-accounts';
 
-class Home extends React.Component {
+class UserPage extends React.Component {
   static propTypes = {
     rawMessages: PropTypes.array.isRequired,
+    user: PropTypes.object.isRequired,
   };
 
   static getInitialProps = async (ctx) => {
@@ -38,6 +41,9 @@ class Home extends React.Component {
 
   render() {
     const { rawMessages, user } = this.props;
+    const { profile } = user.attrs;
+    const hasName = profile.name && profile.name.length > 0;
+    
     return (
       <>
         <Head>
@@ -50,7 +56,16 @@ class Home extends React.Component {
                 <Avatar username={user.attrs.username} size={96} mx="auto" />
               </Box>
               <Box pt={4} fontWeight="bold" textAlign="center">
-                <Type color="purple">{user.attrs.username.split('.')[0]}</Type>
+                {hasName && (
+                  <Type color="purple">{profile.name}</Type>
+                )}
+                <Type mt={hasName ? 3 : 0} fontSize={hasName ? 1 : 2} color="purple">{user.attrs.username}</Type>
+                {/* {profile.description && profile.description.length > 0 && (
+                  <Type mt={3} fontSize={1} color="purple">{profile.description}</Type>
+                )} */}
+              </Box>
+              <Box mt={5}>
+                <SocialAccounts profile={profile} />
               </Box>
             </Card>
           </Box>
@@ -63,6 +78,6 @@ class Home extends React.Component {
   }
 }
 
-Home.contextType = AppContext;
+UserPage.contextType = AppContext;
 
-export default Home;
+export default UserPage;
