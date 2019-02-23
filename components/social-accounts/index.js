@@ -1,6 +1,5 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { TwitterIcon, GithubCircleIcon } from 'mdi-react';
 import { Type } from 'blockstack-ui';
 
 import { StyleWrapper } from './styled';
@@ -26,12 +25,12 @@ const SocialAccounts = ({ profile }) => {
     <StyleWrapper>
       {accounts.github && (
         <AccountLink href={`https://github.com/${accounts.github.identifier}`}>
-          <FontAwesomeIcon icon={faGithub} />
+          <GithubCircleIcon />
         </AccountLink>
       )}
       {accounts.twitter && (
         <AccountLink href={`https://twitter.com/${accounts.twitter.identifier}`}>
-          <FontAwesomeIcon icon={faTwitter} />
+          <TwitterIcon />
         </AccountLink>
       )}
     </StyleWrapper>
