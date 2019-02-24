@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "NODE_ENV=development yarn babel-node server",
     "start": "NODE_ENV=production yarn babel-node server",
+    "nodemon": "NODE_ENV=development nodemon -x 'yarn babel-node server/index.js'",
     "build": "next build",
     "heroku-postbuild": "next build",
     "lint": "eslint ./common/**/*.js ./components/**/*.js ./pages/**/*.js --fix",
