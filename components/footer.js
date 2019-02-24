@@ -13,7 +13,7 @@ const Footer = ({ email }) => (
       </Type.p>
       {email && (
         <Type.p textAlign="center" color="purple" mt={3}>
-          You can change your notification prerences on the
+          You can change your notification preferences on the
           {' '}
           <Type.a href={`${appUrl()}/settings`}>settings page</Type.a>
           .
