@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import { AppContext } from '../../common/context/app-context';
 
-const Logo = ({ width = '28px', height = '28px' }) => (
+export const Logo = ({ width = '28px', height = '28px' }) => (
   <svg
     focusable="false"
     role="img"
