@@ -45,14 +45,6 @@ const Meta = ({ createdBy, username, timeago, id, email, ...rest }) => (
         >
           {username}
         </Type>
-        <Type.a 
-          fontSize={0} 
-          color="gray" 
-          style={{ textDecoration: 'none' }}
-          href={`${appUrl()}/messages/${id}`}
-        >
-          {timeago}
-        </Type.a>
       </>
     ) : (
       <>
@@ -138,9 +130,9 @@ const IconButton = ({ active, ...rest }) => (
   </Active>
 );
 
-const FooterUI = ({ messageId, hasVoted, votes }) => {
+const FooterUI = ({ messageId, hasVoted, votes, email, timeago }) => {
   const [voted, setVoted] = useState(hasVoted);
-  const [count, setCount] = useState(votes);
+  const [count, setCount] = useState(votes || 0);
   const { user } = useContext(AppContext);
   
   if (votes > count) {
@@ -162,16 +154,32 @@ const FooterUI = ({ messageId, hasVoted, votes }) => {
 
   const Icon = voted ? DownvoteFilledIcon : DownvoteEmptyIcon;
   return (
-    <Flex style={{ userSelect: 'none' }} pt={2} color="purple">
-      <IconButton active={voted} onClick={toggleVote}>
-        <Icon size={20} />
-      </IconButton>
-      <Box pl={1}>
-        <Type fontSize={0} fontWeight="bold">
-          {count}
-        </Type>
-      </Box>
-    </Flex>
+    <>
+      <Flex style={{ userSelect: 'none' }} pt={2} color="purple">
+        {/* {(typeof message.attrs.votes !== 'undefined') && (
+        )} */}
+        <IconButton active={voted} onClick={toggleVote}>
+          <Icon size={20} />
+        </IconButton>
+        <Box pl={1}>
+          <Type fontSize={0} fontWeight="bold">
+            {count}
+          </Type>
+        </Box>
+      </Flex>
+      {email && (
+        <Flex mt={2}>
+          <Type.a
+            fontSize={0}
+            color="gray"
+            style={{ textDecoration: 'none' }}
+            href={`${appUrl()}/messages/${messageId}`}
+          >
+            {timeago}
+          </Type.a>
+        </Flex>
+      )}
+    </>
   );
 };
 
@@ -181,9 +189,7 @@ const Message = ({ message, createdBy, email }) => (
     <Details>
       <Meta createdBy={createdBy} username={message.attrs.createdBy} timeago={message.ago()} id={message._id} email={email} />
       <MessageContent content={message.attrs.content} email={email} />
-      {(typeof message.attrs.votes !== 'undefined') && (
-        <FooterUI messageId={message._id} hasVoted={message.attrs.hasVoted} votes={message.attrs.votes} />
-      )}
+      <FooterUI messageId={message._id} hasVoted={message.attrs.hasVoted} votes={message.attrs.votes} email={email} timeago={message.ago()} />
     </Details>
   </Container>
 );
