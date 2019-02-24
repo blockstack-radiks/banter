@@ -1,4 +1,5 @@
 const { COLLECTION } = require('radiks-server/app/lib/constants');
+const sortBy = require('lodash/sortBy');
 
 const aggregateMessages = async (radiksData, query) => {
   const match = {
@@ -35,9 +36,18 @@ const aggregateMessages = async (radiksData, query) => {
     },
   };
 
-  const pipeline = [match, sort, limit, votesLookup];
+  const pipeline = [match, sort, votesLookup];
+
+  if (!query.sortByVotes) {
+    pipeline.push(limit);
+  }
 
   const messages = await radiksData.aggregate(pipeline).toArray();
+
+  if (query.sortByVotes) {
+    const _messages = sortBy(messages, (message) => -message.votes.length);
+    return _messages.slice(0, query.limit || 10);
+  }
 
   return messages;
 };

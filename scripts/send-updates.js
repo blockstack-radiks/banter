@@ -51,25 +51,12 @@ const sendUpdates = async () => {
 
   const nowTime = new Date().getTime();
   const sinceTime = nowTime - timeSinceLastSend;
-  // console.log(new Date());
-  // console.log(new Date(sinceTime));
-
-  // const recentMessages = await radiksCollection.find({
-  //   radiksType: 'Message',
-  //   createdAt: {
-  //     $gte: new Date(sinceTime).getTime(),
-  //   },
-  // }, {
-  //   limit: 20,
-  //   sort: { createdAt: -1 },
-  // }).toArray();
 
   const recentMessages = await aggregateMessages(radiksCollection, {
     gte: new Date(sinceTime).getTime(),
     limit: 20,
+    sortByVotes: true,
   });
-
-  console.log(recentMessages[0].votes);
 
   console.log(`Found ${recentMessages.length} messages to send.`);
 

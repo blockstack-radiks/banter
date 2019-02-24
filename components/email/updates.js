@@ -21,7 +21,7 @@ export default ({ user, messages }) => (
         <Box width={1}>
           <Box textAlign="center">
             <Type.p color="purple" display="block">
-              Hey @{user.username}, here&apos;s some recent <Poop />from Banter!
+              Hey @{user.username}, here&apos;s the best recent <Poop />from Banter!
             </Type.p>
           </Box>
           <Flex>
@@ -36,7 +36,6 @@ export default ({ user, messages }) => (
               boxShadow="card"
             >
               <Messages messages={messages} />
-              {/* <MessageComponent message={_message} mt={4} email /> */}
             </Box>
           </Flex>
           <Box textAlign="center">
