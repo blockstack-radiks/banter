@@ -2,8 +2,15 @@ require('dotenv').config();
 const { getDB } = require('radiks-server');
 const { COLLECTION, CENTRAL_COLLECTION } = require('radiks-server/app/lib/constants');
 const moment = require('moment');
+const emailify = require('react-emailify').default;
+const linkify = require('linkifyjs');
+const mentionPlugin = require('linkifyjs/plugins/mention');
 
+const UpdatesEmail = require('../components/email/updates').default;
 const { sendMail, updatesEmail } = require('../common/lib/mailer');
+const { aggregateMessages, transformMessageVotes } = require('../common/lib/aggregators/messages-aggregator');
+
+mentionPlugin(linkify);
 
 const sendUpdates = async () => {
   const db = await getDB();
@@ -47,15 +54,22 @@ const sendUpdates = async () => {
   // console.log(new Date());
   // console.log(new Date(sinceTime));
 
-  const recentMessages = await radiksCollection.find({
-    radiksType: 'Message',
-    createdAt: {
-      $gte: new Date(sinceTime).getTime(),
-    }
-  }, {
+  // const recentMessages = await radiksCollection.find({
+  //   radiksType: 'Message',
+  //   createdAt: {
+  //     $gte: new Date(sinceTime).getTime(),
+  //   },
+  // }, {
+  //   limit: 20,
+  //   sort: { createdAt: -1 },
+  // }).toArray();
+
+  const recentMessages = await aggregateMessages(radiksCollection, {
+    gte: new Date(sinceTime).getTime(),
     limit: 20,
-    sort: { createdAt: -1 }
-  }).toArray();
+  });
+
+  console.log(recentMessages[0].votes);
 
   console.log(`Found ${recentMessages.length} messages to send.`);
 
@@ -68,7 +82,7 @@ const sendUpdates = async () => {
     updateFrequency: frequency,
     email: {
       $ne: '',
-    }
+    },
   }).toArray();
 
   console.log(`Sending new messages to ${usersToUpdate.length} users.`);
@@ -80,7 +94,13 @@ const sendUpdates = async () => {
         username: userSettings._id.split('-')[0],
         email: userSettings.email,
       };
-      await sendMail(updatesEmail(user, recentMessages));
+      const transformedMessages = transformMessageVotes(recentMessages, user.username);
+      const emailTemplate = emailify(UpdatesEmail);
+      const html = emailTemplate({
+        messages: transformedMessages,
+        user,
+      });
+      await sendMail(updatesEmail(user, recentMessages, html));
       resolve();
     } catch (error) {
       console.error(error);

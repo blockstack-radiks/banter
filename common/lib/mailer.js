@@ -43,13 +43,14 @@ const mentionedEmail = (html, mention, message) => {
   };
 };
 
-const updatesEmail = (user, messages) => {
+const updatesEmail = (user, messages, html) => {
   const messageLines = messages.map((message) => `@${message.createdBy}: ${message.content}`);
   const url = process.env.STAGING ? 'https://staging.banter.pub' : 'https://banter.pub';
   return {
     from: 'hello@banter.pub',
-    to: 'hello@banter.pub',
+    to: user.email,
     subject: `Some 💩from Banter`,
+    html,
     text: `
     Hey ${user.username}! Here's a few recent posts on Banter.\n\n
     ${messageLines.join('\n\n')}\n

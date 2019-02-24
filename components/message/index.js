@@ -44,6 +44,14 @@ const Meta = ({ createdBy, username, timeago, id, email, ...rest }) => (
         >
           {username}
         </Type>
+        <Type.a 
+          fontSize={0} 
+          color="gray" 
+          style={{ textDecoration: 'none' }}
+          href={`${process.env.RADIKS_API_SERVER}/messages/${id}`}
+        >
+          {timeago}
+        </Type.a>
       </>
     ) : (
       <>
@@ -172,7 +180,7 @@ const Message = ({ message, createdBy, email }) => (
     <Details>
       <Meta createdBy={createdBy} username={message.attrs.createdBy} timeago={message.ago()} id={message._id} email={email} />
       <MessageContent content={message.attrs.content} email={email} />
-      {!email && (
+      {(typeof message.attrs.votes !== 'undefined') && (
         <FooterUI messageId={message._id} hasVoted={message.attrs.hasVoted} votes={message.attrs.votes} />
       )}
     </Details>

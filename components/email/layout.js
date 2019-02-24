@@ -15,7 +15,7 @@ export default ({ children }) => {
         <body>
           <Nav />
           {children}
-          <Footer />
+          <Footer email />
         </body>
       </html>
     </ThemeProvider>
