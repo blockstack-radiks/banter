@@ -51,7 +51,7 @@ const fetchMoreMessages = async (messages, createdBy) => {
   const hasMoreMessages = newMessages.length !== 0;
   return {
     hasMoreMessages,
-    messages: newmessages,
+    _messages: newmessages,
   };
 };
 
