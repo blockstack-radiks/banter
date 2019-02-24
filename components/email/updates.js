@@ -16,7 +16,7 @@ const Messages = ({ messages }) => {
 };
 
 export default ({ user, messages }) => (
-    <Layout>
+    <Layout hiddenText='The best recent 💩from Banter.'>
       <Flex>
         <Box width={1}>
           <Box textAlign="center">

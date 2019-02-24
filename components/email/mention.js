@@ -11,7 +11,7 @@ export default ({ message, mention }) => {
   const _message = new Message(message);
 
   return (
-    <Layout>
+    <Layout hiddenText={_message.attrs.content}>
       <Flex>
         <Box width={1}>
           <Box textAlign="center">
