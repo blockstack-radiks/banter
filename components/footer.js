@@ -1,6 +1,7 @@
 import React from 'react';
 import { Flex, Box } from 'blockstack-ui';
 import Type from '../styled/typography';
+import { appUrl } from '../common/utils';
 
 const Footer = ({ email }) => (
   <Flex>
@@ -14,7 +15,7 @@ const Footer = ({ email }) => (
         <Type.p textAlign="center" color="purple" mt={3}>
           You can change your notification prerences on the
           {' '}
-          <Type.a href={`${process.env.RADIKS_API_SERVER}/settings`}>settings page</Type.a>
+          <Type.a href={`${appUrl()}/settings`}>settings page</Type.a>
           .
         </Type.p>
       )}

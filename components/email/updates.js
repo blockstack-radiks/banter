@@ -6,6 +6,7 @@ import MessageComponent from "../message";
 import Poop from '../poop';
 import Message from '../../models/Message';
 import { Button } from '../button';
+import { appUrl } from '../../common/utils';
 
 const Messages = ({ messages }) => {
   const _messages = messages.map((attrs) => new Message(attrs));
@@ -42,7 +43,7 @@ export default ({ user, messages }) => (
             <Button
               my={4}
               is="a"
-              href={process.env.RADIKS_API_SERVER}
+              href={appUrl()}
               display="inline-block"
               style={{ cursor: 'pointer' }}
             >

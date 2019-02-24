@@ -14,17 +14,6 @@ const makeApiController = (db) => {
     let username = (req.query.fetcher || req.universalCookies.get('username'));
     if (username) username = username.replace(/"/g, '');
     messages = transformMessageVotes(messages, username);
-    // messages.forEach((message) => {
-    //   message.hasVoted = false;
-    //   if (username) {
-    //     message.votes.forEach((vote) => {
-    //       if (vote.username === username) {
-    //         message.hasVoted = true;
-    //       }
-    //     });
-    //   }
-    //   message.votes = message.votes.length;
-    // });
 
     res.json({ messages });
   });

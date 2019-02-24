@@ -5,6 +5,7 @@ import MessageComponent from "../message";
 import Message from '../../models/Message';
 import Layout from './layout';
 import { Button } from '../button';
+import { appUrl } from '../../common/utils';
 
 export default ({ message, mention }) => {
   const _message = new Message(message);
@@ -36,7 +37,7 @@ export default ({ message, mention }) => {
             <Button
               my={4}
               is="a"
-              href={`${process.env.RADIKS_API_SERVER}/messages/${message._id}`}
+              href={`${appUrl()}/messages/${message._id}`}
               display="inline-block"
               style={{ cursor: 'pointer' }}
             >
