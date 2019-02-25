@@ -10,6 +10,8 @@ import Message from '../../models/Message';
 import { AppContext } from '../../common/context/app-context';
 import { Button } from '../button';
 import { useOnClickOutside } from '../../common/hooks';
+import { theme } from '../../common/theme';
+import { rgba } from 'polished';
 
 const mentionPlugin = createMentionPlugin({
   mentionPrefix: '@',
@@ -103,6 +105,8 @@ const Compose = ({ pluginProps, ...rest }) => {
           p={3}
           border="1px solid"
           borderColor={focused ? 'pink' : 'hsl(204,25%,80%)'}
+          boxShadow={focused ? `${rgba(theme.colors.pink, 0.14)} 0px 0px 0px 4px` : 'none'}
+          transition="0.1s all ease-in-out"
           is="form"
           flexGrow={1}
           onSubmit={handleSubmit}

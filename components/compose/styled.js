@@ -392,6 +392,7 @@ const StylesWrapper = styled.div`
   .public-DraftEditorPlaceholder-inner {
     position: absolute;
     color: #aaaaaa;
+    user-select: none;
   }
 `;
 
