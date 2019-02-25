@@ -100,44 +100,45 @@ const Compose = ({ pluginProps, ...rest }) => {
   return (
     <Box p={4} {...rest}>
       <Flex justifyContent="space-between">
-        <Box
-          position="relative"
-          p={3}
-          border="1px solid"
-          borderColor={focused ? 'pink' : 'hsl(204,25%,80%)'}
-          boxShadow={focused ? `${rgba(theme.colors.pink, 0.14)} 0px 0px 0px 4px` : 'none'}
-          transition="0.1s all ease-in-out"
-          is="form"
-          flexGrow={1}
-          onSubmit={handleSubmit}
-          onClick={focus}
-          ref={editorWrapper}
-        >
-          <StylesWrapper>
-            <Box>
-              <div
-                className="editor" // eslint-disable-line
-              >
-                <Editor
-                  placeholder="What's on your mind?"
-                  editorState={editorState}
-                  onChange={onChange}
-                  plugins={plugins}
-                  ref={editor}
-                />
-                <MentionSuggestions
-                  onSearchChange={onSearchChange}
-                  suggestions={suggestions}
-                  onAddMention={onAddMention}
-                />
-                <EmojiSuggestions />
-              </div>
-            </Box>
-            <Flex position="absolute" top="2px" right="8px">
-              <EmojiSelect />
-            </Flex>
-          </StylesWrapper>
-        </Box>
+        <div style={{ width: '100%', flexGrow: 1 }} ref={editorWrapper}>
+          <Box
+            position="relative"
+            p={3}
+            border="1px solid"
+            borderColor={focused ? 'pink' : 'hsl(204,25%,80%)'}
+            boxShadow={focused ? `${rgba(theme.colors.pink, 0.14)} 0px 0px 0px 4px` : 'none'}
+            transition="0.1s all ease-in-out"
+            is="form"
+            flexGrow={1}
+            onSubmit={handleSubmit}
+            onClick={focus}
+          >
+            <StylesWrapper>
+              <Box>
+                <div
+                  className="editor" // eslint-disable-line
+                >
+                  <Editor
+                    placeholder="What's on your mind?"
+                    editorState={editorState}
+                    onChange={onChange}
+                    plugins={plugins}
+                    ref={editor}
+                  />
+                  <MentionSuggestions
+                    onSearchChange={onSearchChange}
+                    suggestions={suggestions}
+                    onAddMention={onAddMention}
+                  />
+                  <EmojiSuggestions />
+                </div>
+              </Box>
+              <Flex position="absolute" top="2px" right="8px">
+                <EmojiSelect />
+              </Flex>
+            </StylesWrapper>
+          </Box>
+        </div>
       </Flex>
       {focused && (
         <Flex pt={2}>

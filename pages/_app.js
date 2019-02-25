@@ -1,6 +1,7 @@
 import App, { Container } from 'next/app';
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
+import { Box } from 'blockstack-ui';
 import { UserSession, AppConfig } from 'blockstack';
 import { configure, getConfig, User } from 'radiks';
 import * as linkify from 'linkifyjs';
@@ -24,76 +25,72 @@ const makeUserSession = () => {
 
 const GlobalStyles = globalStyles();
 
-const Wrapper = withRouter(
-  ({ children, username: usernameProps, cookies, router, handleStateUsernameUpdate }) => {
-    const [user, setUser] = useState(null);
-    const [username, setUsername] = useState(usernameProps);
-    const { query } = router;
-    const [isSigningIn, setSigningIn] = useState(!!query.authResponse);
+const Wrapper = withRouter(({ children, username: usernameProps, cookies, router, handleStateUsernameUpdate }) => {
+  const [user, setUser] = useState(null);
+  const [username, setUsername] = useState(usernameProps);
+  const { query } = router;
+  const [isSigningIn, setSigningIn] = useState(!!query.authResponse);
 
-    const logout = (_cookies) => {
-      const { userSession } = getConfig();
-      userSession.signUserOut();
-      window.location = '/';
-      _cookies.remove('username');
-      handleStateUsernameUpdate({ username: null });
-    };
+  const logout = (_cookies) => {
+    const { userSession } = getConfig();
+    userSession.signUserOut();
+    window.location = '/';
+    _cookies.remove('username');
+    handleStateUsernameUpdate({ username: null });
+  };
 
-    const handleRemoveQuery = () => {
-      window.history.pushState(
-        null,
-        'Banter',
-        `${window.location.href.split('?')[0]}`
-      );
-    };
+  const handleRemoveQuery = () => {
+    window.history.pushState(null, 'Banter', `${window.location.href.split('?')[0]}`);
+  };
 
-    const getCurrentUser = async () => {
-      const { userSession } = getConfig();
-      if (user) return null;
-      if (userSession.isUserSignedIn()) {
-        const currentUser = await User.currentUser();
-        if (username) cookies.set('username', JSON.stringify(currentUser.attrs.username), { path: '/' });
-        setUsername(currentUser.attrs.username);
-        handleStateUsernameUpdate(currentUser.attrs.username);
-        setUser(currentUser);
-        handleRemoveQuery();
-      } else if (userSession.isSignInPending()) {
-        await userSession.handlePendingSignIn();
-        const currentUser = await User.createWithCurrentUser();
-        if (username) cookies.set('username', JSON.stringify(currentUser.attrs.username), { path: '/' });
-        setUsername(currentUser.attrs.username);
-        handleStateUsernameUpdate(currentUser.attrs.username);
-        setUser(currentUser);
-        handleRemoveQuery();
-      } else if (cookies.get('username')) {
-        cookies.remove('username');
-      }
-      return true;
-    };
+  const getCurrentUser = async () => {
+    const { userSession } = getConfig();
+    if (user) return null;
+    if (userSession.isUserSignedIn()) {
+      const currentUser = await User.currentUser();
+      if (username) cookies.set('username', JSON.stringify(currentUser.attrs.username), { path: '/' });
+      setUsername(currentUser.attrs.username);
+      handleStateUsernameUpdate(currentUser.attrs.username);
+      setUser(currentUser);
+      handleRemoveQuery();
+    } else if (userSession.isSignInPending()) {
+      await userSession.handlePendingSignIn();
+      const currentUser = await User.createWithCurrentUser();
+      if (username) cookies.set('username', JSON.stringify(currentUser.attrs.username), { path: '/' });
+      setUsername(currentUser.attrs.username);
+      handleStateUsernameUpdate(currentUser.attrs.username);
+      setUser(currentUser);
+      handleRemoveQuery();
+    } else if (cookies.get('username')) {
+      cookies.remove('username');
+    }
+    return true;
+  };
 
-    useEffect(() => {
-      getCurrentUser();
-      if (isSigningIn && !window.location.href.includes('authResponse')) {
-        setSigningIn(false);
-      }
-    });
+  useEffect(() => {
+    getCurrentUser();
+    if (isSigningIn && !window.location.href.includes('authResponse')) {
+      setSigningIn(false);
+    }
+  });
 
-    return (
-      <AppContext.Provider
-        value={{
-          isLoggedIn: !!username,
-          user,
-          username,
-          getCurrentUser,
-          isSigningIn,
-          logout: () => logout(cookies),
-        }}
-      >
+  return (
+    <AppContext.Provider
+      value={{
+        isLoggedIn: !!username,
+        user,
+        username,
+        getCurrentUser,
+        isSigningIn,
+        logout: () => logout(cookies),
+      }}
+    >
+      <Box flexGrow={1} minHeight="100%" bg="pink">
         {children}
-      </AppContext.Provider>
-    );
-  }
-);
+      </Box>
+    </AppContext.Provider>
+  );
+});
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {

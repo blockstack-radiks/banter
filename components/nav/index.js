@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import { Box, Flex, Type } from 'blockstack-ui';
 import { Hover } from 'react-powerplug';
 import Link from 'next/link';
-
+import { Avatar } from '../avatar';
+import SettingsIcon from 'mdi-react/SettingsIcon';
 import { AppContext } from '../../common/context/app-context';
 
 export const Logo = ({ width = '28px', height = '28px' }) => (
@@ -83,25 +84,68 @@ const UserArea = () => {
   ) : null;
 };
 
-const Nav = ({ ...rest }) => (
-  <Flex px={4} py={2} alignItems="center" is="nav" bg="pink" {...rest}>
-    <Hover>
-      {({ hovered, bind }) => (
-        <Box width={1 / 4}>
-          <Type is="h1" m={0} fontSize="28px" display="inline-block" {...bind}>
-            <Type is="a" href="/" color={hovered ? 'white' : 'purple'} textDecoration="none">
-              <Logo />
-              <Type display={['none', 'inline-block']} ml={2}>
-                Banter
+const Nav = ({ ...rest }) => {
+  const { logout, isSigningIn, username } = useContext(AppContext);
+
+  return (
+    <Flex
+      px={6}
+      pt={5}
+      pb={2}
+      mb={3}
+      mx="auto"
+      maxWidth={650}
+      alignItems="center"
+      justifyContent="space-between"
+      is="nav"
+      {...rest}
+    >
+      <Hover>
+        {({ hovered, bind }) => (
+          <Box>
+            <Type is="h1" m={0} fontSize="28px" display="inline-block" {...bind}>
+              <Type is="a" href="/" color={hovered ? 'white' : 'purple'} textDecoration="none">
+                <Logo />
+                <Type display={['none', 'inline-block']} ml={2}>
+                  Banter
+                </Type>
               </Type>
             </Type>
-          </Type>
+          </Box>
+        )}
+      </Hover>
+      <Flex>
+        <Hover>
+          {({ hovered, bind }) => (
+            <Link href="/settings" passHref>
+              <Box cursor={hovered ? 'pointer' : 'unset'} is="a" color={hovered ? 'white' : 'purple'} {...bind}>
+                <SettingsIcon size={28} />
+              </Box>
+            </Link>
+          )}
+        </Hover>
+        <Box pl={3}>
+          <Hover>
+            {({ hovered, bind }) => (
+              <Link
+                href={{
+                  pathname: '/user',
+                  query: {
+                    username,
+                  },
+                }}
+                as={`/[::]${username}`}
+                passHref
+              >
+                <Box cursor={hovered ? 'pointer' : 'unset'} is="a" {...bind}>
+                  <Avatar size={27} username={username} />
+                </Box>
+              </Link>
+            )}
+          </Hover>
         </Box>
-      )}
-    </Hover>
-    <Box ml="auto">
-      <UserArea />
-    </Box>
-  </Flex>
-);
+      </Flex>
+    </Flex>
+  );
+};
 export default Nav;

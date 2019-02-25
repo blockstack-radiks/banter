@@ -122,7 +122,6 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
   return (
     <Box
       border="1px solid rgb(230, 236, 240)"
-      my={[2, 4]}
       mx={[2, 'auto']}
       maxWidth={600}
       bg="white"

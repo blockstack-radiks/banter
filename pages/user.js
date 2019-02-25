@@ -46,9 +46,9 @@ class UserPage extends React.Component {
         <Head>
           <title>{user.attrs.username} - Banter</title>
         </Head>
-        <Flex maxWidth={700} width={1} mx="auto" flexDirection={['column', 'row']}>
-          <Box >
-            <Card width={['100%', 200]} mx={0} p={4} position="sticky" top="20px">
+        <Flex maxWidth={600} width={1} mx="auto" flexDirection={['column', 'row']}>
+          <Box>
+            <Card my={0} width={['100%', 200]} mx={0} p={4} position="sticky" top="20px">
               <Box>
                 <Avatar username={user.attrs.username} size={96} mx="auto" />
               </Box>
