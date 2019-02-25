@@ -110,13 +110,13 @@ const Compose = ({ pluginProps, ...rest }) => {
           is="form"
           flexGrow={1}
           onSubmit={handleSubmit}
+          onClick={focus}
+          ref={editorWrapper}
         >
           <StylesWrapper>
             <Box>
               <div
                 className="editor" // eslint-disable-line
-                onClick={focus}
-                ref={editorWrapper}
               >
                 <Editor
                   placeholder="What's on your mind?"
