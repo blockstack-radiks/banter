@@ -103,13 +103,10 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
     NProgress.start();
     setLoading(true);
     fetchMoreMessages(liveMessages, createdBy).then(({ hasMoreMessages, _messages }) => {
-      if (hasMoreMessages) {
-        setLiveMessages(_messages);
-        setLoading(false);
-        NProgress.done();
-      } else {
-        NProgress.done();
-        setLoading(false);
+      setLiveMessages(_messages);
+      setLoading(false);
+      NProgress.done();
+      if (!hasMoreMessages) {
         setViewingAll(true);
       }
     });
