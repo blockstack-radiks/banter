@@ -40,7 +40,7 @@ const fetchMoreMessages = async (messages, createdBy) => {
   const newMessages = newMessagesAttrs.map((attrs) => new Message(attrs));
 
   const newmessages = messages && messages.concat(newMessages);
-  const hasMoreMessages = newMessages.length !== 0;
+  const hasMoreMessages = newMessages.length === 10;
   return {
     hasMoreMessages,
     _messages: newmessages,
