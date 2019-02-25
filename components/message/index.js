@@ -60,22 +60,6 @@ const Meta = ({ createdBy, username, timeago, id, email, ...rest }) => (
         >
           <Username hoverable={!createdBy}>{username}</Username>
         </ConditionalLink>
-        <TimeAgo>
-          <Link
-            href={{
-              pathname: '/message',
-              query: {
-                id,
-              },
-            }}
-            as={`/messages/${id}`}
-            passHref
-          >
-            <Type.a fontSize={0} color="gray" style={{ textDecoration: 'none' }}>
-              {timeago}
-            </Type.a>
-          </Link>
-        </TimeAgo>
       </>
     )}
   </Flex>
@@ -117,7 +101,7 @@ const IconButton = ({ active, ...rest }) => (
           <Box
             opacity={active ? '1' : hovered ? 0.75 : 0.5}
             cursor={hovered ? 'pointer' : 'unset'}
-            transform={pressed ? 'translateY(2px)' : 'none'}
+            transform={pressed ? 'scale(1.3) translateY(2px)' : hovered || active ? 'scale(1.3)' : 'none'}
             transition="0.1s all ease-in-out"
             {...bind}
             {...pressedBind}
@@ -149,16 +133,24 @@ const FooterUI = ({ messageId, hasVoted, votes }) => {
       });
       await vote.save();
     }
-
   };
 
-  const Icon = voted ? DownvoteFilledIcon : DownvoteEmptyIcon;
   return (
-    <Flex style={{ userSelect: 'none' }} pt={2} color="purple">
+    <Flex
+      alignItems="center"
+      justifyContent="center"
+      position="relative"
+      style={{ userSelect: 'none' }}
+      size={40}
+      borderRadius="100%"
+      bg={`rgba(0,0,0,0.0${voted ? 0 : 5})`}
+      flexShrink={0}
+      color={voted ? '#A84E6D' : 'purple'}
+    >
       <IconButton active={voted} onClick={toggleVote}>
-        <Icon size={20} />
+        <DownvoteFilledIcon size={20} />
       </IconButton>
-      <Box pl={1}>
+      <Box position="absolute" right={0} top="-5px" pl={1}>
         <Type fontSize={0} fontWeight="bold">
           {count}
         </Type>
@@ -171,16 +163,28 @@ const Message = ({ message, createdBy, email }) => (
   <Container>
     <Avatar username={message.attrs.createdBy} />
     <Details>
-      <Meta
-        createdBy={createdBy}
-        username={message.attrs.createdBy}
-        timeago={message.ago()}
-        id={message._id}
-        email={email}
-      />
+      <Meta createdBy={createdBy} username={message.attrs.createdBy} id={message._id} email={email} />
       <MessageContent content={message.attrs.content} email={email} />
-      {!email && <FooterUI messageId={message._id} hasVoted={message.attrs.hasVoted} votes={message.attrs.votes} />}
+      <Box>
+        <TimeAgo>
+          <Link
+            href={{
+              pathname: '/message',
+              query: {
+                id: message._id,
+              },
+            }}
+            as={`/messages/${message._id}`}
+            passHref
+          >
+            <Type.a fontSize={0} color="gray" style={{ textDecoration: 'none' }}>
+              {message.ago()}
+            </Type.a>
+          </Link>
+        </TimeAgo>
+      </Box>
     </Details>
+    {!email && <FooterUI messageId={message._id} hasVoted={message.attrs.hasVoted} votes={message.attrs.votes} />}
   </Container>
 );
 

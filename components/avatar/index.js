@@ -6,6 +6,7 @@ const Avatar = ({ username, ...rest }) => (
   <Box
     size="42px"
     display="block"
+    flexShrink={0}
     width="100%"
     background={`#f8a5c2 url(${`/api/avatar/${username}`}) center center no-repeat`}
     borderRadius="100%"

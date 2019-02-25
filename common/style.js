@@ -1,8 +1,8 @@
 import { normalize } from 'polished';
 import { createGlobalStyle } from 'styled-components';
+import { theme } from './theme';
 
-export const globalStyles = () => {
-  const GlobalStyles = createGlobalStyle`
+export const globalStyles = () => createGlobalStyle`
     ${normalize()};
     * {
       -webkit-font-smoothing: antialiased;
@@ -11,10 +11,8 @@ export const globalStyles = () => {
       font-variant-numeric: tabular-nums;
     }
     body, html{
-      background: #F5F7FB;
+      background: ${theme.colors.pink};
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
       scroll-behavior: smooth;
     }
   `;
-  return GlobalStyles;
-};

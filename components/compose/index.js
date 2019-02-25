@@ -89,18 +89,20 @@ const Compose = ({ pluginProps, ...rest }) => {
       setEditorState(EditorState.createEmpty());
       NProgress.done();
       setLoading(false);
+      setFocused(false);
     } catch (error) {
       console.log(error);
       NProgress.done();
       setLoading(false);
+      setFocused(false);
     }
     return true;
   };
 
   return (
     <Box p={4} {...rest}>
-      <Flex justifyContent="space-between">
-        <div style={{ width: '100%', flexGrow: 1 }} ref={editorWrapper}>
+      <div style={{ width: '100%', flexGrow: 1 }} ref={editorWrapper}>
+        <Flex justifyContent="space-between">
           <Box
             position="relative"
             p={3}
@@ -138,16 +140,16 @@ const Compose = ({ pluginProps, ...rest }) => {
               </Flex>
             </StylesWrapper>
           </Box>
-        </div>
-      </Flex>
-      {focused && (
-        <Flex pt={2}>
-          <Box mr="auto" />
-          <Button disabled={loading || disabled} ml={2} onClick={handleSubmit}>
-            Post{loading ? 'ing...' : ''}
-          </Button>
         </Flex>
-      )}
+        {focused && (
+          <Flex pt={2}>
+            <Box mr="auto" />
+            <Button disabled={loading || disabled} ml={2} onClick={handleSubmit}>
+              Post{loading ? 'ing...' : ''}
+            </Button>
+          </Flex>
+        )}
+      </div>
     </Box>
   );
 };

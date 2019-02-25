@@ -85,7 +85,7 @@ const Wrapper = withRouter(({ children, username: usernameProps, cookies, router
         logout: () => logout(cookies),
       }}
     >
-      <Box flexGrow={1} minHeight="100%" bg="pink">
+      <Box flexGrow={1} minHeight="100vh" bg="pink">
         {children}
       </Box>
     </AppContext.Provider>
