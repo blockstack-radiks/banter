@@ -9,6 +9,7 @@ import StylesWrapper from './styled';
 import Message from '../../models/Message';
 import { AppContext } from '../../common/context/app-context';
 import { Button } from '../button';
+import { useOnClickOutside } from '../../common/hooks';
 
 const mentionPlugin = createMentionPlugin({
   mentionPrefix: '@',
@@ -40,6 +41,7 @@ const Compose = ({ pluginProps, ...rest }) => {
   }, []);
 
   const editor = useRef(null);
+  const editorWrapper = useRef(null);
 
   const onChange = (state) => {
     setEditorState(state);
@@ -63,6 +65,8 @@ const Compose = ({ pluginProps, ...rest }) => {
   const currentContent = editorState.getCurrentContent().getPlainText();
 
   const disabled = !user || currentContent === '';
+
+  useOnClickOutside(editorWrapper, () => setFocused(false));
 
   const handleSubmit = async (e) => {
     const content = editorState.getCurrentContent().getPlainText();
@@ -97,7 +101,8 @@ const Compose = ({ pluginProps, ...rest }) => {
         <Box
           position="relative"
           p={3}
-          border="1px solid hsl(204,25%,80%)"
+          border="1px solid"
+          borderColor={focused ? 'pink' : 'hsl(204,25%,80%)'}
           is="form"
           flexGrow={1}
           onSubmit={handleSubmit}
@@ -107,6 +112,7 @@ const Compose = ({ pluginProps, ...rest }) => {
               <div
                 className="editor" // eslint-disable-line
                 onClick={focus}
+                ref={editorWrapper}
               >
                 <Editor
                   placeholder="What's on your mind?"
