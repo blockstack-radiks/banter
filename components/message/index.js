@@ -48,7 +48,7 @@ const Meta = ({ createdBy, username, timeago, id, email, ...rest }) => (
     ) : (
       <>
         <ConditionalLink
-          condition={ createdBy }
+          condition={createdBy}
           href={{
             pathname: '/user',
             query: {
@@ -133,7 +133,7 @@ const FooterUI = ({ messageId, hasVoted, votes }) => {
   const [voted, setVoted] = useState(hasVoted);
   const [count, setCount] = useState(votes);
   const { user } = useContext(AppContext);
-  
+
   if (votes > count) {
     // a new vote was found in real-time
     setCount(votes);
@@ -149,6 +149,7 @@ const FooterUI = ({ messageId, hasVoted, votes }) => {
       });
       await vote.save();
     }
+
   };
 
   const Icon = voted ? DownvoteFilledIcon : DownvoteEmptyIcon;
@@ -170,11 +171,15 @@ const Message = ({ message, createdBy, email }) => (
   <Container>
     <Avatar username={message.attrs.createdBy} />
     <Details>
-      <Meta createdBy={createdBy} username={message.attrs.createdBy} timeago={message.ago()} id={message._id} email={email} />
+      <Meta
+        createdBy={createdBy}
+        username={message.attrs.createdBy}
+        timeago={message.ago()}
+        id={message._id}
+        email={email}
+      />
       <MessageContent content={message.attrs.content} email={email} />
-      {!email && (
-        <FooterUI messageId={message._id} hasVoted={message.attrs.hasVoted} votes={message.attrs.votes} />
-      )}
+      {!email && <FooterUI messageId={message._id} hasVoted={message.attrs.hasVoted} votes={message.attrs.votes} />}
     </Details>
   </Container>
 );

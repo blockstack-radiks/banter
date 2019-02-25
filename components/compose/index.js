@@ -21,6 +21,7 @@ const plugins = [mentionPlugin, emojiPlugin];
 const Compose = ({ pluginProps, ...rest }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [focused, setFocused] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
 
   const fetchUsernames = async () => {
@@ -37,7 +38,6 @@ const Compose = ({ pluginProps, ...rest }) => {
   useEffect(() => {
     fetchUsernames();
   }, []);
-  
 
   const editor = useRef(null);
 
@@ -60,7 +60,9 @@ const Compose = ({ pluginProps, ...rest }) => {
 
   const { user } = useContext(AppContext);
 
-  const disabled = !user;
+  const currentContent = editorState.getCurrentContent().getPlainText();
+
+  const disabled = !user || currentContent === '';
 
   const handleSubmit = async (e) => {
     const content = editorState.getCurrentContent().getPlainText();
@@ -71,6 +73,7 @@ const Compose = ({ pluginProps, ...rest }) => {
       return null;
     }
     NProgress.start();
+    setLoading(true);
     const message = new Message({
       content,
       createdBy: user._id,
@@ -79,9 +82,11 @@ const Compose = ({ pluginProps, ...rest }) => {
       await message.save();
       setEditorState(EditorState.createEmpty());
       NProgress.done();
+      setLoading(false);
     } catch (error) {
       console.log(error);
       NProgress.done();
+      setLoading(false);
     }
     return true;
   };
@@ -99,7 +104,8 @@ const Compose = ({ pluginProps, ...rest }) => {
         >
           <StylesWrapper>
             <Box>
-              <div className="editor" // eslint-disable-line
+              <div
+                className="editor" // eslint-disable-line
                 onClick={focus}
               >
                 <Editor
@@ -126,8 +132,8 @@ const Compose = ({ pluginProps, ...rest }) => {
       {focused && (
         <Flex pt={2}>
           <Box mr="auto" />
-          <Button disabled={disabled} ml={2} onClick={handleSubmit}>
-            Submit
+          <Button disabled={loading || disabled} ml={2} onClick={handleSubmit}>
+            Post{loading ? 'ing...' : ''}
           </Button>
         </Flex>
       )}
