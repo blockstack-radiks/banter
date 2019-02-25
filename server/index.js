@@ -53,11 +53,16 @@ app.prepare().then(async () => {
     res.sendFile(path.join(__dirname, '..', 'static', 'manifest.json'));
   });
 
-  server.use('/api', makeApiController(RadiksController.db));
+  server.use('/api', makeApiController(RadiksController.DB));
 
   server.get('/messages/:id', (req, res) => {
     const { id } = req.params;
     app.render(req, res, '/message', { id });
+  });
+
+  server.get(`/[\\[::\\]]:username`, (req, res) => {
+    const { username } = req.params;
+    app.render(req, res, '/user', { username });
   });
 
   server.get('*', (req, res) => handle(req, res));

@@ -6,16 +6,24 @@
   "author": "Hank Stoever",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=development node server",
-    "start": "NODE_ENV=production node server",
+    "dev": "NODE_ENV=development yarn babel-node server",
+    "start": "NODE_ENV=production yarn babel-node server",
+    "nodemon": "NODE_ENV=development nodemon -x 'yarn babel-node server/index.js'",
     "build": "next build",
     "heroku-postbuild": "next build",
     "lint": "eslint ./common/**/*.js ./components/**/*.js ./pages/**/*.js --fix",
-    "prettier": "prettier --config .prettierrc ./common/**/*.js ./components/**/*.js ./pages/**/*.js"
+    "prettier": "prettier --config .prettierrc ./common/**/*.js ./components/**/*.js ./pages/**/*.js",
+    "babel-node": "babel-node --config-file ./babel-server.config.js"
   },
   "dependencies": {
     "@awaitjs/express": "^0.3.0",
+    "@babel/core": "^7.3.3",
+    "@babel/node": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.3.3",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-react": "^7.0.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.15",
+    "@fortawesome/free-brands-svg-icons": "^5.7.2",
     "@fortawesome/free-solid-svg-icons": "^5.7.2",
     "@fortawesome/react-fontawesome": "^0.1.4",
     "blockstack": "19.0.0-alpha.3",
@@ -31,6 +39,7 @@
     "grid-styled": "^5.0.2",
     "linkifyjs": "^2.1.8",
     "lodash": "^4.17.11",
+    "mdi-react": "^5.2.0",
     "moment": "^2.22.2",
     "nano-css": "^3.5.0",
     "next": "^8.0.0",
@@ -41,11 +50,13 @@
     "nprogress": "^0.2.0",
     "polished": "^3.0.0",
     "prop-types": "^15.6.2",
+    "qs": "^6.6.0",
     "radiks": "0.2.0-alpha.4",
     "radiks-server": "0.1.6",
     "react": "^16.8.2",
     "react-cookie": "^3.0.8",
     "react-dom": "^16.8.2",
+    "react-emailify": "^0.0.1",
     "react-powerplug": "^1.0.0",
     "react-use": "^5.4.1",
     "react-visibility-sensor": "^5.0.2",
@@ -81,7 +92,8 @@
       ".next",
       "pages/*",
       "components/*",
-      "styled/*"
+      "styled/*",
+      "scripts/*"
     ]
   }
 }

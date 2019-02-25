@@ -3,12 +3,14 @@ import { Flex, Box, Type } from 'blockstack-ui';
 import NProgress from 'nprogress';
 import { getConfig } from 'radiks';
 
-import { AppContext } from '../common/context/app-context';
 import dynamic from 'next/dynamic';
+import { AppContext } from '../common/context/app-context';
 import Message from '../models/Message';
 import MessageComponent from './message';
 import { Button } from './button';
 import { Login } from './login';
+import { fetchMessages } from '../common/lib/api';
+import Vote from '../models/Vote';
 
 const Compose = dynamic(() => import('./compose'), {
   loading: () => (
@@ -29,36 +31,32 @@ const login = () => {
   userSession.redirectToSignIn(redirect, manifest, scopes);
 };
 
-const fetchMoreMessages = async (messages) => {
+const fetchMoreMessages = async (messages, createdBy) => {
   const lastMessage = messages && messages.length && messages[messages.length - 1];
-  const newMessages = await Message.fetchList(
-    {
-      createdAt: {
-        $lt: lastMessage && lastMessage.attrs.createdAt,
-      },
-      limit: 10,
-      sort: '-createdAt',
-    },
-    { decrypt: false }
-  );
+  const newMessagesAttrs = await fetchMessages({ 
+    lt: lastMessage && lastMessage.attrs.createdAt,
+    createdBy,
+  });
+  const newMessages = newMessagesAttrs.map((attrs) => new Message(attrs));
+
   const newmessages = messages && messages.concat(newMessages);
   const hasMoreMessages = newMessages.length !== 0;
   return {
     hasMoreMessages,
-    messages: newmessages,
+    _messages: newmessages,
   };
 };
 
-const TopArea = (props) => {
+const TopArea = () => {
   const { isLoggedIn } = useContext(AppContext);
 
   return !isLoggedIn ? <Login px={4} handleLogin={login} /> : <Compose />;
 };
 
-const Messages = ({ messages }) => messages.map((message) => <MessageComponent key={message._id} message={message} />);
+const Messages = ({ messages, createdBy }) => messages.map((message) => <MessageComponent key={message._id} createdBy={!!createdBy} message={message} />);
 
-const Feed = ({ messages, rawMessages, ...rest }) => {
-  const [liveMessages, setLiveMessages] = useState(rawMessages.map((m) => new Message(m.attrs)));
+const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
+  const [liveMessages, setLiveMessages] = useState(rawMessages.map((m) => new Message(m)));
   const [loading, setLoading] = useState(false);
   const [viewingAll, setViewingAll] = useState(false);
 
@@ -66,7 +64,7 @@ const Feed = ({ messages, rawMessages, ...rest }) => {
     if (liveMessages.find((m) => m._id === message._id)) {
       return null;
     }
-    setLiveMessages([...new Set([message, ...liveMessages])]);
+    return setLiveMessages([...new Set([message, ...liveMessages])]);
   };
 
   const subscribe = () => Message.addStreamListener(newMessageListener);
@@ -77,12 +75,36 @@ const Feed = ({ messages, rawMessages, ...rest }) => {
     return unsubscribe;
   });
 
+  const newVoteListener = (vote) => {
+    console.log('new vote', vote);
+    let foundMessage = false;
+    liveMessages.forEach((message, index) => {
+      if (message.attrs._id === vote.attrs.messageId) {
+        console.log('vote in the feed');
+        message.attrs.votes += 1;
+        liveMessages[index] = message;
+        foundMessage = true;
+      }
+    });
+    if (foundMessage) {
+      setLiveMessages([...new Set([...liveMessages])]);
+    }
+  };
+
+  const subscribeVotes = () => Vote.addStreamListener(newVoteListener);
+  const unsubscribeVotes = () => Vote.removeStreamListener(newVoteListener);
+
+  useEffect(() => {
+    subscribeVotes();
+    return unsubscribeVotes;
+  }, []);
+
   const loadMoreMessages = () => {
     NProgress.start();
     setLoading(true);
-    fetchMoreMessages(liveMessages).then(({ hasMoreMessages, messages }) => {
+    fetchMoreMessages(liveMessages, createdBy).then(({ hasMoreMessages, _messages }) => {
       if (hasMoreMessages) {
-        setLiveMessages(messages);
+        setLiveMessages(_messages);
         setLoading(false);
         NProgress.done();
       } else {
@@ -91,6 +113,13 @@ const Feed = ({ messages, rawMessages, ...rest }) => {
         setViewingAll(true);
       }
     });
+  };
+
+  const onLoadMoreClick = () => {
+    if (loading) {
+      return false;
+    }
+    return loadMoreMessages();
   };
 
   return (
@@ -104,15 +133,15 @@ const Feed = ({ messages, rawMessages, ...rest }) => {
       boxShadow="card"
       {...rest}
     >
-      <TopArea />
-      <Messages messages={liveMessages} />
+      {hideCompose ? null : <TopArea />}
+      <Messages messages={liveMessages} createdBy={createdBy} />
       <Flex borderTop="1px solid rgb(230, 236, 240)" alignItems="center" justifyContent="center" p={4}>
         {viewingAll ? (
           <Type color="purple" fontWeight="bold">
-            You've reached the end of the line!
+            You&apos;ve reached the end of the line!
           </Type>
         ) : (
-          <Button onClick={!loading && loadMoreMessages}>{loading ? 'Loading...' : 'Load more'}</Button>
+          <Button onClick={onLoadMoreClick}>{loading ? 'Loading...' : 'Load more'}</Button>
         )}
       </Flex>
     </Box>
