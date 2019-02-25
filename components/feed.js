@@ -33,7 +33,7 @@ const login = () => {
 
 const fetchMoreMessages = async (messages, createdBy) => {
   const lastMessage = messages && messages.length && messages[messages.length - 1];
-  const newMessagesAttrs = await fetchMessages({ 
+  const newMessagesAttrs = await fetchMessages({
     lt: lastMessage && lastMessage.attrs.createdAt,
     createdBy,
   });
@@ -53,7 +53,8 @@ const TopArea = () => {
   return !isLoggedIn ? <Login px={4} handleLogin={login} /> : <Compose />;
 };
 
-const Messages = ({ messages, createdBy }) => messages.map((message) => <MessageComponent key={message._id} createdBy={!!createdBy} message={message} />);
+const Messages = ({ messages, createdBy }) =>
+  messages.map((message) => <MessageComponent key={message._id} createdBy={!!createdBy} message={message} />);
 
 const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
   const [liveMessages, setLiveMessages] = useState(rawMessages.map((m) => new Message(m)));
@@ -77,11 +78,9 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
   });
 
   const newVoteListener = (vote) => {
-    console.log('new vote', vote);
     let foundMessage = false;
     liveMessages.forEach((message, index) => {
       if (message.attrs._id === vote.attrs.messageId) {
-        console.log('vote in the feed');
         message.attrs.votes += 1;
         liveMessages[index] = message;
         foundMessage = true;
@@ -136,15 +135,17 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
     >
       {hideCompose ? null : <TopArea />}
       <Messages messages={liveMessages} createdBy={createdBy} />
-      <Flex borderTop="1px solid rgb(230, 236, 240)" alignItems="center" justifyContent="center" p={4}>
-        {viewingAll ? (
-          <Type color="purple" fontWeight="bold">
-            You&apos;ve reached the end of the line!
-          </Type>
-        ) : (
-          <Button onClick={onLoadMoreClick}>{loading ? 'Loading...' : 'Load more'}</Button>
-        )}
-      </Flex>
+      {liveMessages.length >= 10 ? (
+        <Flex borderTop="1px solid rgb(230, 236, 240)" alignItems="center" justifyContent="center" p={4}>
+          {viewingAll ? (
+            <Type color="purple" fontWeight="bold">
+              You&apos;ve reached the end of the line!
+            </Type>
+          ) : (
+            <Button onClick={onLoadMoreClick}>{loading ? 'Loading...' : 'Load more'}</Button>
+          )}
+        </Flex>
+      ) : null}
     </Box>
   );
 };
