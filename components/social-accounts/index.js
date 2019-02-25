@@ -2,13 +2,25 @@ import React from 'react';
 import TwitterIcon from 'mdi-react/TwitterIcon';
 import GithubCircleIcon from 'mdi-react/GithubCircleIcon';
 import { Type, Flex } from 'blockstack-ui';
-import {Hover} from 'react-powerplug'
+import { Hover } from 'react-powerplug';
 
-const AccountLink = ({ href, children }) => <Hover>{({hovered, bind}) =>(
-  <Type is="a" mr={2} color={hovered ? 'pink' : 'purple'} href={href} target="_blank" rel="noopener noreferrer" {...bind}>
-    {children}
-  </Type>
-)}</Hover>;
+const AccountLink = ({ href, children }) => (
+  <Hover>
+    {({ hovered, bind }) => (
+      <Type
+        is="a"
+        mr={2}
+        color={hovered ? 'pink' : 'purple'}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        {...bind}
+      >
+        {children}
+      </Type>
+    )}
+  </Hover>
+);
 
 const SocialAccounts = ({ profile }) => {
   const accounts = {};

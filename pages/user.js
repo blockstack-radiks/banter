@@ -40,26 +40,23 @@ class UserPage extends React.Component {
     const { rawMessages, user } = this.props;
     const { profile } = user.attrs;
     const hasName = profile.name && profile.name.length > 0;
-    
+
     return (
       <>
         <Head>
           <title>{user.attrs.username} - Banter</title>
         </Head>
         <Flex maxWidth={700} width={1} mx="auto" flexDirection={['column', 'row']}>
-          <Box>
-            <Card width={['100%', 200]} mx={0} p={4}>
+          <Box >
+            <Card width={['100%', 200]} mx={0} p={4} position="sticky" top="20px">
               <Box>
                 <Avatar username={user.attrs.username} size={96} mx="auto" />
               </Box>
               <Box pt={4} fontWeight="bold" textAlign="center">
-                {hasName && (
-                  <Type color="purple">{profile.name}</Type>
-                )}
-                <Type mt={hasName ? 3 : 0} fontSize={hasName ? 1 : 2} color="purple">{user.attrs.username}</Type>
-                {/* {profile.description && profile.description.length > 0 && (
-                  <Type mt={3} fontSize={1} color="purple">{profile.description}</Type>
-                )} */}
+                {hasName && <Type color="purple">{profile.name}</Type>}
+                <Type mt={hasName ? 3 : 0} fontSize={hasName ? 1 : 2} color="purple">
+                  {user.attrs.username}
+                </Type>
               </Box>
               <Box mt={5}>
                 <SocialAccounts profile={profile} />
