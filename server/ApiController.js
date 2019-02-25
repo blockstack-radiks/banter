@@ -76,7 +76,7 @@ const makeApiController = (db) => {
   });
 
   Router.getAsync('/usernames', async (req, res) => {
-    const users = await db.find({
+    const users = await radiksData.find({
       radiksType: 'BlockstackUser',
     }, {
       projection: { username: 1 },
