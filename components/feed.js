@@ -64,6 +64,7 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
     if (liveMessages.find((m) => m._id === message._id)) {
       return null;
     }
+    message.attrs.votes = message.attrs.votes || 0;
     return setLiveMessages([...new Set([message, ...liveMessages])]);
   };
 
