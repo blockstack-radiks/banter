@@ -146,6 +146,7 @@ const FooterUI = ({ messageId, hasVoted, votes }) => {
       bg={`rgba(0,0,0,0.0${voted ? 0 : 5})`}
       flexShrink={0}
       color={voted ? '#A84E6D' : 'purple'}
+      ml={3}
     >
       <IconButton active={voted} onClick={toggleVote}>
         <DownvoteFilledIcon size={20} />
