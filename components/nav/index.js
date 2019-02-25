@@ -38,7 +38,24 @@ const UserArea = () => {
 
   return username ? (
     <Type color={color} fontWeight="bold" display="inline-block">
-      {username}
+      <Hover>
+        {({ hovered, bind }) => (
+          <Link
+            href={{
+              pathname: '/user',
+              query: {
+                username,
+              },
+            }}
+            as={`/[::]${username}`}
+            passHref
+          >
+            <Type color={hovered ? hover : color} cursor={hovered ? 'pointer' : 'unset'} {...bind} ml={2}>
+              {username}
+            </Type>
+          </Link>
+        )}
+      </Hover>
 
       <Hover>
         {({ hovered, bind }) => (
