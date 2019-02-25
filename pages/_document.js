@@ -14,6 +14,7 @@ export default class MyDocument extends Document {
     return (
       <html lang="en">
         <Head>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
           {this.props.styleTags}
           <link rel="stylesheet" href="/static/nprogress.css" />
           <link rel="icon" href="/static/cat.png" type="image/png" />
