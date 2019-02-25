@@ -3,8 +3,8 @@ import { Flex, Box, Type } from 'blockstack-ui';
 import NProgress from 'nprogress';
 import { getConfig } from 'radiks';
 
+import dynamic from 'next/dynamic';
 import { AppContext } from '../common/context/app-context';
-import Input from '../styled/input';
 import Message from '../models/Message';
 import MessageComponent from './message';
 import { Button } from './button';
@@ -12,24 +12,16 @@ import { Login } from './login';
 import { fetchMessages } from '../common/lib/api';
 import Vote from '../models/Vote';
 
-const Compose = ({ handleSubmit, value, handleValueChange, disabled, ...rest }) => (
-  <Box p={4} {...rest}>
-    <Flex justifyContent="space-between">
-      <Box is="form" flexGrow={1} onSubmit={handleSubmit}>
-        <Input
-          type="text"
-          width={1}
-          placeholder="What do you have to say?"
-          value={value}
-          onChange={(evt) => handleValueChange(evt.target.value)}
-        />
+const Compose = dynamic(() => import('./compose'), {
+  loading: () => (
+    <Box p="16px">
+      <Box border="1px solid hsl(204,25%,80%)" height="44px" p="12px">
+        <Type color="#aaaaaa">Loading...</Type>
       </Box>
-      <Button disabled={disabled} ml={2} onClick={handleSubmit}>
-        Submit
-      </Button>
-    </Flex>
-  </Box>
-);
+    </Box>
+  ),
+  ssr: false,
+});
 
 const login = () => {
   const scopes = ['store_write', 'publish_data'];
@@ -56,42 +48,9 @@ const fetchMoreMessages = async (messages, createdBy) => {
 };
 
 const TopArea = () => {
-  const { isLoggedIn, user } = useContext(AppContext);
-  const [content, setContent] = useState('');
+  const { isLoggedIn } = useContext(AppContext);
 
-  const handleSubmit = async (e) => {
-    if (e && e.preventDefault) {
-      e.preventDefault();
-    }
-    if (content === '') {
-      return null;
-    }
-    NProgress.start();
-    const message = new Message({
-      content,
-      createdBy: user._id,
-    });
-    try {
-      await message.save();
-      setContent('');
-      NProgress.done();
-    } catch (error) {
-      console.log(error);
-      NProgress.done();
-    }
-    return true;
-  };
-
-  return !isLoggedIn ? (
-    <Login px={4} handleLogin={login} />
-  ) : (
-    <Compose
-      handleSubmit={handleSubmit}
-      handleValueChange={setContent}
-      value={content}
-      disabled={content === '' || !user}
-    />
-  );
+  return !isLoggedIn ? <Login px={4} handleLogin={login} /> : <Compose />;
 };
 
 const Messages = ({ messages, createdBy }) => messages.map((message) => <MessageComponent key={message._id} createdBy={!!createdBy} message={message} />);
@@ -105,6 +64,7 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
     if (liveMessages.find((m) => m._id === message._id)) {
       return null;
     }
+    message.attrs.votes = message.attrs.votes || 0;
     return setLiveMessages([...new Set([message, ...liveMessages])]);
   };
 
