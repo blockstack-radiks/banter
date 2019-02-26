@@ -1,6 +1,7 @@
 import React from 'react';
 import { Flex, Box } from 'blockstack-ui';
 import Type from '../styled/typography';
+import Poop from './poop';
 import { appUrl } from '../common/utils';
 
 const Footer = ({ email }) => (
@@ -9,7 +10,7 @@ const Footer = ({ email }) => (
       <Type.p textAlign="center" color="purple">
         Banter, a place for
         {' '}
-        <span role="img" aria-label="poo">💩</span>
+        <Poop />
       </Type.p>
       {email && (
         <Type.p textAlign="center" color="purple" mt={3}>

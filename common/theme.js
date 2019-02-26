@@ -5,7 +5,9 @@ const colors = {
   borders: {
     light: 'hsl(202, 40%, 83%)',
   },
-  gray: Object.assign('#303952', {}),
+  gray: Object.assign('#303952', {
+    mid: '#596275'
+  }),
 };
 const breakpoints = ['40em', '52em', '64em', '72em', '85em'];
 const fontSizes = [12, 14, 16, 20, 24, 28, 32, 36, 48, 64, 96, 128];

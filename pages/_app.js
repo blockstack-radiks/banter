@@ -12,6 +12,7 @@ import { AppContext } from '../common/context/app-context';
 import Nav from '../components/nav';
 import Footer from '../components/footer';
 import { theme } from '../common/theme';
+import NewSignInModal from '../components/modal/new-sign-in';
 import { globalStyles } from '../common/style';
 
 mentionPlugin(linkify);
@@ -30,6 +31,7 @@ const Wrapper = withRouter(
     const [username, setUsername] = useState(usernameProps);
     const { query } = router;
     const [isSigningIn, setSigningIn] = useState(!!query.authResponse);
+    const [showNewSignInModal, setShowNewSignInModal] = useState(false);
 
     const logout = (_cookies) => {
       const { userSession } = getConfig();
@@ -65,6 +67,11 @@ const Wrapper = withRouter(
         handleStateUsernameUpdate(currentUser.attrs.username);
         setUser(currentUser);
         handleRemoveQuery();
+        const { createdAt, updatedAt } = currentUser.attrs;
+        if (createdAt === updatedAt) {
+          // brand new user!
+          setShowNewSignInModal(true);
+        }
       } else if (cookies.get('username')) {
         cookies.remove('username');
       }
@@ -90,6 +97,7 @@ const Wrapper = withRouter(
         }}
       >
         {children}
+        <NewSignInModal open={showNewSignInModal} />
       </AppContext.Provider>
     );
   }
