@@ -1,8 +1,23 @@
-import Styled from 'styled-components';
+import React from 'react';
+import { Box } from 'blockstack-ui';
 
-export default Styled.img`
-  border-radius: 50%;
-  max-width: ${({ size }) => size};
-  max-height: ${({ size }) => size};
-  max-width: 100%;
-`;
+const size = 42 * 3;
+
+const imageUrl = (username) => `https://banter-pub.imgix.net/users/${username}?w=${size}&h=${size}&fit=crop&crop=faces,top,left`;
+
+const Avatar = ({ username, ...rest }) => (
+  <Box
+    size="42px"
+    display="block"
+    width="100%"
+    background={`#f8a5c2 url(${imageUrl(username)}) center center no-repeat`}
+    borderRadius="100%"
+    overflow="hidden"
+    style={{
+      backgroundSize: 'cover',
+    }}
+    {...rest}
+  />
+);
+
+export {Avatar};

@@ -1,19 +1,19 @@
 import App, { Container } from 'next/app';
 import React, { useState, useEffect } from 'react';
-import { ThemeProvider, createGlobalStyle } from 'styled-components';
+import { ThemeProvider } from 'styled-components';
 import { UserSession, AppConfig } from 'blockstack';
 import { configure, getConfig, User } from 'radiks';
 import * as linkify from 'linkifyjs';
 import mentionPlugin from 'linkifyjs/plugins/mention';
 import { CookiesProvider, withCookies, Cookies } from 'react-cookie';
 import { instanceOf } from 'prop-types';
-import { normalize } from 'polished';
 import { withRouter } from 'next/router';
 import { AppContext } from '../common/context/app-context';
 import Nav from '../components/nav';
 import Footer from '../components/footer';
 import { theme } from '../common/theme';
 import NewSignInModal from '../components/modal/new-sign-in';
+import { globalStyles } from '../common/style';
 
 mentionPlugin(linkify);
 
@@ -23,20 +23,7 @@ const makeUserSession = () => {
   return userSession;
 };
 
-const GlobalStyles = createGlobalStyle`
-  ${normalize()};
-  * {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    box-sizing: border-box;
-    font-variant-numeric: tabular-nums;
-  }
-  body, html{
-    background: #F5F7FB;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    scroll-behavior: smooth;
-  }
-`;
+const GlobalStyles = globalStyles();
 
 const Wrapper = withRouter(
   ({ children, username: usernameProps, cookies, router, handleStateUsernameUpdate }) => {

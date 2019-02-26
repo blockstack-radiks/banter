@@ -67,11 +67,12 @@ const SettingsPage = ({ ...rest }) => {
       await Central.save(key, state);
       setSaved(true);
       NProgress.done();
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
       setSaved(false);
       NProgress.done();
     }
+    return true;
   };
 
   const { notifyMentioned, sendUpdates, updateFrequency, email } = state;
@@ -113,6 +114,7 @@ const SettingsPage = ({ ...rest }) => {
               <select value={updateFrequency} onChange={updateFrequencyChanged}>
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
+                <option value="hours">Every few hours</option>
               </select>
             </Type.span>
           </Checkbox>

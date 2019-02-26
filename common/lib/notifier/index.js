@@ -3,12 +3,16 @@ const mentionPlugin = require('linkifyjs/plugins/mention');
 const { CENTRAL_COLLECTION } = require('radiks-server/app/lib/constants');
 const _ = require('lodash');
 
+const emailify = require('react-emailify').default;
+
+const MentionEmail = require('../../../components/email/mention').default;
+
 const { sendMail, mentionedEmail } = require('../mailer');
 
 mentionPlugin(linkify);
 
 const handleNewModel = async (db, attrs) => {
-  console.log('emitter', attrs);
+  // console.log('emitter', attrs);
   if (attrs.radiksType !== 'Message') {
     return true;
   }
@@ -46,7 +50,7 @@ const handleNewModel = async (db, attrs) => {
       if (email && email.length > 0 && notifyMentioned) {
         return resolve({
           username,
-          email
+          email,
         });
       } 
       return resolve(null);
@@ -61,7 +65,13 @@ const handleNewModel = async (db, attrs) => {
 
   const sendMentions = mentionsToSend.map((mention) => new Promise(async (resolve) => {
     try {
-      await sendMail(mentionedEmail(mention, attrs));
+      const emailTemplate = emailify(MentionEmail);
+      const html = emailTemplate({
+        message: attrs,
+        mention,
+      });
+      await sendMail(mentionedEmail(html, mention, attrs));
+
       return resolve(true);
     } catch (error) {
       console.error('Error when sending message:');
