@@ -10,6 +10,7 @@ const { setup } = require('radiks-server');
 const { STREAM_CRAWL_EVENT } = require('radiks-server/app/lib/constants');
 const makeApiController = require('./ApiController');
 const notifier = require('../common/lib/notifier');
+const { handleUserSave } = require('./lib/image-uploader');
 
 const dev = process.env.NODE_ENV !== 'production';
 
@@ -69,6 +70,9 @@ app.prepare().then(async () => {
 
   RadiksController.emitter.on(STREAM_CRAWL_EVENT, ([attrs]) => {
     notifier(RadiksController.DB, attrs);
+    if (attrs.radiksType === 'BlockstackUser') {
+      handleUserSave(RadiksController.radiksCollection, attrs);
+    }
   });
 
   server.listen(port, (err) => {
