@@ -53,13 +53,14 @@ const TopArea = () => {
   return !isLoggedIn ? <Login px={4} handleLogin={login} /> : <Compose />;
 };
 
-const Messages = ({ messages, createdBy }) =>
-  messages.map((message) => <MessageComponent key={message._id} createdBy={!!createdBy} message={message} />);
+const Messages = ({ messages, votes, createdBy }) =>
+  messages.map((message) => <MessageComponent votesForThisMessage={votes.filter(v => v.messageId === message._id)} key={message._id} createdBy={!!createdBy} message={message} />);
 
 const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
   const [liveMessages, setLiveMessages] = useState(rawMessages.map((m) => new Message(m)));
   const [loading, setLoading] = useState(false);
   const [viewingAll, setViewingAll] = useState(false);
+  const [liveVotes, setLiveVotes] = useState([]);
 
   const newMessageListener = (message) => {
     if (liveMessages.find((m) => m._id === message._id)) {
@@ -70,14 +71,10 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
   };
 
   const newVoteListener = (vote) => {
-    let foundMessage = false;
-    liveMessages.forEach((message, index) => {
-      if (message.attrs._id === vote.attrs.messageId) {
-        message.attrs.votes += 1;
-        liveMessages[index] = message;
-        foundMessage = true;
-      }
-    });
+       if (liveVotes.find((v) => v._id === vote._id)) {
+      return null;
+    }
+    return setLiveVotes([...new Set([vote, ...liveVotes])]);
   };
 
   const subscribe = () => {
@@ -125,7 +122,7 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
       {...rest}
     >
       {hideCompose ? null : <TopArea />}
-      <Messages messages={liveMessages} createdBy={createdBy} />
+      <Messages votes={liveVotes} messages={liveMessages} createdBy={createdBy} />
       {liveMessages.length >= 10 ? (
         <Flex borderTop="1px solid rgb(230, 236, 240)" alignItems="center" justifyContent="center" p={4}>
           {viewingAll ? (

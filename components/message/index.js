@@ -176,7 +176,7 @@ const FooterUI = ({ messageId, hasVoted, votes }) => {
   );
 };
 
-const Message = ({ message, single, createdBy, email }) => (
+const Message = ({ message, votesForThisMessage, single, createdBy, email }) => (
   <Container single={single}>
     <Avatar username={message.attrs.createdBy} />
     <Details>
@@ -201,7 +201,13 @@ const Message = ({ message, single, createdBy, email }) => (
         </TimeAgo>
       </Box>
     </Details>
-    {!email && <FooterUI messageId={message._id} hasVoted={message.attrs.hasVoted} votes={message.attrs.votes} />}
+    {!email && (
+      <FooterUI
+        messageId={message._id}
+        hasVoted={message.attrs.hasVoted}
+        votes={votesForThisMessage.length || message.attrs.votes}
+      />
+    )}
   </Container>
 );
 
