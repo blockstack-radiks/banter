@@ -69,14 +69,6 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
     return setLiveMessages([...new Set([message, ...liveMessages])]);
   };
 
-  const subscribe = () => Message.addStreamListener(newMessageListener);
-  const unsubscribe = () => Message.removeStreamListener(newMessageListener);
-
-  useEffect(() => {
-    subscribe();
-    return unsubscribe;
-  });
-
   const newVoteListener = (vote) => {
     let foundMessage = false;
     liveMessages.forEach((message, index) => {
@@ -86,17 +78,20 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
         foundMessage = true;
       }
     });
-    if (foundMessage) {
-      setLiveMessages([...new Set([...liveMessages])]);
-    }
   };
 
-  const subscribeVotes = () => Vote.addStreamListener(newVoteListener);
-  const unsubscribeVotes = () => Vote.removeStreamListener(newVoteListener);
+  const subscribe = () => {
+    Message.addStreamListener(newMessageListener);
+    Vote.addStreamListener(newVoteListener);
+  };
+  const unsubscribe = () => {
+    Message.removeStreamListener(newMessageListener);
+    Vote.removeStreamListener(newVoteListener);
+  };
 
   useEffect(() => {
-    subscribeVotes();
-    return unsubscribeVotes;
+    subscribe();
+    return unsubscribe;
   }, []);
 
   const loadMoreMessages = () => {
