@@ -26,10 +26,11 @@ const Username = ({ hoverable, ...rest }) => (
   </Hover>
 );
 
-const TimeAgo = ({ ...rest }) => <Type fontSize={0} {...rest} />;
+const TimeAgo = ({ ...rest }) => <Type opacity={0.6} color="purple" fontSize={0} pt={3} {...rest} />;
 
 const ConditionalLink = ({ condition, children, ...rest }) =>
   condition ? children : <Link {...rest}>{children}</Link>;
+
 const Meta = ({ createdBy, username, timeago, id, email, ...rest }) => (
   <Flex pb={1} alignItems="flex-end" justifyContent="space-between" color="gray" {...rest}>
     {email ? (
