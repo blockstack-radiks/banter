@@ -118,7 +118,13 @@ const Nav = ({ ...rest }) => {
         <Hover>
           {({ hovered, bind }) => (
             <Link href="/settings" passHref>
-              <Box cursor={hovered ? 'pointer' : 'unset'} is="a" color={hovered ? 'white' : 'purple'} {...bind}>
+              <Box
+                title="Settings"
+                cursor={hovered ? 'pointer' : 'unset'}
+                is="a"
+                color={hovered ? 'white' : 'purple'}
+                {...bind}
+              >
                 <SettingsIcon size={28} />
               </Box>
             </Link>
@@ -137,7 +143,7 @@ const Nav = ({ ...rest }) => {
                 as={`/[::]${username}`}
                 passHref
               >
-                <Box cursor={hovered ? 'pointer' : 'unset'} is="a" {...bind}>
+                <Box title="Your Profile" cursor={hovered ? 'pointer' : 'unset'} is="a" {...bind}>
                   <Avatar size={27} username={username} />
                 </Box>
               </Link>

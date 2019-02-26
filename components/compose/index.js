@@ -1,5 +1,6 @@
 import React, { useContext, useRef, useEffect, useState } from 'react';
 import { EditorState } from 'draft-js';
+import { Hover } from 'react-powerplug';
 import Editor from 'draft-js-plugins-editor';
 import createMentionPlugin, { defaultSuggestionsFilter } from 'draft-js-mention-plugin';
 import createEmojiPlugin from 'draft-js-emoji-plugin';
@@ -20,6 +21,16 @@ const emojiPlugin = createEmojiPlugin();
 const { MentionSuggestions } = mentionPlugin;
 const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
 const plugins = [mentionPlugin, emojiPlugin];
+
+const EmojiButton = ({ ...rest }) => (
+  <Hover>
+    {({ hovered, bind }) => (
+      <Box opacity={hovered ? 1 : 0.5} {...bind}>
+        <EmojiSelect />
+      </Box>
+    )}
+  </Hover>
+);
 
 const Compose = ({ pluginProps, ...rest }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -107,7 +118,7 @@ const Compose = ({ pluginProps, ...rest }) => {
             position="relative"
             p={3}
             border="1px solid"
-            borderColor={focused ? 'pink' : 'hsl(204,25%,80%)'}
+            borderColor={focused ? 'pink' : 'hsl(204,25%,90%)'}
             boxShadow={focused ? `${rgba(theme.colors.pink, 0.14)} 0px 0px 0px 4px` : 'none'}
             transition="0.1s all ease-in-out"
             is="form"
@@ -136,7 +147,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                 </div>
               </Box>
               <Flex position="absolute" top="2px" right="8px">
-                <EmojiSelect />
+                <EmojiButton />
               </Flex>
             </StylesWrapper>
           </Box>

@@ -138,7 +138,7 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
               You&apos;ve reached the end of the line!
             </Type>
           ) : (
-            <Button onClick={onLoadMoreClick}>{loading ? 'Loading...' : 'Load more'}</Button>
+            <Button onClick={onLoadMoreClick}>{loading ? 'Loading...' : 'More Posts'}</Button>
           )}
         </Flex>
       ) : null}
