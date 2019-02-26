@@ -68,10 +68,7 @@ const NewSignInModal = ({ open }) => {
           Welcome to Banter!
         </Type.h3>
         <Type my={4}>
-          Banter is a super-social place for friends to
-          {' '}
-          <Poop />
-          on each other.
+          Banter is a super-social place for friends.
           You might miss out if Banter can&apos;t send you notifications... don&apos;t worry,
           you can always remove your email or limit notifications in the
           {' '}
@@ -100,7 +97,7 @@ const NewSignInModal = ({ open }) => {
               Skip
             </SecondaryButton>
             <Button mt={4} display="inline-block" disabled={saving} onClick={submit}>
-              {saving ? 'Saving..' : 'Submit'}
+              {saving ? 'Saving..' : 'Save Email'}
             </Button>
           </Box>
         </Box>
