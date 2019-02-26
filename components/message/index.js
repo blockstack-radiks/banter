@@ -9,6 +9,7 @@ import Vote from '../../models/Vote';
 import { AppContext } from '../../common/context/app-context';
 import { Avatar } from '../avatar';
 import { MessageContent as StyledMessageContent } from './styled';
+import { appUrl } from '../../common/utils';
 
 const Username = ({ hoverable, ...rest }) => (
   <Hover>
@@ -37,7 +38,7 @@ const Meta = ({ createdBy, username, timeago, id, email, ...rest }) => (
         <Type
           is="a"
           mt={0}
-          href={`${process.env.RADIKS_API_SERVER}/[::]${username}`}
+          href={`${appUrl()}/[::]${username}`}
           fontWeight={600}
           color="purple"
           style={{ textDecoration: 'none' }}
@@ -89,7 +90,7 @@ const MessageContent = ({ content, email, ...rest }) => (
         formatHref: (href, type) => {
           if (type === 'mention') {
             if (email) {
-              return `${process.env.RADIKS_API_SERVER}/[::]${href.slice(1)}`;
+              return `${appUrl()}/[::]${href.slice(1)}`;
             }
             return `/[::]${href.slice(1)}`;
           }
@@ -129,9 +130,9 @@ const IconButton = ({ active, ...rest }) => (
   </Active>
 );
 
-const FooterUI = ({ messageId, hasVoted, votes }) => {
+const FooterUI = ({ messageId, hasVoted, votes, email, timeago }) => {
   const [voted, setVoted] = useState(hasVoted);
-  const [count, setCount] = useState(votes);
+  const [count, setCount] = useState(votes || 0);
   const { user } = useContext(AppContext);
   
   if (votes > count) {
@@ -153,16 +154,32 @@ const FooterUI = ({ messageId, hasVoted, votes }) => {
 
   const Icon = voted ? DownvoteFilledIcon : DownvoteEmptyIcon;
   return (
-    <Flex style={{ userSelect: 'none' }} pt={2} color="purple">
-      <IconButton active={voted} onClick={toggleVote}>
-        <Icon size={20} />
-      </IconButton>
-      <Box pl={1}>
-        <Type fontSize={0} fontWeight="bold">
-          {count}
-        </Type>
-      </Box>
-    </Flex>
+    <>
+      <Flex style={{ userSelect: 'none' }} pt={2} color="purple">
+        {/* {(typeof message.attrs.votes !== 'undefined') && (
+        )} */}
+        <IconButton active={voted} onClick={toggleVote}>
+          <Icon size={20} />
+        </IconButton>
+        <Box pl={1}>
+          <Type fontSize={0} fontWeight="bold">
+            {count}
+          </Type>
+        </Box>
+      </Flex>
+      {email && (
+        <Flex mt={2}>
+          <Type.a
+            fontSize={0}
+            color="gray"
+            style={{ textDecoration: 'none' }}
+            href={`${appUrl()}/messages/${messageId}`}
+          >
+            {timeago}
+          </Type.a>
+        </Flex>
+      )}
+    </>
   );
 };
 
@@ -172,9 +189,7 @@ const Message = ({ message, createdBy, email }) => (
     <Details>
       <Meta createdBy={createdBy} username={message.attrs.createdBy} timeago={message.ago()} id={message._id} email={email} />
       <MessageContent content={message.attrs.content} email={email} />
-      {!email && (
-        <FooterUI messageId={message._id} hasVoted={message.attrs.hasVoted} votes={message.attrs.votes} />
-      )}
+      <FooterUI messageId={message._id} hasVoted={message.attrs.hasVoted} votes={message.attrs.votes} email={email} timeago={message.ago()} />
     </Details>
   </Container>
 );
