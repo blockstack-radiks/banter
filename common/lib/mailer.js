@@ -27,12 +27,13 @@ const sendMail = (email) =>
     });
   });
 
-const mentionedEmail = (user, message) => {
+const mentionedEmail = (html, mention, message) => {
   const url = process.env.STAGING ? 'https://staging.banter.pub' : 'https://banter.pub';
   return {
     from: 'hello@banter.pub',
-    to: 'hello@banter.pub',
-    subject: `You were mentioned by @${message.createdBy}`,
+    to: mention.email,
+    subject: `💩You were mentioned by @${message.createdBy}`,
+    html,
     text: `
     You were mentioned in a message on Banter:\n
     ${message.content}\n

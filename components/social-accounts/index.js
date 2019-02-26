@@ -19,6 +19,9 @@ const AccountLink = ({ href, children}) => (
 
 const SocialAccounts = ({ profile }) => {
   const accounts = {};
+  if (!profile.accounts) {
+    return null;
+  }
   profile.account.forEach((account) => {
     accounts[account.service] = account;
   });
