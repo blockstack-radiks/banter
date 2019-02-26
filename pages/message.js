@@ -24,7 +24,7 @@ class MessagePage extends React.Component {
         borderRadius={2}
         boxShadow="card"
       >
-        <MessageComponent message={message} />
+        <MessageComponent single message={message} />
       </Box>
     );
   }

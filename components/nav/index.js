@@ -104,7 +104,13 @@ const Nav = ({ ...rest }) => {
         {({ hovered, bind }) => (
           <Box>
             <Type is="h1" m={0} fontSize="28px" display="inline-block" {...bind}>
-              <Type is="a" href="/" color={hovered ? 'white' : 'purple'} textDecoration="none">
+              <Type
+                is="a"
+                href="/"
+                color={hovered ? 'white' : 'purple'}
+                textDecoration="none"
+                transition="0.1s all ease-in-out"
+              >
                 <Logo />
                 <Type display={['none', 'inline-block']} ml={2}>
                   Banter
@@ -123,6 +129,7 @@ const Nav = ({ ...rest }) => {
                 cursor={hovered ? 'pointer' : 'unset'}
                 is="a"
                 color={hovered ? 'white' : 'purple'}
+                transition="0.1s all ease-in-out"
                 {...bind}
               >
                 <SettingsIcon size={28} />
@@ -143,7 +150,18 @@ const Nav = ({ ...rest }) => {
                 as={`/[::]${username}`}
                 passHref
               >
-                <Box title="Your Profile" cursor={hovered ? 'pointer' : 'unset'} is="a" {...bind}>
+                <Box
+                  title="Your Profile"
+                  size={31}
+                  cursor={hovered ? 'pointer' : 'unset'}
+                  is="a"
+                  display="block"
+                  border="2px solid"
+                  borderColor={hovered ? 'white' : 'transparent'}
+                  transition="0.1s all ease-in-out"
+                  borderRadius="100%"
+                  {...bind}
+                >
                   <Avatar size={27} username={username} />
                 </Box>
               </Link>

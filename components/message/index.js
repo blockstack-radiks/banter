@@ -26,7 +26,22 @@ const Username = ({ hoverable, ...rest }) => (
   </Hover>
 );
 
-const TimeAgo = ({ ...rest }) => <Type opacity={0.6} color="purple" fontSize={0} pt={3} {...rest} />;
+const TimeAgo = ({ ...rest }) => (
+  <Hover>
+    {({ hovered, bind }) => (
+      <Type
+        title="Permalink"
+        opacity={hovered ? 1 : 0.6}
+        cursor={hovered ? 'pointer' : 'unset'}
+        color="purple"
+        fontSize={0}
+        pt={3}
+        {...bind}
+        {...rest}
+      />
+    )}
+  </Hover>
+);
 
 const ConditionalLink = ({ condition, children, ...rest }) =>
   condition ? children : <Link {...rest}>{children}</Link>;
@@ -90,8 +105,8 @@ const MessageContent = ({ content, email, ...rest }) => (
 
 const Details = ({ ...rest }) => <Box ml={3} width={7 / 8} {...rest} />;
 
-const Container = ({ ...rest }) => (
-  <Flex px={3} py={3} alignItems="flex-start" borderTop="1px solid rgb(230, 236, 240)" {...rest} />
+const Container = ({ single, ...rest }) => (
+  <Flex px={3} py={3} alignItems="flex-start" borderTop={single ? 'none' : '1px solid rgb(230, 236, 240)'} {...rest} />
 );
 
 const IconButton = ({ active, ...rest }) => (
@@ -152,7 +167,7 @@ const FooterUI = ({ messageId, hasVoted, votes }) => {
       <IconButton active={voted} onClick={toggleVote}>
         <DownvoteFilledIcon size={20} />
       </IconButton>
-      <Box position="absolute" right={0} top="-5px" pl={1}>
+      <Box position="absolute" right="2px" top="-5px" pl={1}>
         <Type fontSize={0} fontWeight="bold">
           {count}
         </Type>
@@ -161,8 +176,8 @@ const FooterUI = ({ messageId, hasVoted, votes }) => {
   );
 };
 
-const Message = ({ message, createdBy, email }) => (
-  <Container>
+const Message = ({ message, single, createdBy, email }) => (
+  <Container single={single}>
     <Avatar username={message.attrs.createdBy} />
     <Details>
       <Meta createdBy={createdBy} username={message.attrs.createdBy} id={message._id} email={email} />
