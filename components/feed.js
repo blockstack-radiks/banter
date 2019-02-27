@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import NProgress from 'nprogress';
 import { getConfig } from 'radiks';
-
+import { useConnect } from 'redux-bundler-hook';
 import dynamic from 'next/dynamic';
 import { AppContext } from '../common/context/app-context';
 import Message from '../models/Message';
@@ -54,36 +54,36 @@ const TopArea = () => {
 };
 
 const Messages = ({ messages, votes, createdBy }) =>
-  messages.map((message) => <MessageComponent votesForThisMessage={votes.filter(v => v.messageId === message._id)} key={message._id} createdBy={!!createdBy} message={message} />);
+  messages.map((message) => (
+    <MessageComponent
+      votesForThisMessage={votes.filter((v) => v.messageId === message._id)}
+      key={message._id}
+      createdBy={!!createdBy}
+      message={new Message(message)}
+    />
+  ));
 
-const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
-  const [liveMessages, setLiveMessages] = useState(rawMessages.map((m) => new Message(m)));
+const Feed = ({ hideCompose, createdBy, ...rest }) => {
+  const { messages, doFetchMoreMessages, doAddMessage, doUpdateMessageVoteCount } = useConnect(
+    'selectMessages',
+    'doFetchMoreMessages',
+    'doAddMessage',
+    'doUpdateMessageVoteCount'
+  );
+  const [liveMessages, setLiveMessages] = useState(messages.map((m) => new Message(m)));
   const [loading, setLoading] = useState(false);
   const [viewingAll, setViewingAll] = useState(false);
   const [liveVotes, setLiveVotes] = useState([]);
 
-  const newMessageListener = (message) => {
-    if (liveMessages.find((m) => m._id === message._id)) {
-      return null;
-    }
-    message.attrs.votes = message.attrs.votes || 0;
-    return setLiveMessages([...new Set([message, ...liveMessages])]);
-  };
-
-  const newVoteListener = (vote) => {
-       if (liveVotes.find((v) => v._id === vote._id)) {
-      return null;
-    }
-    return setLiveVotes([...new Set([vote, ...liveVotes])]);
-  };
+  const newVoteListener = (vote) => {};
 
   const subscribe = () => {
-    Message.addStreamListener(newMessageListener);
-    Vote.addStreamListener(newVoteListener);
+    Message.addStreamListener(doAddMessage);
+    Vote.addStreamListener(doUpdateMessageVoteCount);
   };
   const unsubscribe = () => {
-    Message.removeStreamListener(newMessageListener);
-    Vote.removeStreamListener(newVoteListener);
+    Message.removeStreamListener(doAddMessage);
+    Vote.removeStreamListener(doUpdateMessageVoteCount);
   };
 
   useEffect(() => {
@@ -94,11 +94,11 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
   const loadMoreMessages = () => {
     NProgress.start();
     setLoading(true);
-    fetchMoreMessages(liveMessages, createdBy).then(({ hasMoreMessages, _messages }) => {
-      setLiveMessages(_messages);
+    const fetchMoreMessages = doFetchMoreMessages(createdBy);
+    fetchMoreMessages.then((payload) => {
       setLoading(false);
       NProgress.done();
-      if (!hasMoreMessages) {
+      if (payload && !payload.hasMoreMessages) {
         setViewingAll(true);
       }
     });
@@ -122,8 +122,8 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
       {...rest}
     >
       {hideCompose ? null : <TopArea />}
-      <Messages votes={liveVotes} messages={liveMessages} createdBy={createdBy} />
-      {liveMessages.length >= 10 ? (
+      <Messages votes={liveVotes} messages={messages} createdBy={createdBy} />
+      {messages.length >= 10 ? (
         <Flex borderTop="1px solid rgb(230, 236, 240)" alignItems="center" justifyContent="center" p={4}>
           {viewingAll ? (
             <Type color="purple" fontWeight="bold">

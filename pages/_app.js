@@ -9,6 +9,9 @@ import mentionPlugin from 'linkifyjs/plugins/mention';
 import { CookiesProvider, withCookies, Cookies } from 'react-cookie';
 import { instanceOf } from 'prop-types';
 import { withRouter } from 'next/router';
+import { Provider } from 'redux-bundler-react';
+import { ReduxBundlerProvider } from 'redux-bundler-hook';
+import withReduxStore from '../common/lib/with-redux-store';
 import { AppContext } from '../common/context/app-context';
 import Nav from '../components/nav';
 import Footer from '../components/footer';
@@ -140,23 +143,25 @@ class MyApp extends App {
   handleStateUsernameUpdate = (username) => this.setState({ username });
 
   render() {
-    const { Component, pageProps, universalCookies } = this.props;
+    const { Component, pageProps, universalCookies, reduxStore } = this.props;
 
     return (
       <ThemeProvider theme={theme}>
         <Container>
           <GlobalStyles />
-          <CookiesProvider cookie={universalCookies}>
-            <Wrapper
-              handleStateUsernameUpdate={this.handleStateUsernameUpdate}
-              username={this.state.username}
-              cookies={this.props.cookies}
-            >
-              <Nav />
-              <Component {...pageProps} />
-              <Footer />
-            </Wrapper>
-          </CookiesProvider>
+          <ReduxBundlerProvider store={reduxStore}>
+            <CookiesProvider cookie={universalCookies}>
+              <Wrapper
+                handleStateUsernameUpdate={this.handleStateUsernameUpdate}
+                username={this.state.username}
+                cookies={this.props.cookies}
+              >
+                <Nav />
+                <Component reduxStore={reduxStore} {...pageProps} />
+                <Footer />
+              </Wrapper>
+            </CookiesProvider>
+          </ReduxBundlerProvider>
         </Container>
       </ThemeProvider>
     );
@@ -167,4 +172,4 @@ MyApp.propTypes = {
   cookies: instanceOf(Cookies).isRequired,
 };
 
-export default withCookies(MyApp);
+export default withReduxStore(withCookies(MyApp));

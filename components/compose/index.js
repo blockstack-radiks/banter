@@ -93,6 +93,7 @@ const Compose = ({ pluginProps, ...rest }) => {
     setLoading(true);
     const message = new Message({
       content,
+      votes: [],
       createdBy: user._id,
     });
     try {

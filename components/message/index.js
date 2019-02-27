@@ -176,39 +176,42 @@ const FooterUI = ({ messageId, hasVoted, votes }) => {
   );
 };
 
-const Message = ({ message, votesForThisMessage, single, createdBy, email }) => (
-  <Container single={single}>
-    <Avatar username={message.attrs.createdBy} />
-    <Details>
-      <Meta createdBy={createdBy} username={message.attrs.createdBy} id={message._id} email={email} />
-      <MessageContent content={message.attrs.content} email={email} />
-      <Box>
-        <TimeAgo>
-          <Link
-            href={{
-              pathname: '/message',
-              query: {
-                id: message._id,
-              },
-            }}
-            as={`/messages/${message._id}`}
-            passHref
-          >
-            <Type.a fontSize={0} color="gray" style={{ textDecoration: 'none' }}>
-              {message.ago()}
-            </Type.a>
-          </Link>
-        </TimeAgo>
-      </Box>
-    </Details>
-    {!email && (
-      <FooterUI
-        messageId={message._id}
-        hasVoted={message.attrs.hasVoted}
-        votes={votesForThisMessage.length || message.attrs.votes}
-      />
-    )}
-  </Container>
-);
+const Message = ({ message, votesForThisMessage, single, createdBy, email }) => {
+  const { username } = useContext(AppContext);
+  return (
+    <Container single={single}>
+      <Avatar username={message.attrs.createdBy} />
+      <Details>
+        <Meta createdBy={createdBy} username={message.attrs.createdBy} id={message._id} email={email} />
+        <MessageContent content={message.attrs.content} email={email} />
+        <Box>
+          <TimeAgo>
+            <Link
+              href={{
+                pathname: '/message',
+                query: {
+                  id: message._id,
+                },
+              }}
+              as={`/messages/${message._id}`}
+              passHref
+            >
+              <Type.a fontSize={0} color="gray" style={{ textDecoration: 'none' }}>
+                {message.ago()}
+              </Type.a>
+            </Link>
+          </TimeAgo>
+        </Box>
+      </Details>
+      {!email && (
+        <FooterUI
+          messageId={message._id}
+          hasVoted={message.attrs.votes.find((v) => v && v.username && v.username === username)}
+          votes={votesForThisMessage.length || message.attrs.votes.length}
+        />
+      )}
+    </Container>
+  );
+};
 
 export default Message;

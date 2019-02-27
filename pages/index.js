@@ -11,16 +11,14 @@ class Home extends React.Component {
     rawMessages: PropTypes.array.isRequired,
   };
 
-  static getInitialProps = async ({ req }) => {
+  static getInitialProps = async ({ req, reduxStore }) => {
     const query = { fetcher: null };
     if (req && req.universalCookies && req.universalCookies.cookies && req.universalCookies.cookies.username) {
       query.fetcher = req.universalCookies.cookies.username;
     }
-    const rawMessages = await fetchMessages(query);
+    await reduxStore.doFetchMessages(query);
 
-    return {
-      rawMessages,
-    };
+    return {};
   };
 
   render() {

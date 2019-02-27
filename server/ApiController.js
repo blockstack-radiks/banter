@@ -40,7 +40,7 @@ const makeApiController = (db) => {
 
     const messages = await radiksData.aggregate(pipeline).toArray();
 
-    let username = (req.query.fetcher || req.universalCookies.get('username'));
+    let username = req.query.fetcher || req.universalCookies.get('username');
     if (username) username = username.replace(/"/g, '');
     messages.forEach((message) => {
       message.hasVoted = false;
@@ -51,11 +51,11 @@ const makeApiController = (db) => {
           }
         });
       }
-      message.votes = message.votes.length;
     });
 
     res.json({ messages });
   });
+
 
   Router.getAsync('/avatar/:username', async (req, res) => {
     const { username } = req.params;
@@ -76,11 +76,16 @@ const makeApiController = (db) => {
   });
 
   Router.getAsync('/usernames', async (req, res) => {
-    const users = await radiksData.find({
-      radiksType: 'BlockstackUser',
-    }, {
-      projection: { username: 1 },
-    }).toArray();
+    const users = await radiksData
+      .find(
+        {
+          radiksType: 'BlockstackUser',
+        },
+        {
+          projection: { username: 1 },
+        }
+      )
+      .toArray();
     const usernames = users.map(({ username }) => username);
     res.json(usernames);
   });
