@@ -31,22 +31,6 @@ const login = () => {
   userSession.redirectToSignIn(redirect, manifest, scopes);
 };
 
-const fetchMoreMessages = async (messages, createdBy) => {
-  const lastMessage = messages && messages.length && messages[messages.length - 1];
-  const newMessagesAttrs = await fetchMessages({
-    lt: lastMessage && lastMessage.attrs.createdAt,
-    createdBy,
-  });
-  const newMessages = newMessagesAttrs.map((attrs) => new Message(attrs));
-
-  const newmessages = messages && messages.concat(newMessages);
-  const hasMoreMessages = newMessages.length === 10;
-  return {
-    hasMoreMessages,
-    _messages: newmessages,
-  };
-};
-
 const TopArea = () => {
   const { isLoggedIn } = useContext(AppContext);
   return !isLoggedIn ? <Login px={4} handleLogin={login} /> : <Compose />;
