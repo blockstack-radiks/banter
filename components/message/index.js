@@ -176,7 +176,7 @@ const FooterUI = ({ messageId, hasVoted, votes }) => {
   );
 };
 
-const Message = ({ message, votesForThisMessage, single, createdBy, email }) => {
+const Message = ({ message, single, createdBy, email }) => {
   const { username } = useContext(AppContext);
   return (
     <Container single={single}>
@@ -207,7 +207,7 @@ const Message = ({ message, votesForThisMessage, single, createdBy, email }) => 
         <FooterUI
           messageId={message._id}
           hasVoted={message.attrs.votes.find((v) => v && v.username && v.username === username)}
-          votes={votesForThisMessage.length || message.attrs.votes.length}
+          votes={message.attrs.votes.length}
         />
       )}
     </Container>

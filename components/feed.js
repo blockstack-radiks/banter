@@ -49,19 +49,19 @@ const fetchMoreMessages = async (messages, createdBy) => {
 
 const TopArea = () => {
   const { isLoggedIn } = useContext(AppContext);
-
   return !isLoggedIn ? <Login px={4} handleLogin={login} /> : <Compose />;
 };
 
-const Messages = ({ messages, votes, createdBy }) =>
-  messages.map((message) => (
+const Messages = ({ createdBy }) => {
+  const { messages } = useConnect('selectMessages');
+  return messages.map((message) => (
     <MessageComponent
-      votesForThisMessage={votes.filter((v) => v.messageId === message._id)}
       key={message._id}
       createdBy={!!createdBy}
       message={new Message(message)}
     />
   ));
+};
 
 const Feed = ({ hideCompose, createdBy, ...rest }) => {
   const { messages, doFetchMoreMessages, doAddMessage, doUpdateMessageVoteCount } = useConnect(
@@ -70,12 +70,8 @@ const Feed = ({ hideCompose, createdBy, ...rest }) => {
     'doAddMessage',
     'doUpdateMessageVoteCount'
   );
-  const [liveMessages, setLiveMessages] = useState(messages.map((m) => new Message(m)));
   const [loading, setLoading] = useState(false);
   const [viewingAll, setViewingAll] = useState(false);
-  const [liveVotes, setLiveVotes] = useState([]);
-
-  const newVoteListener = (vote) => {};
 
   const subscribe = () => {
     Message.addStreamListener(doAddMessage);
@@ -122,7 +118,7 @@ const Feed = ({ hideCompose, createdBy, ...rest }) => {
       {...rest}
     >
       {hideCompose ? null : <TopArea />}
-      <Messages votes={liveVotes} messages={messages} createdBy={createdBy} />
+      <Messages createdBy={createdBy} />
       {messages.length >= 10 ? (
         <Flex borderTop="1px solid rgb(230, 236, 240)" alignItems="center" justifyContent="center" p={4}>
           {viewingAll ? (
