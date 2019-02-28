@@ -120,55 +120,57 @@ const Nav = ({ ...rest }) => {
           </Box>
         )}
       </Hover>
-      <Flex>
-        <Hover>
-          {({ hovered, bind }) => (
-            <Link href="/settings" passHref>
-              <Box
-                title="Settings"
-                cursor={hovered ? 'pointer' : 'unset'}
-                is="a"
-                color={hovered ? 'white' : 'purple'}
-                transition="0.1s all ease-in-out"
-                {...bind}
-              >
-                <SettingsIcon size={28} />
-              </Box>
-            </Link>
-          )}
-        </Hover>
-        <Box pl={3}>
+      {username ? (
+        <Flex>
           <Hover>
             {({ hovered, bind }) => (
-              <Link
-                href={{
-                  pathname: '/user',
-                  query: {
-                    username,
-                  },
-                }}
-                as={`/[::]${username}`}
-                passHref
-              >
+              <Link href="/settings" passHref>
                 <Box
-                  title="Your Profile"
-                  size={31}
+                  title="Settings"
                   cursor={hovered ? 'pointer' : 'unset'}
                   is="a"
-                  display="block"
-                  border="2px solid"
-                  borderColor={hovered ? 'white' : 'transparent'}
+                  color={hovered ? 'white' : 'purple'}
                   transition="0.1s all ease-in-out"
-                  borderRadius="100%"
                   {...bind}
                 >
-                  <Avatar size={27} username={username} />
+                  <SettingsIcon size={28} />
                 </Box>
               </Link>
             )}
           </Hover>
-        </Box>
-      </Flex>
+          <Box pl={3}>
+            <Hover>
+              {({ hovered, bind }) => (
+                <Link
+                  href={{
+                    pathname: '/user',
+                    query: {
+                      username,
+                    },
+                  }}
+                  as={`/[::]${username}`}
+                  passHref
+                >
+                  <Box
+                    title="Your Profile"
+                    size={31}
+                    cursor={hovered ? 'pointer' : 'unset'}
+                    is="a"
+                    display="block"
+                    border="2px solid"
+                    borderColor={hovered ? 'white' : 'transparent'}
+                    transition="0.1s all ease-in-out"
+                    borderRadius="100%"
+                    {...bind}
+                  >
+                    <Avatar size={27} username={username} />
+                  </Box>
+                </Link>
+              )}
+            </Hover>
+          </Box>
+        </Flex>
+      ) : null}
     </Flex>
   );
 };
