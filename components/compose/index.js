@@ -22,6 +22,8 @@ const { MentionSuggestions } = mentionPlugin;
 const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
 const plugins = [mentionPlugin, emojiPlugin];
 
+let allUsernames = [];
+
 const EmojiButton = ({ ...rest }) => (
   <Hover>
     {({ hovered, bind }) => (
@@ -41,12 +43,12 @@ const Compose = ({ pluginProps, ...rest }) => {
   const fetchUsernames = async () => {
     const response = await fetch('/api/usernames');
     const usernames = await response.json();
-    const _suggestions = usernames.map((username) => ({
+    allUsernames = usernames.map((username) => ({
       name: username,
       link: `/[::]${username}`,
       avatar: `/api/avatar/${username}`,
     }));
-    setSuggestions(_suggestions);
+    setSuggestions(allUsernames);
   };
 
   useEffect(() => {
@@ -61,7 +63,7 @@ const Compose = ({ pluginProps, ...rest }) => {
   };
 
   const onSearchChange = ({ value }) => {
-    setSuggestions(defaultSuggestionsFilter(value, suggestions));
+    setSuggestions(defaultSuggestionsFilter(value, allUsernames));
   };
 
   const onAddMention = () => {

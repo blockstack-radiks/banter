@@ -35,24 +35,24 @@ const mentionedEmail = (html, mention, message) => {
     from: FROM,
     to: mention.email,
     subject: `💩You were mentioned by @${message.createdBy}`,
-    html,
+    // html,
     text: `
     You were mentioned in a message on Banter:\n
-    ${message.content}\n
+    @${message.createdBy}: ${message.content}\n
     ${url}/messages/${message._id}\n
     Happy Banting!
     `,
   };
 };
 
-const updatesEmail = (user, messages, html) => {
+const updatesEmail = (user, messages) => {
   const messageLines = messages.map((message) => `@${message.createdBy}: ${message.content}`);
   const url = process.env.STAGING ? 'https://staging.banter.pub' : 'https://banter.pub';
   return {
     from: FROM,
     to: user.email,
     subject: `Some 💩from Banter`,
-    html,
+    // html,
     text: `
     Hey ${user.username}! Here's a few recent posts on Banter.\n\n
     ${messageLines.join('\n\n')}\n
