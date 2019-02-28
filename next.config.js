@@ -6,5 +6,6 @@ if (process.env.HEROKU_APP_NAME) {
 module.exports = {
   env: {
     RADIKS_API_SERVER: radiksServer,
+    HEROKU_APP_NAME: process.env.HEROKU_APP_NAME,
   },
 };

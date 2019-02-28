@@ -1,6 +1,8 @@
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
 
+const FROM = '💩Banter <hello@banter.pub>';
+
 const sendMail = (email) =>
   new Promise(async (resolve, reject) => {
     let transport = null;
@@ -30,7 +32,7 @@ const sendMail = (email) =>
 const mentionedEmail = (html, mention, message) => {
   const url = process.env.STAGING ? 'https://staging.banter.pub' : 'https://banter.pub';
   return {
-    from: 'hello@banter.pub',
+    from: FROM,
     to: mention.email,
     subject: `💩You were mentioned by @${message.createdBy}`,
     html,
@@ -43,13 +45,14 @@ const mentionedEmail = (html, mention, message) => {
   };
 };
 
-const updatesEmail = (user, messages) => {
+const updatesEmail = (user, messages, html) => {
   const messageLines = messages.map((message) => `@${message.createdBy}: ${message.content}`);
   const url = process.env.STAGING ? 'https://staging.banter.pub' : 'https://banter.pub';
   return {
-    from: 'hello@banter.pub',
-    to: 'hello@banter.pub',
+    from: FROM,
+    to: user.email,
     subject: `Some 💩from Banter`,
+    html,
     text: `
     Hey ${user.username}! Here's a few recent posts on Banter.\n\n
     ${messageLines.join('\n\n')}\n

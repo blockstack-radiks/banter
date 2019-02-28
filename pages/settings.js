@@ -6,14 +6,10 @@ import { Card } from '../components/card';
 import Input from '../styled/input';
 import Checkbox from '../components/checkbox';
 import { Button } from '../components/button';
+import { USER_SETTINGS, defaultUserSettings } from '../common/constants';
 
 const SettingsPage = ({ ...rest }) => {
-  const [state, setState] = useState({
-    notifyMentioned: true,
-    sendUpdates: true,
-    updateFrequency: 'daily',
-    email: '',
-  });
+  const [state, setState] = useState(defaultUserSettings);
 
   const [initialLoad, setIntialLoad] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -66,7 +62,7 @@ const SettingsPage = ({ ...rest }) => {
       return null;
     }
     NProgress.start();
-    const key = 'UserSettings';
+    const key = USER_SETTINGS;
     try {
       await Central.save(key, state);
       setSaved(true);

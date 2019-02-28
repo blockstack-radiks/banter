@@ -54,7 +54,14 @@ const TopArea = () => {
 };
 
 const Messages = ({ messages, votes, createdBy }) =>
-  messages.map((message) => <MessageComponent votesForThisMessage={votes.filter(v => v.messageId === message._id)} key={message._id} createdBy={!!createdBy} message={message} />);
+  messages.map((message) => (
+    <MessageComponent
+      votesForThisMessage={votes.filter((v) => v.messageId === message._id)}
+      key={message._id}
+      createdBy={!!createdBy}
+      message={message}
+    />
+  ));
 
 const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
   const [liveMessages, setLiveMessages] = useState(rawMessages.map((m) => new Message(m)));
@@ -71,7 +78,7 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
   };
 
   const newVoteListener = (vote) => {
-       if (liveVotes.find((v) => v._id === vote._id)) {
+    if (liveVotes.find((v) => v._id === vote._id)) {
       return null;
     }
     return setLiveVotes([...new Set([vote, ...liveVotes])]);
@@ -94,11 +101,16 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
   const loadMoreMessages = () => {
     NProgress.start();
     setLoading(true);
-    fetchMoreMessages(liveMessages, createdBy).then(({ hasMoreMessages, _messages }) => {
-      setLiveMessages(_messages);
-      setLoading(false);
-      NProgress.done();
-      if (!hasMoreMessages) {
+
+    fetchMoreMessages(liveMessages, createdBy).then(({ hasMoreMessages, ...data }) => {
+      const _messages = data.messages;
+      if (hasMoreMessages) {
+        setLiveMessages(_messages);
+        setLoading(false);
+        NProgress.done();
+      } else {
+        NProgress.done();
+        setLoading(false);
         setViewingAll(true);
       }
     });

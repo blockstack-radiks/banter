@@ -1,22 +1,27 @@
 import React from 'react';
 import { Type, Flex, Box } from 'blockstack-ui';
 
-import MessageComponent from "../message";
-import Message from '../../models/Message';
 import Layout from './layout';
+import MessageComponent from "../message";
+import Poop from '../poop';
+import Message from '../../models/Message';
 import { Button } from '../button';
 import { appUrl } from '../../common/utils';
 
-export default ({ message, mention }) => {
-  const _message = new Message(message);
+const Messages = ({ messages }) => {
+  const _messages = messages.map((attrs) => new Message(attrs));
+  return _messages.map((message) => (
+    <MessageComponent key={message._id} message={message} email />
+  ));
+};
 
-  return (
-    <Layout hiddenText={_message.attrs.content}>
+export default ({ user, messages }) => (
+    <Layout hiddenText='The best recent 💩from Banter.'>
       <Flex>
         <Box width={1}>
           <Box textAlign="center">
             <Type.p color="purple" display="block">
-              Hey @{mention.username}, you&apos;ve been mentioned!
+              Hey @{user.username}, here&apos;s the best recent <Poop />from Banter!
             </Type.p>
           </Box>
           <Flex>
@@ -30,22 +35,21 @@ export default ({ message, mention }) => {
               borderRadius={2}
               boxShadow="card"
             >
-              <MessageComponent message={_message} mt={4} email />
+              <Messages messages={messages} />
             </Box>
           </Flex>
           <Box textAlign="center">
             <Button
               my={4}
               is="a"
-              href={`${appUrl()}/messages/${message._id}`}
+              href={appUrl()}
               display="inline-block"
               style={{ cursor: 'pointer' }}
             >
-              View this message in Banter
-            </Button>
+              Go to Banter
+                </Button>
           </Box>
         </Box>
       </Flex>
     </Layout>
   );
-};
