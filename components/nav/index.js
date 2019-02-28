@@ -1,10 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Box, Flex, Type } from 'blockstack-ui';
 import { Hover } from 'react-powerplug';
 import Link from 'next/link';
 import { Avatar } from '../avatar';
-import SettingsIcon from 'mdi-react/SettingsIcon';
-import { AppContext } from '../../common/context/app-context';
+import { useConnect } from 'redux-bundler-hook';
 import { Provider, Popover } from 'reakit';
 import theme from 'reakit-theme-default';
 
@@ -52,69 +51,8 @@ export const Logo = ({ width = '28px', height = '28px' }) => (
   </svg>
 );
 
-const UserArea = () => {
-  const { logout, isSigningIn, username } = useContext(AppContext);
-
-  const color = 'purple';
-  const hover = 'white';
-
-  if (isSigningIn) {
-    return (
-      <Type color={color} fontWeight="bold" display="inline-block">
-        Signing In...
-      </Type>
-    );
-  }
-
-  return username ? (
-    <Type color={color} fontWeight="bold" display="inline-block">
-      <Hover>
-        {({ hovered, bind }) => (
-          <Link
-            href={{
-              pathname: '/user',
-              query: {
-                username,
-              },
-            }}
-            as={`/[::]${username}`}
-            passHref
-          >
-            <Type color={hovered ? hover : color} cursor={hovered ? 'pointer' : 'unset'} {...bind} ml={2}>
-              {username}
-            </Type>
-          </Link>
-        )}
-      </Hover>
-
-      <Hover>
-        {({ hovered, bind }) => (
-          <Link href="/settings">
-            <Type color={hovered ? hover : color} cursor={hovered ? 'pointer' : 'unset'} {...bind} ml={2}>
-              Settings
-            </Type>
-          </Link>
-        )}
-      </Hover>
-      <Hover>
-        {({ hovered, bind }) => (
-          <Type
-            color={hovered ? hover : color}
-            cursor={hovered ? 'pointer' : 'unset'}
-            onClick={logout}
-            ml={2}
-            {...bind}
-          >
-            Log Out
-          </Type>
-        )}
-      </Hover>
-    </Type>
-  ) : null;
-};
-
 const Nav = ({ ...rest }) => {
-  const { logout, isSigningIn, username } = useContext(AppContext);
+  const { doLogout, cookieUsername: username } = useConnect('doLogout', 'selectCookieUsername');
 
   return (
     <Provider theme={theme}>
@@ -134,18 +72,19 @@ const Nav = ({ ...rest }) => {
           {({ hovered, bind }) => (
             <Box>
               <Type is="h1" m={0} fontSize="28px" display="inline-block" {...bind}>
-                <Type
-                  is="a"
-                  href="/"
-                  color={hovered ? 'white' : 'purple'}
-                  textDecoration="none"
-                  transition="0.1s all ease-in-out"
-                >
-                  <Logo />
-                  <Type display={['none', 'inline-block']} ml={2}>
-                    Banter
+                <Link href="/" passHref>
+                  <Type
+                    is="a"
+                    color={hovered ? 'white' : 'purple'}
+                    textDecoration="none"
+                    transition="0.1s all ease-in-out"
+                  >
+                    <Logo />
+                    <Type display={['none', 'inline-block']} ml={2}>
+                      Banter
+                    </Type>
                   </Type>
-                </Type>
+                </Link>
               </Type>
             </Box>
           )}
@@ -208,7 +147,7 @@ const Nav = ({ ...rest }) => {
                           <DropdownItem is="a" href="/settings" passHref>
                             Settings
                           </DropdownItem>
-                          <DropdownItem onClick={logout}>Log out</DropdownItem>
+                          <DropdownItem onClick={doLogout}>Log out</DropdownItem>
                         </Box>
                       </Popover>
                     </Box>

@@ -3,8 +3,6 @@ import { Flex, Box } from 'rebass';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import Feed from '../components/feed';
-import { AppContext } from '../common/context/app-context';
-import { fetchMessages } from '../common/lib/api';
 
 class Home extends React.Component {
   static propTypes = {
@@ -36,6 +34,6 @@ class Home extends React.Component {
   }
 }
 
-Home.contextType = AppContext;
+
 
 export default Home;

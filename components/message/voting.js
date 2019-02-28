@@ -1,8 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import DownvoteFilledIcon from 'mdi-react/EmoticonPoopIcon';
 import Vote from '../../models/Vote';
-import { AppContext } from '../../common/context/app-context';
+import { useConnect } from 'redux-bundler-hook';
 import { Hover, Active } from 'react-powerplug';
 
 const IconButton = ({ active, ...rest }) => (
@@ -28,7 +28,7 @@ const IconButton = ({ active, ...rest }) => (
 const Voting = ({ messageId, hasVoted, votes }) => {
   const [voted, setVoted] = useState(hasVoted);
   const [count, setCount] = useState(votes);
-  const { user } = useContext(AppContext);
+  const { user } = useConnect('selectUser');
 
   if (votes > count) {
     // a new vote was found in real-time

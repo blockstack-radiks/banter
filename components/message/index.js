@@ -1,16 +1,14 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import Linkify from 'linkifyjs/react';
-import { Hover, Active } from 'react-powerplug';
+import { Hover } from 'react-powerplug';
 import Link from 'next/link';
-import { AppContext } from '../../common/context/app-context';
 import { Avatar } from '../avatar';
 import { MessageContent as StyledMessageContent } from './styled';
-
+import { useConnect } from 'redux-bundler-hook';
 import { Voting } from './voting';
 
 import { appUrl } from '../../common/utils';
-
 
 const Username = ({ hoverable, ...rest }) => (
   <Hover>
@@ -111,9 +109,8 @@ const Container = ({ single, ...rest }) => (
   <Flex px={3} py={3} alignItems="flex-start" borderTop={single ? 'none' : '1px solid rgb(230, 236, 240)'} {...rest} />
 );
 
-
 const Message = ({ message, single, createdBy, email }) => {
-  const { username } = useContext(AppContext);
+  const { cookieUsername: username } = useConnect('selectCookieUsername');
 
   return (
     <Container single={single}>

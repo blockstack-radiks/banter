@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import NProgress from 'nprogress';
-import { getConfig } from 'radiks';
 import { useConnect } from 'redux-bundler-hook';
 import dynamic from 'next/dynamic';
-import { AppContext } from '../common/context/app-context';
 import Message from '../models/Message';
 import MessageComponent from './message';
 import { Button } from './button';
@@ -22,17 +20,9 @@ const Compose = dynamic(() => import('./compose'), {
   ssr: false,
 });
 
-const login = () => {
-  const scopes = ['store_write', 'publish_data'];
-  const redirect = window.location.origin;
-  const manifest = `${window.location.origin}/manifest.json`;
-  const { userSession } = getConfig();
-  userSession.redirectToSignIn(redirect, manifest, scopes);
-};
-
 const TopArea = () => {
-  const { isLoggedIn } = useContext(AppContext);
-  return !isLoggedIn ? <Login px={4} handleLogin={login} /> : <Compose />;
+  const { doLogin, cookieUsername } = useConnect('doLogin', 'selectCookieUsername');
+  return !cookieUsername ? <Login px={4} handleLogin={doLogin} /> : <Compose />;
 };
 
 const Messages = ({ createdBy }) => {
