@@ -1,4 +1,5 @@
 import App, { Container } from 'next/app';
+import { decodeToken } from 'jsontokens';
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { Box } from 'blockstack-ui';
@@ -65,6 +66,10 @@ class MyApp extends App {
     const authResponse = ctx.req ? ctx.req.query.authResponse : ctx.query.authResponse;
 
     if (authResponse) {
+      const decoded = decodeToken(authResponse);
+      if (decoded.payload && decoded.payload.username) {
+        ctx.reduxStore.doSetUsername(decoded.payload.username);
+      }
       ctx.reduxStore.doSetLoginLoading();
     }
     if (username) {
