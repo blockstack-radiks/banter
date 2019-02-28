@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
-import NProgress from 'nprogress';
 import { useConnect } from 'redux-bundler-hook';
+import DownvoteFilledIcon from 'mdi-react/EmoticonPoopIcon';
+import Vote from '../models/Vote';
 import dynamic from 'next/dynamic';
 import Message from '../models/Message';
 import MessageComponent from './message';
 import { Button } from './button';
 import { Login } from './login';
-import Vote from '../models/Vote';
 
 const Compose = dynamic(() => import('./compose'), {
   loading: () => (
@@ -27,9 +27,20 @@ const TopArea = () => {
 
 const Messages = ({ createdBy }) => {
   const { messages } = useConnect('selectMessages');
-  return messages.map((message) => (
-    <MessageComponent key={message._id} createdBy={!!createdBy} message={new Message(message)} />
-  ));
+  return createdBy && !messages.length ? (
+    <Flex alignItems="center" justifyContent="center" flexDirection="column" p={4}>
+      <Box pb={3} color="purple" opacity={0.1}>
+        <DownvoteFilledIcon size={120} />
+      </Box>
+      <Type color="purple" fontWeight="bold">
+        No messages here!
+      </Type>
+    </Flex>
+  ) : (
+    messages.map((message) => (
+      <MessageComponent key={message._id} createdBy={!!createdBy} message={new Message(message)} />
+    ))
+  );
 };
 
 const Feed = ({ hideCompose, createdBy, ...rest }) => {
