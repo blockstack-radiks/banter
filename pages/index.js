@@ -3,24 +3,20 @@ import { Flex, Box } from 'rebass';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import Feed from '../components/feed';
-import { AppContext } from '../common/context/app-context';
-import { fetchMessages } from '../common/lib/api';
 
 class Home extends React.Component {
   static propTypes = {
     rawMessages: PropTypes.array.isRequired,
   };
 
-  static getInitialProps = async ({ req }) => {
+  static getInitialProps = async ({ req, reduxStore }) => {
     const query = { fetcher: null };
     if (req && req.universalCookies && req.universalCookies.cookies && req.universalCookies.cookies.username) {
       query.fetcher = req.universalCookies.cookies.username;
     }
-    const rawMessages = await fetchMessages(query);
+    await reduxStore.doFetchMessages(query);
 
-    return {
-      rawMessages,
-    };
+    return {};
   };
 
   render() {
@@ -38,6 +34,6 @@ class Home extends React.Component {
   }
 }
 
-Home.contextType = AppContext;
+
 
 export default Home;

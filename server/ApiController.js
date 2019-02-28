@@ -11,7 +11,7 @@ const makeApiController = (db) => {
   Router.getAsync('/messages', async (req, res) => {
     let messages = await aggregateMessages(radiksData, req.query);
 
-    let username = (req.query.fetcher || req.universalCookies.get('username'));
+    let username = req.query.fetcher || req.universalCookies.get('username');
     if (username) username = username.replace(/"/g, '');
     messages = transformMessageVotes(messages, username);
 
@@ -37,11 +37,16 @@ const makeApiController = (db) => {
   });
 
   Router.getAsync('/usernames', async (req, res) => {
-    const users = await radiksData.find({
-      radiksType: 'BlockstackUser',
-    }, {
-      projection: { username: 1 },
-    }).toArray();
+    const users = await radiksData
+      .find(
+        {
+          radiksType: 'BlockstackUser',
+        },
+        {
+          projection: { username: 1 },
+        }
+      )
+      .toArray();
     const usernames = users.map(({ username }) => username);
     res.json(usernames);
   });

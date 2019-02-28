@@ -4438,6 +4438,11 @@ immer@^1.7.4:
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.12.1.tgz#40c6e5b292c00560836c2993bda3a24379d466f5"
   integrity sha512-3fmKM6ovaqDt0CdC9daXpNi5x/YCYS3i4cwLdTVkhJdk5jrDXoPs7lCm3IqM3yhfSnz4tjjxbRG2CziQ7m8ztg==
 
+immer@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-2.0.0.tgz#d834c874d2d249f73511af39f3ef1ed3b7411132"
+  integrity sha512-qwwvbGbidU0P5SjO4s1wZ9hjNj8fQ908UVtKDSAYgxuDiY1MFylCvsQJSr/fUUo3aeHdxZapdpzPi3vpwTUXUQ==
+
 immutable@~3.7.4:
   version "3.7.6"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.7.6.tgz#13b4d3cb12befa15482a26fe1b2ebae640071e4b"
@@ -6824,6 +6829,21 @@ recursive-copy@2.0.6:
     pify "^2.3.0"
     promise "^7.0.1"
     slash "^1.0.0"
+
+redux-bundler-hook@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/redux-bundler-hook/-/redux-bundler-hook-1.0.1.tgz#cd1e9acbf0f0abac612351c901619f57d9d8ad04"
+  integrity sha512-cqKol5TDH+F5jeSrkhABfQHmhWGn6BAndOD652gx/Nc6unFJL5xS6IIwi0JRl0Pwj+xBosTWNBEeFMmWE0+EWw==
+
+redux-bundler-react@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/redux-bundler-react/-/redux-bundler-react-1.1.0.tgz#762f1f33bae036485df0eca4f039119677e28c71"
+  integrity sha512-EH4wJJoBdh70N6hrjnUjJRgxdaFLDTZz3eTkeRCZ1FxXau5wheJw4ryDq6p4Dy96yCtdolFXQP24zsHf3I0gxg==
+
+redux-bundler@^23.1.0:
+  version "23.1.0"
+  resolved "https://registry.yarnpkg.com/redux-bundler/-/redux-bundler-23.1.0.tgz#017b16f051abc4a118413bc1a194f8ee6d186343"
+  integrity sha512-FDBDj+BOMf5xvz3184+5VhguVmt/f+1sFaO0S+HE+x+TKJgHRtpNVCiL4HwyARMRStc5F3EunW574kMllNGX8g==
 
 reflect.ownkeys@^0.2.0:
   version "0.2.0"

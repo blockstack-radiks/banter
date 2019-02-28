@@ -1,14 +1,14 @@
-import React, { useContext, useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { EditorState } from 'draft-js';
 import { Hover } from 'react-powerplug';
 import Editor from 'draft-js-plugins-editor';
 import createMentionPlugin, { defaultSuggestionsFilter } from 'draft-js-mention-plugin';
 import createEmojiPlugin from 'draft-js-emoji-plugin';
 import { Box, Flex } from 'blockstack-ui';
+import { useConnect } from 'redux-bundler-hook';
 import NProgress from 'nprogress';
 import StylesWrapper from './styled';
 import Message from '../../models/Message';
-import { AppContext } from '../../common/context/app-context';
 import { Button } from '../button';
 import { useOnClickOutside } from '../../common/hooks';
 import { theme } from '../../common/theme';
@@ -73,7 +73,7 @@ const Compose = ({ pluginProps, ...rest }) => {
     editor.current.focus();
   };
 
-  const { user } = useContext(AppContext);
+  const { user } = useConnect('selectUser');
 
   const currentContent = editorState.getCurrentContent().getPlainText();
 
@@ -93,6 +93,7 @@ const Compose = ({ pluginProps, ...rest }) => {
     setLoading(true);
     const message = new Message({
       content,
+      votes: [],
       createdBy: user._id,
     });
     try {

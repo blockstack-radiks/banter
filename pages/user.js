@@ -3,13 +3,11 @@ import { Box, Flex, Type } from 'blockstack-ui';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { User } from 'radiks';
-
 import { Card } from '../components/card';
 import Feed from '../components/feed';
-import { AppContext } from '../common/context/app-context';
+
 import { Avatar } from '../components/avatar';
 import SocialAccounts from '../components/social-accounts';
-import { fetchMessages } from '../common/lib/api';
 
 class UserPage extends React.Component {
   static propTypes = {
@@ -28,10 +26,9 @@ class UserPage extends React.Component {
     if (req && req.universalCookies && req.universalCookies.cookies && req.universalCookies.cookies.username) {
       query.fetcher = req.universalCookies.cookies.username;
     }
-    const rawMessages = await fetchMessages(query);
+    await ctx.reduxStore.doFetchMessages(query);
 
     return {
-      rawMessages,
       user,
     };
   };
@@ -72,6 +69,5 @@ class UserPage extends React.Component {
   }
 }
 
-UserPage.contextType = AppContext;
 
 export default UserPage;

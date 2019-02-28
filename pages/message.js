@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box } from 'blockstack-ui';
-
 import Message from '../models/Message';
 import MessageComponent from '../components/message';
 

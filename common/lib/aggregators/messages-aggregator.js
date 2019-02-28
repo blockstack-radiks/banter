@@ -66,7 +66,6 @@ const transformMessageVotes = (_messages, username) => {
         }
       });
     }
-    _message.votes = message.votes.length;
     messages[index] = _message;
   });
   return messages;

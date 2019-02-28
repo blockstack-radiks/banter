@@ -1,16 +1,16 @@
 import React, { useContext, useState } from 'react';
 import { Box, Flex, Type } from 'blockstack-ui';
 import { Button } from '../button';
-import { AppContext } from '../../common/context/app-context';
+import { useConnect } from 'redux-bundler-hook';
 
 const Login = ({ handleLogin, ...rest }) => {
-  const { isSigningIn } = useContext(AppContext);
+  const { userLoading } = useConnect('selectUserLoading');
 
   const [loading, setLoading] = useState(false);
 
   return (
     <Flex alignItems="center" justifyContent="space-between" py={3} px={3} textAlign="center" {...rest}>
-      {isSigningIn ? (
+      {!loading && userLoading ? (
         <Box>
           <Type color="#574b90" fontWeight={500}>
             Signing In...
