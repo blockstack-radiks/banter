@@ -11,7 +11,9 @@ const setUsernameCookie = (username) => {
   cookies.set('username', username, { expires: d });
 };
 
-const getUsernameCookie = () => cookies.get('username');
+const getUsernameCookie = () => {
+  return cookies.get('username');
+};
 
 const USER_LOGIN_STARTED = 'user/USER_LOGIN_STARTED';
 const USER_LOGIN_FINISHED = 'user/USER_LOGIN_FINISHED';
@@ -180,6 +182,12 @@ export default {
         } else {
           if (getUsernameCookie()) {
             return { actionCreator: 'doHandleLogin' };
+          } else {
+            const isReallyLoggedIn =
+              typeof window !== 'undefined' && localStorage && localStorage.getItem('blockstack-session');
+            if (isReallyLoggedIn) {
+              return { actionCreator: 'doHandleLogin' };
+            }
           }
         }
       }
