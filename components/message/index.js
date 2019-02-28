@@ -1,14 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import Linkify from 'linkifyjs/react';
-import DownvoteEmptyIcon from 'mdi-react/EmoticonPoopOutlineIcon';
-import DownvoteFilledIcon from 'mdi-react/EmoticonPoopIcon';
 import { Hover, Active } from 'react-powerplug';
 import Link from 'next/link';
-import Vote from '../../models/Vote';
 import { AppContext } from '../../common/context/app-context';
 import { Avatar } from '../avatar';
 import { MessageContent as StyledMessageContent } from './styled';
+import { Voting } from './voting';
 
 const Username = ({ hoverable, ...rest }) => (
   <Hover>
@@ -109,73 +107,6 @@ const Container = ({ single, ...rest }) => (
   <Flex px={3} py={3} alignItems="flex-start" borderTop={single ? 'none' : '1px solid rgb(230, 236, 240)'} {...rest} />
 );
 
-const IconButton = ({ active, ...rest }) => (
-  <Active>
-    {({ active: pressed, bind: pressedBind }) => (
-      <Hover>
-        {({ hovered, bind }) => (
-          <Box
-            opacity={active ? '1' : hovered ? 0.75 : 0.5}
-            cursor={hovered ? 'pointer' : 'unset'}
-            transform={pressed ? 'scale(1.3) translateY(2px)' : hovered || active ? 'scale(1.3)' : 'none'}
-            transition="0.1s all ease-in-out"
-            {...bind}
-            {...pressedBind}
-            {...rest}
-          />
-        )}
-      </Hover>
-    )}
-  </Active>
-);
-
-const FooterUI = ({ messageId, hasVoted, votes }) => {
-  const [voted, setVoted] = useState(hasVoted);
-  const [count, setCount] = useState(votes);
-  const { user } = useContext(AppContext);
-
-  if (votes > count) {
-    // a new vote was found in real-time
-    setCount(votes);
-  }
-
-  const toggleVote = async () => {
-    if (!voted && user) {
-      setVoted(true);
-      setCount((s) => s + 1);
-      const vote = new Vote({
-        messageId,
-        username: user._id,
-      });
-      await vote.save();
-    }
-  };
-
-  return (
-    <Flex
-      alignItems="center"
-      justifyContent="center"
-      position="relative"
-      style={{ userSelect: 'none' }}
-      size={40}
-      borderRadius="100%"
-      bg={`rgba(0,0,0,0.0${voted ? 0 : 5})`}
-      flexShrink={0}
-      color={voted ? '#A84E6D' : 'purple'}
-      ml={3}
-    >
-      <IconButton active={voted} onClick={toggleVote}>
-        <DownvoteFilledIcon size={20} />
-      </IconButton>
-      <Box position="absolute" right="2px" top="-5px" pl={1}>
-        <Type fontSize={0} fontWeight="bold">
-          {count}
-        </Type>
-      </Box>
-    </Flex>
-  );
-};
-
 const Message = ({ message, single, createdBy, email }) => {
   const { username } = useContext(AppContext);
   return (
@@ -204,7 +135,7 @@ const Message = ({ message, single, createdBy, email }) => {
         </Box>
       </Details>
       {!email && (
-        <FooterUI
+        <Voting
           messageId={message._id}
           hasVoted={message.attrs.votes.find((v) => v && v.username && v.username === username)}
           votes={message.attrs.votes.length}
