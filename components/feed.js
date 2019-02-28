@@ -9,7 +9,6 @@ import Message from '../models/Message';
 import MessageComponent from './message';
 import { Button } from './button';
 import { Login } from './login';
-import { fetchMessages } from '../common/lib/api';
 import Vote from '../models/Vote';
 
 const Compose = dynamic(() => import('./compose'), {
@@ -39,11 +38,7 @@ const TopArea = () => {
 const Messages = ({ createdBy }) => {
   const { messages } = useConnect('selectMessages');
   return messages.map((message) => (
-    <MessageComponent
-      key={message._id}
-      createdBy={!!createdBy}
-      message={new Message(message)}
-    />
+    <MessageComponent key={message._id} createdBy={!!createdBy} message={new Message(message)} />
   ));
 };
 

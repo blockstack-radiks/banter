@@ -30,6 +30,7 @@ const SocialAccounts = ({ profile }) => {
     profile.account.forEach((account) => {
       accounts[account.service] = account;
     });
+
   return (
     <Flex mx="auto" alignItems="center" justifyContent="center">
       {accounts.github && (

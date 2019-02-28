@@ -6,7 +6,11 @@ import Link from 'next/link';
 import { AppContext } from '../../common/context/app-context';
 import { Avatar } from '../avatar';
 import { MessageContent as StyledMessageContent } from './styled';
+
 import { Voting } from './voting';
+
+import { appUrl } from '../../common/utils';
+
 
 const Username = ({ hoverable, ...rest }) => (
   <Hover>
@@ -51,7 +55,7 @@ const Meta = ({ createdBy, username, timeago, id, email, ...rest }) => (
         <Type
           is="a"
           mt={0}
-          href={`${process.env.RADIKS_API_SERVER}/[::]${username}`}
+          href={`${appUrl()}/[::]${username}`}
           fontWeight={600}
           color="purple"
           style={{ textDecoration: 'none' }}
@@ -87,7 +91,7 @@ const MessageContent = ({ content, email, ...rest }) => (
         formatHref: (href, type) => {
           if (type === 'mention') {
             if (email) {
-              return `${process.env.RADIKS_API_SERVER}/[::]${href.slice(1)}`;
+              return `${appUrl()}/[::]${href.slice(1)}`;
             }
             return `/[::]${href.slice(1)}`;
           }
@@ -107,8 +111,10 @@ const Container = ({ single, ...rest }) => (
   <Flex px={3} py={3} alignItems="flex-start" borderTop={single ? 'none' : '1px solid rgb(230, 236, 240)'} {...rest} />
 );
 
+
 const Message = ({ message, single, createdBy, email }) => {
   const { username } = useContext(AppContext);
+
   return (
     <Container single={single}>
       <Avatar username={message.attrs.createdBy} />
