@@ -5,7 +5,10 @@ import { Cookies } from 'react-cookie';
 const cookies = new Cookies();
 
 const setUsernameCookie = (username) => {
-  cookies.set('username', username, { path: '/' });
+  if (!username) return null;
+  let d = new Date();
+  d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+  cookies.set('username', username, { expires: d });
 };
 
 const getUsernameCookie = () => cookies.get('username');
