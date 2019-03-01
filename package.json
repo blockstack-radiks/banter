@@ -55,7 +55,7 @@
     "prop-types": "^15.6.2",
     "qs": "^6.6.0",
     "radiks": "0.2.0-alpha.4",
-    "radiks-server": "0.1.6",
+    "radiks-server": "0.1.8",
     "react": "^16.8.2",
     "react-cookie": "^3.0.8",
     "react-dom": "^16.8.2",

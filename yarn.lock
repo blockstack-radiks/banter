@@ -6527,10 +6527,10 @@ querystring@0.2.0, querystring@^0.2.0:
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
   integrity sha1-sgmEkgO7Jd+CDadW50cAWHhSFiA=
 
-radiks-server@0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/radiks-server/-/radiks-server-0.1.6.tgz#6d25e6c0c3de56ca9c61e11f652864f2b214113d"
-  integrity sha512-A3WUBu7WRpzz8RgCNlSljWrID5QO8WJGuE0zPPzQBlVgZ+4sXjddXVf1Ito6Gm9x7PzvN8raihmrn47f9JLymA==
+radiks-server@0.1.8:
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/radiks-server/-/radiks-server-0.1.8.tgz#2101535aa368539bb0eb9e89b48b3a53ec893896"
+  integrity sha512-6AMlhgB/VYS2Is0kV6z58K1y/QQnW1TifCJh3DOR+fCPa/hJjioIYkuMgwIxb3WjkyLqjlwcKlwRQB2yehfc5A==
   dependencies:
     "@awaitjs/express" "^0.1.4"
     blockstack "^18.0.4"
