@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Flex, Type } from 'blockstack-ui';
-import { Button } from '../button';
 import { useConnect } from 'redux-bundler-hook';
+import { Button } from '../button';
 
 const Login = ({ handleLogin, ...rest }) => {
   const { userLoading } = useConnect('selectUserLoading');

@@ -28,14 +28,12 @@ const makeUserSession = () => {
 
 const GlobalStyles = globalStyles();
 
-const Wrapper = withRouter(({ children }) => {
-  return (
+const Wrapper = withRouter(({ children }) => (
     <Box flexGrow={1} minHeight="100vh" bg="pink" pb={4}>
       <NewSignInModal />
       {children}
     </Box>
-  );
-});
+  ));
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -53,13 +51,13 @@ class MyApp extends App {
       pageProps = await Component.getInitialProps(ctx);
     }
 
-    let universalCookies = null;
+    const universalCookies = null;
     let username = null;
 
     if (ctx.req) {
-      const { universalCookies } = ctx.req;
-      if (universalCookies && universalCookies.cookies && universalCookies.cookies.username) {
-        username = JSON.parse(universalCookies.cookies.username);
+      const reqCookies = ctx.req.universalCookies;
+      if (reqCookies && reqCookies.cookies && reqCookies.cookies.username) {
+        username = JSON.parse(reqCookies.cookies.username);
       }
     }
 

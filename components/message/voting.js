@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import DownvoteFilledIcon from 'mdi-react/EmoticonPoopIcon';
-import Vote from '../../models/Vote';
 import { useConnect } from 'redux-bundler-hook';
 import { Hover, Active } from 'react-powerplug';
+import Vote from '../../models/Vote';
+
+const getButtonOpacity = (active, hovered) => {
+  if (active) return '1';
+  return hovered ? 0.75 : 0.5;
+};
+
+const getTransform = (pressed, hovered, active) => {
+  if (pressed) return 'scale(1.3) translateY(2px)';
+  return hovered || active ? 'scale(1.3)' : 'none';
+};
 
 const IconButton = ({ active, ...rest }) => (
   <Active>
@@ -11,9 +21,9 @@ const IconButton = ({ active, ...rest }) => (
       <Hover>
         {({ hovered, bind }) => (
           <Box
-            opacity={active ? '1' : hovered ? 0.75 : 0.5}
+            opacity={getButtonOpacity(active, hovered)}
             cursor={hovered ? 'pointer' : 'unset'}
-            transform={pressed ? 'scale(1.3) translateY(2px)' : hovered || active ? 'scale(1.3)' : 'none'}
+            transform={getTransform(pressed, hovered, active)}
             transition="0.1s all ease-in-out"
             {...bind}
             {...pressedBind}

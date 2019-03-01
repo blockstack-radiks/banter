@@ -24,12 +24,14 @@ const AccountLink = ({ href, children }) => (
 
 const SocialAccounts = ({ profile }) => {
   const accounts = {};
-  profile &&
+  const accountsExist = profile &&
     profile.account &&
-    profile.account.length &&
+    profile.account.length;
+  if (accountsExist) {
     profile.account.forEach((account) => {
       accounts[account.service] = account;
     });
+  }
 
   return (
     <Flex mx="auto" alignItems="center" justifyContent="center">

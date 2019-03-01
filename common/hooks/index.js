@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect} from 'react';
 // Hook
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -21,4 +21,4 @@ function useOnClickOutside(ref, handler) {
   }, []); // Empty array ensures that effect is only run on mount and unmount
 }
 
-export {useOnClickOutside}
+export {useOnClickOutside};

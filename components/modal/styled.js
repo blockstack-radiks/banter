@@ -1,8 +1,6 @@
 import styled, { css } from 'styled-components';
 import { Box } from 'blockstack-ui';
 
-import { theme } from '../../common/theme';
-
 export const CloseButton = styled.div`
   opacity: 0.5;
   &:hover {

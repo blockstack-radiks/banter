@@ -2,10 +2,10 @@ import React from 'react';
 import { Box, Flex, Type } from 'blockstack-ui';
 import { Hover } from 'react-powerplug';
 import Link from 'next/link';
-import { Avatar } from '../avatar';
 import { useConnect } from 'redux-bundler-hook';
 import { Provider, Popover } from 'reakit';
 import theme from 'reakit-theme-default';
+import { Avatar } from '../avatar';
 
 const DropdownItem = ({ href, passHref, as, ...rest }) => {
   const WrapperComponent = href ? Link : Box;

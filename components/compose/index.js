@@ -7,12 +7,12 @@ import createEmojiPlugin from 'draft-js-emoji-plugin';
 import { Box, Flex } from 'blockstack-ui';
 import { useConnect } from 'redux-bundler-hook';
 import NProgress from 'nprogress';
+import { rgba } from 'polished';
 import StylesWrapper from './styled';
 import Message from '../../models/Message';
 import { Button } from '../button';
 import { useOnClickOutside } from '../../common/hooks';
 import { theme } from '../../common/theme';
-import { rgba } from 'polished';
 
 const mentionPlugin = createMentionPlugin({
   mentionPrefix: '@',
@@ -24,7 +24,7 @@ const plugins = [mentionPlugin, emojiPlugin];
 
 let allUsernames = [];
 
-const EmojiButton = ({ ...rest }) => (
+const EmojiButton = () => (
   <Hover>
     {({ hovered, bind }) => (
       <Box opacity={hovered ? 1 : 0.5} {...bind}>

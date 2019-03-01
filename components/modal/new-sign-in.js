@@ -4,14 +4,14 @@ import { Type, Box } from 'blockstack-ui';
 import Link from 'next/link';
 import { Central } from 'radiks';
 import { useConnect } from 'redux-bundler-hook';
+import { Backdrop, Overlay, Provider } from 'reakit';
+import theme from 'reakit-theme-default';
 import StyledModal from './styled';
 import Input from '../../styled/input';
 import { Button, SecondaryButton } from '../button';
 import { USER_SETTINGS, defaultUserSettings } from '../../common/constants';
-import { Backdrop, Overlay, Provider } from 'reakit';
-import theme from 'reakit-theme-default';
 
-const NewSignInModal = ({ open }) => {
+const NewSignInModal = () => {
   const { user } = useConnect('selectUser');
   const [email, setEmail] = useState('');
   const [saving, setSaving] = useState(false);

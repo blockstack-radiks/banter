@@ -3,9 +3,9 @@ import { Flex, Box, Type } from 'blockstack-ui';
 import Linkify from 'linkifyjs/react';
 import { Hover } from 'react-powerplug';
 import Link from 'next/link';
+import { useConnect } from 'redux-bundler-hook';
 import { Avatar } from '../avatar';
 import { MessageContent as StyledMessageContent } from './styled';
-import { useConnect } from 'redux-bundler-hook';
 import { Voting } from './voting';
 
 import { appUrl } from '../../common/utils';
