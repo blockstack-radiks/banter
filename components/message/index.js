@@ -85,7 +85,9 @@ const MessageContent = ({ content, email, ...rest }) => (
   <StyledMessageContent {...rest} color="gray">
     <Linkify
       options={{
-        format: (value) => value,
+        format: (value, type) => {
+          return <Type style={{ wordBreak: 'break-all' }}>{value}</Type>;
+        },
         formatHref: (href, type) => {
           if (type === 'mention') {
             if (email) {
