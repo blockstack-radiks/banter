@@ -16,13 +16,12 @@ export default class MyDocument extends Document {
         <Head>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           {this.props.styleTags}
-          <link rel="stylesheet" href="/static/nprogress.css" />
           <link rel="icon" href="/static/cat.png" type="image/png" />
-          <script src="/static/nprogress.js" />
         </Head>
         <body className="custom">
           <Main />
           <NextScript />
+          <script src="/static/nprogress.js" async defer />
         </body>
       </html>
     );
