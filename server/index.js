@@ -4,6 +4,8 @@ const path = require('path');
 const expressWS = require('express-ws');
 const secure = require('express-force-https');
 const cookiesMiddleware = require('universal-cookie-express');
+const shrinkRay = require('shrink-ray');
+
 require('dotenv').config();
 
 const { setup } = require('radiks-server');
@@ -21,8 +23,16 @@ const port = parseInt(process.env.PORT, 10) || 5000;
 
 app.prepare().then(async () => {
   const server = express();
-  server.use(cookiesMiddleware());
-  server.use(secure);
+  server
+    .use(cookiesMiddleware())
+    .use(secure)
+    .use(
+      shrinkRay({
+        brotli: {
+          quality: 11,
+        },
+      })
+    );
 
   expressWS(server);
 
