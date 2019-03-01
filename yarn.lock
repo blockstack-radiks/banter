@@ -2149,10 +2149,10 @@ block-stream@*:
   dependencies:
     inherits "~2.0.0"
 
-blockstack-ui@^0.0.76:
-  version "0.0.76"
-  resolved "https://registry.yarnpkg.com/blockstack-ui/-/blockstack-ui-0.0.76.tgz#930bbef659f5245fbb6a4c6420e3923fff91d820"
-  integrity sha512-DcwW1DGz6C2J6aEiRXWmyjKq3WoTpj3e3cSaDmKjcB1pyE+zndcawKBxX8Vcoauu0vePB+tsfGqAOUz3Jnt/Jg==
+blockstack-ui@^0.0.77:
+  version "0.0.77"
+  resolved "https://registry.yarnpkg.com/blockstack-ui/-/blockstack-ui-0.0.77.tgz#7347efb7fb20f597e6987fbfd0176224d0cf9402"
+  integrity sha512-H7NDl4keqCugwRQDBh8CBss5t/nvc1zhy2S9THk7LhQnYiA0mKTm2tI/2Pm4nF8pg+tn/uumb5V00SYKXZIYZw==
   dependencies:
     epitath "^1.0.0-beta.2"
     html-tags "^2.0.0"
@@ -2165,7 +2165,7 @@ blockstack-ui@^0.0.76:
     reakit "^0.16.0"
     regenerator-runtime "^0.13.1"
     shortid "^2.2.14"
-    styled-system "^4.0.1"
+    styled-system "^3.2.1"
     system-components "^3.0.3"
 
 blockstack@19.0.0-alpha.3:

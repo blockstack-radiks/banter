@@ -28,7 +28,7 @@
     "@fortawesome/react-fontawesome": "^0.1.4",
     "aws-sdk": "^2.413.0",
     "blockstack": "19.0.0-alpha.3",
-    "blockstack-ui": "^0.0.76",
+    "blockstack-ui": "^0.0.77",
     "dotenv": "^6.2.0",
     "draft-js": "^0.10.5",
     "draft-js-emoji-plugin": "^2.1.1",
