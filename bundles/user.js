@@ -154,7 +154,7 @@ export default {
   selectUser: (state) => state.user.data,
   selectUsername: (state) => state.user.data.username,
   selectCookieUsername: (state) => state.user.username,
-  selectProfile: (state) => state.user.data.profile,
+  selectProfile: (state) => state.user && state.user.data && state.user.data.profile,
   selectUserLoading: (state) => state.user.loading,
   selectUserSigningIn: (state) => state.user.signingIn,
   selectUserLastUpdated: (state) => state.user.lastUpdated,

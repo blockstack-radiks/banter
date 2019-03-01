@@ -6,6 +6,7 @@ import { useConnect } from 'redux-bundler-hook';
 import { Provider, Popover } from 'reakit';
 import theme from 'reakit-theme-default';
 import { Avatar } from '../avatar';
+import { ProfileDropdown } from '../profile-dropdown';
 
 const DropdownItem = ({ href, passHref, as, ...rest }) => {
   const WrapperComponent = href ? Link : Box;
@@ -89,74 +90,7 @@ const Nav = ({ ...rest }) => {
             </Box>
           )}
         </Hover>
-        {username ? (
-          <Popover.Container
-            style={{
-              outline: 'none',
-            }}
-          >
-            {(popover) => (
-              <Box
-                is={Popover.Toggle}
-                {...popover}
-                style={{
-                  outline: 'none',
-                }}
-              >
-                <Hover>
-                  {({ hovered, bind }) => (
-                    <Box position="relative">
-                      <Flex alignItems="center" cursor={hovered ? 'pointer' : 'unset'} {...bind}>
-                        <Box
-                          title="Your Profile"
-                          size={31}
-                          is="a"
-                          display="block"
-                          border="2px solid"
-                          borderColor={hovered ? 'white' : 'transparent'}
-                          transition="0.1s all ease-in-out"
-                          borderRadius="100%"
-                        >
-                          <Avatar size={27} username={username} />
-                        </Box>
-                        <Type
-                          transition="0.1s all ease-in-out"
-                          color={hovered ? 'white' : 'purple'}
-                          pl={2}
-                          fontWeight={600}
-                        >
-                          {username}
-                        </Type>
-                      </Flex>
-                      <Popover fade slide expand hideOnClickOutside {...popover}>
-                        <Popover.Arrow />
-                        <Box minWidth={100} textAlign="right">
-                          <DropdownItem
-                            href={{
-                              pathname: '/user',
-                              query: {
-                                username,
-                              },
-                            }}
-                            as={`/[::]${username}`}
-                            passHref
-                          >
-                            Profile
-                          </DropdownItem>
-
-                          <DropdownItem is="a" href="/settings" passHref>
-                            Settings
-                          </DropdownItem>
-                          <DropdownItem onClick={doLogout}>Log out</DropdownItem>
-                        </Box>
-                      </Popover>
-                    </Box>
-                  )}
-                </Hover>
-              </Box>
-            )}
-          </Popover.Container>
-        ) : null}
+        <ProfileDropdown />
       </Flex>
     </Provider>
   );
