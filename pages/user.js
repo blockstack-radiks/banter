@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { User } from 'radiks';
 import { Card } from '../components/card';
 import Feed from '../components/feed';
+import { fetchUser } from '../common/lib/api';
 
 import { Avatar } from '../components/avatar';
 import SocialAccounts from '../components/social-accounts';
@@ -19,7 +20,8 @@ class UserPage extends React.Component {
     const username = ctx.req ? ctx.req.params.username : ctx.query.username;
 
     const createdBy = username.replace('::]', '');
-    const user = await User.findById(createdBy, { decrypt: false });
+    // const user = await User.findById(createdBy, { decrypt: false });
+    const user = await fetchUser(createdBy);
 
     const query = { fetcher: null, createdBy };
     const { req } = ctx;
@@ -50,7 +52,7 @@ class UserPage extends React.Component {
                 <Avatar username={user.attrs.username} size={96} mx="auto" />
               </Box>
               <Box pt={4} fontWeight="bold" textAlign="center">
-                {hasName && <Type color="purple">{profile.name}</Type>}
+                {hasName && <Type color="purple" display="block">{profile.name}</Type>}
                 <Type mt={hasName ? 3 : 0} fontSize={hasName ? 1 : 2} color="purple">
                   {user.attrs.username}
                 </Type>

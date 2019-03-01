@@ -1,6 +1,7 @@
 import { aggregateMessages, transformMessageVotes } from '../common/lib/aggregators/messages-aggregator';
 
 const express = require('express');
+const request = require('request-promise');
 const { decorateApp } = require('@awaitjs/express');
 const { COLLECTION } = require('radiks-server/app/lib/constants');
 
@@ -49,6 +50,34 @@ const makeApiController = (db) => {
       .toArray();
     const usernames = users.map(({ username }) => username);
     res.json(usernames);
+  });
+
+  Router.getAsync('/user/:username', async (req, res) => {
+    const { username } = req.params;
+    let user = await radiksData.findOne({
+      radiksType: 'BlockstackUser',
+      username,
+    });
+
+    if (!user) {
+      const uri = `https://core.blockstack.org/v1/users/${username}`;
+      try {
+        const userData = await request({
+          uri,
+          json: true,
+        });
+        if (userData[username] && !userData[username].error) {
+          user = {
+            username,
+            profile: userData[username].profile,
+          };
+        }
+      } catch (error) {
+        // user not found
+      }
+    }
+
+    res.json({ attrs: user });
   });
 
   return Router;

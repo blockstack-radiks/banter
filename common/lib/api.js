@@ -31,3 +31,11 @@ export const fetchVotes = async (query) => {
   const data = await response.json();
   return data.messages;
 };
+
+export const fetchUser = async (username) => {
+  const { apiServer } = getConfig();
+  const url = `${apiServer}/api/user/${username}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
+};
