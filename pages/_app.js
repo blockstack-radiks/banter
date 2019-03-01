@@ -1,14 +1,18 @@
 import App, { Container } from 'next/app';
-import React, { useState, useEffect } from 'react';
+import { decodeToken } from 'jsontokens';
+import React from 'react';
 import { ThemeProvider } from 'styled-components';
+import { Box } from 'blockstack-ui';
 import { UserSession, AppConfig } from 'blockstack';
-import { configure, getConfig, User } from 'radiks';
+import { configure } from 'radiks';
 import * as linkify from 'linkifyjs';
 import mentionPlugin from 'linkifyjs/plugins/mention';
 import { CookiesProvider, withCookies, Cookies } from 'react-cookie';
 import { instanceOf } from 'prop-types';
 import { withRouter } from 'next/router';
-import { AppContext } from '../common/context/app-context';
+import { ReduxBundlerProvider } from 'redux-bundler-hook';
+import withReduxStore from '../common/lib/with-redux-store';
+
 import Nav from '../components/nav';
 import Footer from '../components/footer';
 import { theme } from '../common/theme';
@@ -19,89 +23,19 @@ mentionPlugin(linkify);
 
 const makeUserSession = () => {
   const appConfig = new AppConfig(['store_write', 'publish_data'], process.env.RADIKS_API_SERVER);
-  const userSession = new UserSession({ appConfig });
-  return userSession;
+  return new UserSession({ appConfig });
 };
 
 const GlobalStyles = globalStyles();
 
-const Wrapper = withRouter(
-  ({ children, username: usernameProps, cookies, router, handleStateUsernameUpdate }) => {
-    const [user, setUser] = useState(null);
-    const [username, setUsername] = useState(usernameProps);
-    const { query } = router;
-    const [isSigningIn, setSigningIn] = useState(!!query.authResponse);
-    const [showNewSignInModal, setShowNewSignInModal] = useState(false);
-
-    const logout = (_cookies) => {
-      const { userSession } = getConfig();
-      userSession.signUserOut();
-      window.location = '/';
-      _cookies.remove('username');
-      handleStateUsernameUpdate({ username: null });
-    };
-
-    const handleRemoveQuery = () => {
-      window.history.pushState(
-        null,
-        'Banter',
-        `${window.location.href.split('?')[0]}`
-      );
-    };
-
-    const getCurrentUser = async () => {
-      const { userSession } = getConfig();
-      if (user) return null;
-      if (userSession.isUserSignedIn()) {
-        const currentUser = await User.currentUser();
-        if (username) cookies.set('username', JSON.stringify(currentUser.attrs.username), { path: '/' });
-        setUsername(currentUser.attrs.username);
-        handleStateUsernameUpdate(currentUser.attrs.username);
-        setUser(currentUser);
-        handleRemoveQuery();
-      } else if (userSession.isSignInPending()) {
-        await userSession.handlePendingSignIn();
-        const currentUser = await User.createWithCurrentUser();
-        if (username) cookies.set('username', JSON.stringify(currentUser.attrs.username), { path: '/' });
-        setUsername(currentUser.attrs.username);
-        handleStateUsernameUpdate(currentUser.attrs.username);
-        setUser(currentUser);
-        handleRemoveQuery();
-        const { createdAt, updatedAt } = currentUser.attrs;
-        if (createdAt === updatedAt) {
-          // brand new user!
-          setShowNewSignInModal(true);
-        }
-      } else if (cookies.get('username')) {
-        cookies.remove('username');
-      }
-      return true;
-    };
-
-    useEffect(() => {
-      getCurrentUser();
-      if (isSigningIn && !window.location.href.includes('authResponse')) {
-        setSigningIn(false);
-      }
-    });
-
-    return (
-      <AppContext.Provider
-        value={{
-          isLoggedIn: !!username,
-          user,
-          username,
-          getCurrentUser,
-          isSigningIn,
-          logout: () => logout(cookies),
-        }}
-      >
-        {children}
-        <NewSignInModal open={showNewSignInModal} />
-      </AppContext.Provider>
-    );
-  }
-);
+const Wrapper = withRouter(({ children }) => {
+  return (
+    <Box flexGrow={1} minHeight="100vh" bg="pink" pb={4}>
+      <NewSignInModal />
+      {children}
+    </Box>
+  );
+});
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -123,10 +57,23 @@ class MyApp extends App {
     let username = null;
 
     if (ctx.req) {
-      ({ universalCookies } = ctx.req);
+      const { universalCookies } = ctx.req;
       if (universalCookies && universalCookies.cookies && universalCookies.cookies.username) {
         username = JSON.parse(universalCookies.cookies.username);
       }
+    }
+
+    const authResponse = ctx.req ? ctx.req.query.authResponse : ctx.query.authResponse;
+
+    if (authResponse) {
+      const decoded = decodeToken(authResponse);
+      if (decoded.payload && decoded.payload.username) {
+        ctx.reduxStore.doSetUsername(decoded.payload.username);
+      }
+      ctx.reduxStore.doSetLoginLoading();
+    }
+    if (username) {
+      ctx.reduxStore.doSetUsername(username);
     }
     return { pageProps: { ...pageProps, userSession, username }, username, universalCookies };
   }
@@ -151,23 +98,25 @@ class MyApp extends App {
   handleStateUsernameUpdate = (username) => this.setState({ username });
 
   render() {
-    const { Component, pageProps, universalCookies } = this.props;
+    const { Component, pageProps, universalCookies, reduxStore } = this.props;
 
     return (
       <ThemeProvider theme={theme}>
         <Container>
           <GlobalStyles />
-          <CookiesProvider cookie={universalCookies}>
-            <Wrapper
-              handleStateUsernameUpdate={this.handleStateUsernameUpdate}
-              username={this.state.username}
-              cookies={this.props.cookies}
-            >
-              <Nav />
-              <Component {...pageProps} />
-              <Footer />
-            </Wrapper>
-          </CookiesProvider>
+          <ReduxBundlerProvider store={reduxStore}>
+            <CookiesProvider cookie={universalCookies}>
+              <Wrapper
+                handleStateUsernameUpdate={this.handleStateUsernameUpdate}
+                username={this.state.username}
+                cookies={this.props.cookies}
+              >
+                <Nav />
+                <Component reduxStore={reduxStore} {...pageProps} />
+                <Footer />
+              </Wrapper>
+            </CookiesProvider>
+          </ReduxBundlerProvider>
         </Container>
       </ThemeProvider>
     );
@@ -178,4 +127,4 @@ MyApp.propTypes = {
   cookies: instanceOf(Cookies).isRequired,
 };
 
-export default withCookies(MyApp);
+export default withReduxStore(withCookies(MyApp));

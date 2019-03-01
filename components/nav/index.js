@@ -1,9 +1,38 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Box, Flex, Type } from 'blockstack-ui';
 import { Hover } from 'react-powerplug';
 import Link from 'next/link';
+import { Avatar } from '../avatar';
+import { useConnect } from 'redux-bundler-hook';
+import { Provider, Popover } from 'reakit';
+import theme from 'reakit-theme-default';
 
-import { AppContext } from '../../common/context/app-context';
+const DropdownItem = ({ href, passHref, as, ...rest }) => {
+  const WrapperComponent = href ? Link : Box;
+  return (
+    <Hover>
+      {({ hovered, bind }) => (
+        <WrapperComponent href={href} as={as} passHref={passHref}>
+          <Box
+            py={1}
+            width={1}
+            display="block"
+            color="purple"
+            is={href ? 'a' : Box}
+            opacity={hovered ? 1 : 0.75}
+            style={{
+              textDecoration: 'none',
+            }}
+            cursor={hovered ? 'pointer' : 'unset'}
+            {...bind}
+            textAlign="right"
+            {...rest}
+          />
+        </WrapperComponent>
+      )}
+    </Hover>
+  );
+};
 
 export const Logo = ({ width = '28px', height = '28px' }) => (
   <svg
@@ -22,69 +51,114 @@ export const Logo = ({ width = '28px', height = '28px' }) => (
   </svg>
 );
 
-const UserArea = () => {
-  const { logout, isSigningIn, username } = useContext(AppContext);
+const Nav = ({ ...rest }) => {
+  const { doLogout, cookieUsername: username } = useConnect('doLogout', 'selectCookieUsername');
 
-  const color = 'purple';
-  const hover = 'white';
-
-  if (isSigningIn) {
-    return (
-      <Type color={color} fontWeight="bold" display="inline-block">
-        Signing In...
-      </Type>
-    );
-  }
-
-  return username ? (
-    <Type color={color} fontWeight="bold" display="inline-block">
-      {username}
-
-      <Hover>
-        {({ hovered, bind }) => (
-          <Link href="/settings">
-            <Type color={hovered ? hover : color} cursor={hovered ? 'pointer' : 'unset'} {...bind} ml={2}>
-              Settings
-            </Type>
-          </Link>
-        )}
-      </Hover>
-      <Hover>
-        {({ hovered, bind }) => (
-          <Type
-            color={hovered ? hover : color}
-            cursor={hovered ? 'pointer' : 'unset'}
-            onClick={logout}
-            ml={2}
-            {...bind}
-          >
-            Log Out
-          </Type>
-        )}
-      </Hover>
-    </Type>
-  ) : null;
-};
-
-const Nav = ({ ...rest }) => (
-  <Flex px={4} py={2} alignItems="center" is="nav" bg="pink" {...rest}>
-    <Hover>
-      {({ hovered, bind }) => (
-        <Box width={1 / 4}>
-          <Type is="h1" m={0} fontSize="28px" display="inline-block" {...bind}>
-            <Type is="a" href="/" color={hovered ? 'white' : 'purple'} textDecoration="none">
-              <Logo />
-              <Type display={['none', 'inline-block']} ml={2}>
-                Banter
+  return (
+    <Provider theme={theme}>
+      <Flex
+        px={6}
+        pt={5}
+        pb={2}
+        mb={3}
+        mx="auto"
+        maxWidth={650}
+        alignItems="center"
+        justifyContent="space-between"
+        is="nav"
+        {...rest}
+      >
+        <Hover>
+          {({ hovered, bind }) => (
+            <Box>
+              <Type is="h1" m={0} fontSize="28px" display="inline-block" {...bind}>
+                <Link href="/" passHref>
+                  <Type
+                    is="a"
+                    color={hovered ? 'white' : 'purple'}
+                    textDecoration="none"
+                    transition="0.1s all ease-in-out"
+                  >
+                    <Logo />
+                    <Type display={['none', 'inline-block']} ml={2}>
+                      Banter
+                    </Type>
+                  </Type>
+                </Link>
               </Type>
-            </Type>
-          </Type>
-        </Box>
-      )}
-    </Hover>
-    <Box ml="auto">
-      <UserArea />
-    </Box>
-  </Flex>
-);
+            </Box>
+          )}
+        </Hover>
+        {username ? (
+          <Popover.Container
+            style={{
+              outline: 'none',
+            }}
+          >
+            {(popover) => (
+              <Box
+                is={Popover.Toggle}
+                {...popover}
+                style={{
+                  outline: 'none',
+                }}
+              >
+                <Hover>
+                  {({ hovered, bind }) => (
+                    <Box position="relative">
+                      <Flex alignItems="center" cursor={hovered ? 'pointer' : 'unset'} {...bind}>
+                        <Box
+                          title="Your Profile"
+                          size={31}
+                          is="a"
+                          display="block"
+                          border="2px solid"
+                          borderColor={hovered ? 'white' : 'transparent'}
+                          transition="0.1s all ease-in-out"
+                          borderRadius="100%"
+                        >
+                          <Avatar size={27} username={username} />
+                        </Box>
+                        <Type
+                          transition="0.1s all ease-in-out"
+                          color={hovered ? 'white' : 'purple'}
+                          pl={2}
+                          fontWeight={600}
+                        >
+                          {username}
+                        </Type>
+                      </Flex>
+                      <Popover fade slide expand hideOnClickOutside {...popover}>
+                        <Popover.Arrow />
+                        <Box minWidth={100} textAlign="right">
+                          <DropdownItem
+                            href={{
+                              pathname: '/user',
+                              query: {
+                                username,
+                              },
+                            }}
+                            as={`/[::]${username}`}
+                            passHref
+                          >
+                            Profile
+                          </DropdownItem>
+
+                          <DropdownItem is="a" href="/settings" passHref>
+                            Settings
+                          </DropdownItem>
+                          <DropdownItem onClick={doLogout}>Log out</DropdownItem>
+                        </Box>
+                      </Popover>
+                    </Box>
+                  )}
+                </Hover>
+              </Box>
+            )}
+          </Popover.Container>
+        ) : null}
+      </Flex>
+    </Provider>
+  );
+};
 export default Nav;

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box } from 'blockstack-ui';
-
 import Message from '../models/Message';
 import MessageComponent from '../components/message';
 
@@ -24,7 +23,7 @@ class MessagePage extends React.Component {
         borderRadius={2}
         boxShadow="card"
       >
-        <MessageComponent message={message} />
+        <MessageComponent single message={message} />
       </Box>
     );
   }

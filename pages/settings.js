@@ -82,7 +82,7 @@ const SettingsPage = ({ ...rest }) => {
       <Head>
         <title>Settings - Banter</title>
       </Head>
-      <Card width={[1, 1 / 2]} mx="auto" background="white" p={4} my={2} {...rest}>
+      <Card width={[1]} maxWidth={600} mx="auto" background="white" p={4} my={2} {...rest}>
         <Box pb={4}>
           <Type is="h2" color="purple" mt={0}>
             Settings

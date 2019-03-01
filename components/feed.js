@@ -1,16 +1,13 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
-import NProgress from 'nprogress';
-import { getConfig } from 'radiks';
-
+import { useConnect } from 'redux-bundler-hook';
+import DownvoteFilledIcon from 'mdi-react/EmoticonPoopIcon';
+import Vote from '../models/Vote';
 import dynamic from 'next/dynamic';
-import { AppContext } from '../common/context/app-context';
 import Message from '../models/Message';
 import MessageComponent from './message';
 import { Button } from './button';
 import { Login } from './login';
-import { fetchMessages } from '../common/lib/api';
-import Vote from '../models/Vote';
 
 const Compose = dynamic(() => import('./compose'), {
   loading: () => (
@@ -23,95 +20,61 @@ const Compose = dynamic(() => import('./compose'), {
   ssr: false,
 });
 
-const login = () => {
-  const scopes = ['store_write', 'publish_data'];
-  const redirect = window.location.origin;
-  const manifest = `${window.location.origin}/manifest.json`;
-  const { userSession } = getConfig();
-  userSession.redirectToSignIn(redirect, manifest, scopes);
-};
-
-const fetchMoreMessages = async (messages, createdBy) => {
-  const lastMessage = messages && messages.length && messages[messages.length - 1];
-  const newMessagesAttrs = await fetchMessages({ 
-    lt: lastMessage && lastMessage.attrs.createdAt,
-    createdBy,
-  });
-  const newMessages = newMessagesAttrs.map((attrs) => new Message(attrs));
-
-  const newmessages = messages && messages.concat(newMessages);
-  const hasMoreMessages = newMessages.length !== 0;
-  return {
-    hasMoreMessages,
-    _messages: newmessages,
-  };
-};
-
 const TopArea = () => {
-  const { isLoggedIn } = useContext(AppContext);
-
-  return !isLoggedIn ? <Login px={4} handleLogin={login} /> : <Compose />;
+  const { doLogin, cookieUsername } = useConnect('doLogin', 'selectCookieUsername');
+  return !cookieUsername ? <Login px={4} handleLogin={doLogin} /> : <Compose />;
 };
 
-const Messages = ({ messages, createdBy }) => messages.map((message) => <MessageComponent key={message._id} createdBy={!!createdBy} message={message} />);
+const Messages = ({ createdBy }) => {
+  const { messages } = useConnect('selectMessages');
+  return createdBy && !messages.length ? (
+    <Flex alignItems="center" justifyContent="center" flexDirection="column" p={4}>
+      <Box pb={3} color="purple" opacity={0.1}>
+        <DownvoteFilledIcon size={120} />
+      </Box>
+      <Type color="purple" fontWeight="bold">
+        No messages here!
+      </Type>
+    </Flex>
+  ) : (
+    messages.map((message) => (
+      <MessageComponent key={message._id} createdBy={!!createdBy} message={new Message(message)} />
+    ))
+  );
+};
 
-const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
-  const [liveMessages, setLiveMessages] = useState(rawMessages.map((m) => new Message(m)));
+const Feed = ({ hideCompose, createdBy, ...rest }) => {
+  const { messages, doFetchMoreMessages, doAddMessage, doUpdateMessageVoteCount } = useConnect(
+    'selectMessages',
+    'doFetchMoreMessages',
+    'doAddMessage',
+    'doUpdateMessageVoteCount'
+  );
   const [loading, setLoading] = useState(false);
   const [viewingAll, setViewingAll] = useState(false);
 
-  const newMessageListener = (message) => {
-    if (liveMessages.find((m) => m._id === message._id)) {
-      return null;
-    }
-    message.attrs.votes = message.attrs.votes || 0;
-    return setLiveMessages([...new Set([message, ...liveMessages])]);
+  const subscribe = () => {
+    Message.addStreamListener(doAddMessage);
+    Vote.addStreamListener(doUpdateMessageVoteCount);
   };
-
-  const subscribe = () => Message.addStreamListener(newMessageListener);
-  const unsubscribe = () => Message.removeStreamListener(newMessageListener);
+  const unsubscribe = () => {
+    Message.removeStreamListener(doAddMessage);
+    Vote.removeStreamListener(doUpdateMessageVoteCount);
+  };
 
   useEffect(() => {
     subscribe();
     return unsubscribe;
-  });
-
-  const newVoteListener = (vote) => {
-    console.log('new vote', vote);
-    let foundMessage = false;
-    liveMessages.forEach((message, index) => {
-      if (message.attrs._id === vote.attrs.messageId) {
-        console.log('vote in the feed');
-        message.attrs.votes += 1;
-        liveMessages[index] = message;
-        foundMessage = true;
-      }
-    });
-    if (foundMessage) {
-      setLiveMessages([...new Set([...liveMessages])]);
-    }
-  };
-
-  const subscribeVotes = () => Vote.addStreamListener(newVoteListener);
-  const unsubscribeVotes = () => Vote.removeStreamListener(newVoteListener);
-
-  useEffect(() => {
-    subscribeVotes();
-    return unsubscribeVotes;
   }, []);
 
   const loadMoreMessages = () => {
     NProgress.start();
     setLoading(true);
-    fetchMoreMessages(liveMessages, createdBy).then(({ hasMoreMessages, ...data }) => {
-      const _messages = data.messages;
-      if (hasMoreMessages) {
-        setLiveMessages(_messages);
-        setLoading(false);
-        NProgress.done();
-      } else {
-        NProgress.done();
-        setLoading(false);
+    const fetchMoreMessages = doFetchMoreMessages(createdBy);
+    fetchMoreMessages.then((payload) => {
+      setLoading(false);
+      NProgress.done();
+      if (payload && !payload.hasMoreMessages) {
         setViewingAll(true);
       }
     });
@@ -127,7 +90,6 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
   return (
     <Box
       border="1px solid rgb(230, 236, 240)"
-      my={[2, 4]}
       mx={[2, 'auto']}
       maxWidth={600}
       bg="white"
@@ -136,16 +98,18 @@ const Feed = ({ hideCompose, messages, rawMessages, createdBy, ...rest }) => {
       {...rest}
     >
       {hideCompose ? null : <TopArea />}
-      <Messages messages={liveMessages} createdBy={createdBy} />
-      <Flex borderTop="1px solid rgb(230, 236, 240)" alignItems="center" justifyContent="center" p={4}>
-        {viewingAll ? (
-          <Type color="purple" fontWeight="bold">
-            You&apos;ve reached the end of the line!
-          </Type>
-        ) : (
-          <Button onClick={onLoadMoreClick}>{loading ? 'Loading...' : 'Load more'}</Button>
-        )}
-      </Flex>
+      <Messages createdBy={createdBy} />
+      {messages.length >= 10 ? (
+        <Flex borderTop="1px solid rgb(230, 236, 240)" alignItems="center" justifyContent="center" p={4}>
+          {viewingAll ? (
+            <Type color="purple" fontWeight="bold">
+              You&apos;ve reached the end of the line!
+            </Type>
+          ) : (
+            <Button onClick={onLoadMoreClick}>{loading ? 'Loading...' : 'More Posts'}</Button>
+          )}
+        </Flex>
+      ) : null}
     </Box>
   );
 };
