@@ -80,7 +80,11 @@ const StylesWrapper = styled.div`
   .editor {
     box-sizing: border-box;
     cursor: text;
-    padding: 0px;
+    padding: 0;
+    padding-right: 25px;
+    * {
+      word-break: break-all;
+    }
   }
 
   .editor :global(.public-DraftEditor-content) {
@@ -130,7 +134,7 @@ const StylesWrapper = styled.div`
     padding: 0 0.3em;
     position: absolute;
     z-index: 1000;
-    right:0;
+    right: 0;
     box-sizing: content-box;
     background: #fff;
     border: 1px solid #e0e0e0;
