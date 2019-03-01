@@ -1,4 +1,8 @@
+import * as linkify from 'linkifyjs';
+import mentionPlugin from 'linkifyjs/plugins/mention';
+
 import { fetchMessages } from '../common/lib/api';
+
 const FETCH_MESSAGES_STARTED = 'messages/FETCH_MESSAGES_STARTED';
 const FETCH_MESSAGES_FINISHED = 'messages/FETCH_MESSAGES_FINISHED';
 const MESSAGES_ERROR = 'messages/MESSAGES_ERROR';
@@ -6,6 +10,8 @@ const UPDATE_MESSAGES = 'messages/UPDATE_MESSAGES';
 const UPDATE_MESSAGE_VOTE_COUNT = 'messages/UPDATE_MESSAGE_VOTE_COUNT';
 
 const doError = (error) => ({ type: MESSAGES_ERROR, payload: error });
+
+mentionPlugin(linkify);
 
 export default {
   name: 'messages',
@@ -16,6 +22,7 @@ export default {
       loading: false,
       hasMoreMessages: null,
       error: null,
+      lastMentions: [],
     };
 
     return (state = initialData, { type, payload }) => {
@@ -39,8 +46,9 @@ export default {
           ...state,
           data: {
             ...state.data,
-            [payload._id]: payload,
+            [payload.attrs._id]: payload.attrs,
           },
+          lastMentions: payload.mentions,
           lastUpdated: Date.now(),
         };
       }
@@ -67,12 +75,20 @@ export default {
   doAddMessage: (message) => ({ getState, dispatch, store }) => {
     const messages = store.selectMessages(getState());
 
+    const mentions = linkify
+      .find(message.attrs.content)
+      .filter((match) => match.type === 'mention')
+      .map((mention) => mention.value);
+
     if (messages.find((m) => m._id === message._id)) {
       return null;
     }
     dispatch({
       type: UPDATE_MESSAGES,
-      payload: message.attrs,
+      payload: {
+        attrs: message.attrs,
+        mentions,
+      },
     });
   },
   doUpdateMessageVoteCount: (vote) => ({ dispatch, getState, store }) => {
