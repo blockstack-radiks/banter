@@ -4,7 +4,7 @@ const path = require('path');
 const expressWS = require('express-ws');
 const secure = require('express-force-https');
 const cookiesMiddleware = require('universal-cookie-express');
-const shrinkRay = require('shrink-ray');
+const shrinkRay = require('shrink-ray-current');
 
 require('dotenv').config();
 
@@ -23,16 +23,17 @@ const port = parseInt(process.env.PORT, 10) || 5000;
 
 app.prepare().then(async () => {
   const server = express();
-  server
-    .use(cookiesMiddleware())
-    .use(secure)
-    .use(
+  server.use(cookiesMiddleware()).use(secure);
+
+  if (!dev) {
+    server.use(
       shrinkRay({
         brotli: {
           quality: 11,
         },
       })
     );
+  }
 
   expressWS(server);
 
