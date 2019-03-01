@@ -39,6 +39,8 @@ const Compose = ({ pluginProps, ...rest }) => {
   const [focused, setFocused] = useState(false);
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const [query, setQuery] = useState('');
+  const [blockstackProfiles, setBlockstackProfiles] = useState([]);
 
   const fetchUsernames = async () => {
     const response = await fetch('/api/usernames');
@@ -55,6 +57,23 @@ const Compose = ({ pluginProps, ...rest }) => {
     fetchUsernames();
   }, []);
 
+  const fetchBlockstackAccounts = async () => {
+    const url = `https://core.blockstack.org/v1/search?query=${query}`;
+    const response = await fetch(url);
+    const { results } = await response.json();
+    if (!results) return;
+    setBlockstackProfiles(results.map((user) => ({
+      name: user.fullyQualifiedName,
+      link: `/[::]${user.fullyQualifiedName}`,
+      avatar: `https://banter-pub.imgix.net/banana.png`,
+    })));
+  };
+
+  useEffect(() => {
+    setBlockstackProfiles([]);
+    fetchBlockstackAccounts();
+  }, [query]);
+
   const editor = useRef(null);
   const editorWrapper = useRef(null);
 
@@ -63,6 +82,7 @@ const Compose = ({ pluginProps, ...rest }) => {
   };
 
   const onSearchChange = ({ value }) => {
+    setQuery(value);
     setSuggestions(defaultSuggestionsFilter(value, allUsernames));
   };
 
@@ -143,7 +163,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                   />
                   <MentionSuggestions
                     onSearchChange={onSearchChange}
-                    suggestions={suggestions}
+                    suggestions={suggestions.concat(blockstackProfiles)}
                     onAddMention={onAddMention}
                   />
                   <EmojiSuggestions />
