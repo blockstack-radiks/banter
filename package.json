@@ -102,7 +102,8 @@
       "pages/*",
       "components/*",
       "styled/*",
-      "scripts/*"
+      "scripts/*",
+      "bundles/*"
     ]
   }
 }
