@@ -29,6 +29,7 @@
     "aws-sdk": "^2.409.0",
     "blockstack": "19.0.0-alpha.3",
     "blockstack-ui": "^0.0.71",
+    "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
     "draft-js": "^0.10.5",
     "draft-js-emoji-plugin": "^2.1.1",

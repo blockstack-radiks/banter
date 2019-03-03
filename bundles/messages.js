@@ -22,6 +22,7 @@ export default {
       loading: false,
       hasMoreMessages: null,
       error: null,
+      lastMessage: null,
       lastMentions: [],
     };
 
@@ -48,6 +49,7 @@ export default {
             ...state.data,
             [payload.attrs._id]: payload.attrs,
           },
+          lastMessage: payload.attrs,
           lastMentions: payload.mentions,
           lastUpdated: Date.now(),
         };
@@ -129,9 +131,8 @@ export default {
   },
   doFetchMoreMessages: (createdBy) => async ({ getState, dispatch, store }) => {
     const messages = store.selectMessages(getState());
-    const loading = getState().messages.loading;
-    const hasMoreMessages = getState().messages.hasMoreMessages;
-    if (!hasMoreMessages || loading) return;
+    const { loading, hasMoreMessages } = getState().messages;
+    if (!hasMoreMessages || loading) return null;
     try {
       dispatch({
         type: FETCH_MESSAGES_STARTED,
@@ -160,8 +161,11 @@ export default {
     } catch (e) {
       dispatch(doError(e));
     }
+    return null;
   },
   selectMessagesRaw: (state) => state.messages.data,
+  selectLastMentions: (state) => state.messages.lastMentions,
+  selectLastMessage: (state) => state.messages.lastMessage,
   selectMessages: (state) =>
     Object.values(state.messages.data).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)),
 };

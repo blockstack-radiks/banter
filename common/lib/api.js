@@ -39,3 +39,17 @@ export const fetchUser = async (username) => {
   const data = await response.json();
   return data;
 };
+
+export const sendInviteEmails = async (data) => {
+  const { apiServer } = getConfig();
+  const url = `${apiServer}/api/invite`;
+  const response = await fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
+  });
+  const { success } = await response.json();
+  return success;
+};

@@ -13,6 +13,7 @@ import Message from '../../models/Message';
 import { Button } from '../button';
 import { useOnClickOutside } from '../../common/hooks';
 import { theme } from '../../common/theme';
+import InviteUserModal from '../modal/invite-user';
 
 const mentionPlugin = createMentionPlugin({
   mentionPrefix: '@',
@@ -137,6 +138,7 @@ const Compose = ({ pluginProps, ...rest }) => {
     <Box p={4} {...rest}>
       <div style={{ width: '100%', flexGrow: 1 }} ref={editorWrapper}>
         <Flex justifyContent="space-between">
+          <InviteUserModal />
           <Box
             position="relative"
             p={3}
