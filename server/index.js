@@ -4,6 +4,7 @@ const path = require('path');
 const expressWS = require('express-ws');
 const secure = require('express-force-https');
 const cookiesMiddleware = require('universal-cookie-express');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const { setup } = require('radiks-server');
@@ -23,6 +24,7 @@ app.prepare().then(async () => {
   const server = express();
   server.use(cookiesMiddleware());
   server.use(secure);
+  server.use(bodyParser.json());
 
   expressWS(server);
 

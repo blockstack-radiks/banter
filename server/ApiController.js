@@ -5,6 +5,8 @@ const request = require('request-promise');
 const { decorateApp } = require('@awaitjs/express');
 const { COLLECTION } = require('radiks-server/app/lib/constants');
 
+const { sendMail, inviteEmail } = require('../common/lib/mailer');
+
 const makeApiController = (db) => {
   const Router = decorateApp(express.Router());
   const radiksData = db.collection(COLLECTION);
@@ -78,6 +80,29 @@ const makeApiController = (db) => {
     }
 
     res.json({ attrs: user });
+  });
+
+  Router.postAsync('/invite', async (req, res) => {
+    const { lastMessage, userEmails } = req.body;
+    console.log(lastMessage);
+    console.log(userEmails);
+    const sendInvites = Object.keys(userEmails).map((username) => new Promise(async (resolve) => {
+      const email = userEmails[username];
+      try {
+        if (email && email.length > 0) {
+          await sendMail(inviteEmail(lastMessage, username, email));
+        }
+        resolve(true);
+      } catch (error) {
+        console.error(`Error when sending invite email to ${username} (${email}):`);
+        console.error(error);
+        resolve(true);
+      }
+    }));
+
+    await Promise.all(sendInvites);
+
+    res.json({ success: true });
   });
 
   return Router;
