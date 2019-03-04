@@ -157,7 +157,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                   className="editor" // eslint-disable-line
                 >
                   <Editor
-                    placeholder="What's on your mind?"
+                    placeholder="Whats on your mind? Invite friends with an @mention!"
                     editorState={editorState}
                     onChange={onChange}
                     plugins={plugins}
