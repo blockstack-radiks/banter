@@ -47,7 +47,8 @@ const makeApiController = (db) => {
         }
       )
       .toArray();
-    const usernames = users.map(({ username }) => username);
+
+    const usernames = users.map(({ username }) => username && username);
     res.json(usernames);
   });
 

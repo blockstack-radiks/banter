@@ -1,6 +1,6 @@
 import { composeBundles, createCacheBundle } from 'redux-bundler';
-import app from './app';
+import visibility from './visibility';
 import user from './user';
 import messages from './messages';
 
-export default composeBundles(app, user, messages);
+export default composeBundles(visibility, user, messages);

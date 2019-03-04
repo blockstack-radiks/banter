@@ -15,24 +15,13 @@ const getTransform = (pressed, hovered, active) => {
   return hovered || active ? 'scale(1.3)' : 'none';
 };
 
-const IconButton = ({ active, ...rest }) => (
-  <Active>
-    {({ active: pressed, bind: pressedBind }) => (
-      <Hover>
-        {({ hovered, bind }) => (
-          <Box
-            opacity={getButtonOpacity(active, hovered)}
-            cursor={hovered ? 'pointer' : 'unset'}
-            transform={getTransform(pressed, hovered, active)}
-            transition="0.1s all ease-in-out"
-            {...bind}
-            {...pressedBind}
-            {...rest}
-          />
-        )}
-      </Hover>
-    )}
-  </Active>
+const IconButton = ({ active, pressed, hovered, ...rest }) => (
+  <Box
+    opacity={getButtonOpacity(active, hovered)}
+    transform={getTransform(pressed, hovered, active)}
+    transition="0.1s all ease-in-out"
+    {...rest}
+  />
 );
 
 const Voting = ({ messageId, hasVoted, votes }) => {
@@ -58,27 +47,39 @@ const Voting = ({ messageId, hasVoted, votes }) => {
   };
 
   return (
-    <Flex
-      alignItems="center"
-      justifyContent="center"
-      position="relative"
-      style={{ userSelect: 'none' }}
-      size={40}
-      borderRadius="100%"
-      bg={`rgba(0,0,0,0.0${voted ? 0 : 5})`}
-      flexShrink={0}
-      color={voted ? '#A84E6D' : 'purple'}
-      ml={3}
-    >
-      <IconButton active={voted} onClick={toggleVote}>
-        <DownvoteFilledIcon size={20} />
-      </IconButton>
-      <Box position="absolute" right="2px" top="-5px" pl={1}>
-        <Type fontSize={0} fontWeight="bold">
-          {count}
-        </Type>
-      </Box>
-    </Flex>
+    <Active>
+      {({ active: pressed, bind: pressedBind }) => (
+        <Hover>
+          {({ hovered, bind }) => (
+            <Flex
+              alignItems="center"
+              justifyContent="center"
+              position="relative"
+              style={{ userSelect: 'none' }}
+              size={40}
+              borderRadius="100%"
+              bg={`rgba(0,0,0,0.0${voted ? 0 : 5})`}
+              flexShrink={0}
+              color={voted ? '#A84E6D' : 'purple'}
+              ml={3}
+              cursor={hovered ? 'pointer' : 'unset'}
+              onClick={toggleVote}
+              {...pressedBind}
+              {...bind}
+            >
+              <IconButton active={voted} pressed={pressed} hovered={hovered}>
+                <DownvoteFilledIcon size={20} />
+              </IconButton>
+              <Box position="absolute" right="2px" top="-5px" pl={1}>
+                <Type fontSize={0} fontWeight="bold">
+                  {count}
+                </Type>
+              </Box>
+            </Flex>
+          )}
+        </Hover>
+      )}
+    </Active>
   );
 };
 

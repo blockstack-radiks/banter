@@ -1,5 +1,5 @@
 import Model from 'radiks/lib/model';
-import moment from 'moment';
+import fromNow from 'fromnow';
 
 export default class Message extends Model {
   static className = 'Message';
@@ -12,10 +12,10 @@ export default class Message extends Model {
     createdBy: {
       type: String,
       decrypted: true,
-    }
-  }
+    },
+  };
 
   ago() {
-    return moment(this.attrs.createdAt).fromNow();
+    return fromNow(this.attrs.createdAt);
   }
 }

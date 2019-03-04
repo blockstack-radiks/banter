@@ -12,7 +12,6 @@ import { instanceOf } from 'prop-types';
 import { withRouter } from 'next/router';
 import { ReduxBundlerProvider } from 'redux-bundler-hook';
 import withReduxStore from '../common/lib/with-redux-store';
-
 import Nav from '../components/nav';
 import Footer from '../components/footer';
 import { theme } from '../common/theme';
@@ -29,11 +28,11 @@ const makeUserSession = () => {
 const GlobalStyles = globalStyles();
 
 const Wrapper = withRouter(({ children }) => (
-    <Box flexGrow={1} minHeight="100vh" bg="pink" pb={4}>
-      <NewSignInModal />
-      {children}
-    </Box>
-  ));
+  <Box flexGrow={1} minHeight="100vh" bg="pink" pb={4}>
+    <NewSignInModal />
+    {children}
+  </Box>
+));
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
