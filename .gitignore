@@ -2,3 +2,4 @@ node_modules
 .env
 .next
 .idea
+bundles/client.html
