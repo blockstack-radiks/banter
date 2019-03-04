@@ -14,6 +14,7 @@ import { Button } from '../button';
 import { useOnClickOutside } from '../../common/hooks';
 import { theme } from '../../common/theme';
 import InviteUserModal from '../modal/invite-user';
+import { generateImageUrl } from '../../common/utils';
 
 const mentionPlugin = createMentionPlugin({
   mentionPrefix: '@',
@@ -49,7 +50,7 @@ const Compose = ({ pluginProps, ...rest }) => {
     allUsernames = usernames.map((username) => ({
       name: username,
       link: `/[::]${username}`,
-      avatar: `/api/avatar/${username}`,
+      avatar: generateImageUrl(username, 80),
     }));
     setSuggestions(allUsernames);
   };

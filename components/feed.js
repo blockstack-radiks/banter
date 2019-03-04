@@ -8,6 +8,7 @@ import Message from '../models/Message';
 import MessageComponent from './message';
 import { Button } from './button';
 import { Login } from './login';
+import Head from 'next/head';
 
 const Compose = dynamic(() => import('./compose'), {
   loading: () => (
@@ -26,7 +27,11 @@ const TopArea = () => {
 };
 
 const Messages = ({ createdBy }) => {
-  const { messages } = useConnect('selectMessages');
+  const { messages, isVisible, newMessageCount } = useConnect(
+    'selectMessages',
+    'selectIsVisible',
+    'selectNewMessageCount'
+  );
   return createdBy && !messages.length ? (
     <Flex alignItems="center" justifyContent="center" flexDirection="column" p={4}>
       <Box pb={3} color="purple" opacity={0.1}>
@@ -37,9 +42,16 @@ const Messages = ({ createdBy }) => {
       </Type>
     </Flex>
   ) : (
-    messages.map((message) => (
-      <MessageComponent key={message._id} createdBy={!!createdBy} message={new Message(message)} />
-    ))
+    <>
+      {!isVisible && newMessageCount > 0 ? (
+        <Head>
+          <title>Banter ({newMessageCount})</title>
+        </Head>
+      ) : null}
+      {messages.map((message) => (
+        <MessageComponent key={message._id} createdBy={!!createdBy} message={new Message(message)} />
+      ))}
+    </>
   );
 };
 
