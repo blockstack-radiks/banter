@@ -59,6 +59,7 @@
     "react": "^16.8.2",
     "react-cookie": "^3.0.8",
     "react-dom": "^16.8.2",
+    "react-dropzone": "^9.0.0",
     "react-emailify": "^0.0.1",
     "react-powerplug": "^1.0.0",
     "react-use": "^5.4.1",

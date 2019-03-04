@@ -20,6 +20,9 @@ import { useOnClickOutside } from '../../common/hooks';
 import { theme } from '../../common/theme';
 import { Provider, Tooltip } from 'reakit';
 import reakitTheme from 'reakit-theme-default';
+import Dropzone from 'react-dropzone';
+
+const dropzoneRef = React.createRef();
 
 const mentionPlugin = createMentionPlugin({
   mentionPrefix: '@',
@@ -78,10 +81,14 @@ const EmojiButton = () => (
   </Hover>
 );
 
-const BottomTray = ({ setHasImage, loading, disabled, handleSubmit, ...rest }) => (
+const BottomTray = ({ setHasImage, open, loading, disabled, handleSubmit, ...rest }) => (
   <Flex alignItems="center" pt={2}>
     <Flex {...rest}>
-      <ImageButton onClick={() => setHasImage((s) => !s)} />
+      <ImageButton
+        onClick={() => {
+          open();
+        }}
+      />
       <GifButton ml={2} />
       <LocationButton ml={2} />
     </Flex>
@@ -96,8 +103,14 @@ const Compose = ({ pluginProps, ...rest }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [focused, setFocused] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [hasImage, setHasImage] = useState(false);
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
+
+  const handleClearFile = () => {
+    setPreview(null);
+    setFile(null);
+  };
 
   const fetchUsernames = async () => {
     const response = await fetch('/api/usernames');
@@ -174,68 +187,169 @@ const Compose = ({ pluginProps, ...rest }) => {
     return true;
   };
 
+  const onDrop = async (acceptedFiles, rejectedFiles) => {
+    const fileReader = new FileReader();
+
+    fileReader.addEventListener(
+      'load',
+      () => {
+        setPreview(fileReader.result);
+      },
+      false
+    );
+
+    await Promise.all(
+      acceptedFiles.map(async (file) => {
+        fileReader.readAsDataURL(file);
+        return {
+          ...file,
+        };
+      })
+    );
+
+    setFile(acceptedFiles[0]);
+  };
+
   return (
-    <Box p={4} {...rest}>
-      <Flex justifyContent="space-between">
-        <Box position="relative" is="form" flexGrow={1} onSubmit={handleSubmit}>
-          <div style={{ width: '100%', flexGrow: 1 }} ref={editorWrapper}>
-            <StylesWrapper>
-              <Box
-                p={3}
-                position="relative"
-                zIndex={99}
-                border="1px solid"
-                borderColor={focused ? 'pink' : 'hsl(204,25%,90%)'}
-                boxShadow={focused ? `${rgba(theme.colors.pink, 0.14)} 0px 0px 0px 4px` : 'none'}
-                transition="0.1s all ease-in-out"
-                onClick={focus}
-              >
-                <div
-                  className="editor" // eslint-disable-line
-                >
-                  <Editor
-                    placeholder="What's on your mind?"
-                    editorState={editorState}
-                    onChange={onChange}
-                    plugins={plugins}
-                    ref={editor}
-                  />
-                  <MentionSuggestions
-                    onSearchChange={onSearchChange}
-                    suggestions={suggestions}
-                    onAddMention={onAddMention}
-                  />
-                  <EmojiSuggestions />
-                </div>
-              </Box>
-              <Flex position="absolute" top="2px" right="8px">
-                <EmojiButton />
+    <Dropzone accept="image/*" ref={dropzoneRef} onDrop={onDrop}>
+      {({ getRootProps, getInputProps, isDragActive }) => (
+        <div
+          {...getRootProps({
+            onClick: (evt) => evt.preventDefault(),
+            style: {
+              outline: 'none',
+            },
+          })}
+        >
+          <Box p={4} position="relative" {...rest}>
+            <Flex
+              style={{ pointerEvents: 'none' }}
+              transition="0.1s all ease-in-out"
+              position="absolute"
+              opacity={isDragActive ? 1 : 0}
+              width="100%"
+              height="100%"
+              left={0}
+              top={0}
+              bg="white"
+              zIndex={999}
+              p={4}
+            >
+              <Flex border="5px dashed hsl(204,25%,90%)" flexGrow={1} alignItems="center" justifyContent="center">
+                <Type fontWeight="bold" color="purple">
+                  Drag your image here.
+                </Type>
               </Flex>
-            </StylesWrapper>
-          </div>
-          {hasImage ? (
-            <Box p={3} border="1px solid" borderTop="0" borderColor={'hsl(204,25%,90%)'} bg="hsl(204,25%,97%)">
-              <Box borderRadius="3px" bg="purple" size={100} position="relative">
-                <Flex
-                  ml="auto"
-                  color="white"
-                  size={28}
-                  alignItems="center"
-                  justifyContent="center"
-                  boxShadow="card"
-                  onClick={() => setHasImage((s) => !s)}
-                >
-                  <CloseIcon size={20} />
-                </Flex>
+            </Flex>
+            <Flex justifyContent="space-between">
+              <Box position="relative" is="form" flexGrow={1} onSubmit={handleSubmit}>
+                <div style={{ width: '100%', flexGrow: 1 }} ref={editorWrapper}>
+                  <StylesWrapper>
+                    <Box
+                      p={3}
+                      position="relative"
+                      zIndex={99}
+                      border="1px solid"
+                      borderColor={focused ? 'pink' : 'hsl(204,25%,90%)'}
+                      boxShadow={focused ? `${rgba(theme.colors.pink, 0.14)} 0px 0px 0px 4px` : 'none'}
+                      transition="0.1s all ease-in-out"
+                      onClick={focus}
+                    >
+                      <div
+                        className="editor" // eslint-disable-line
+                      >
+                        <Editor
+                          placeholder="What's on your mind?"
+                          editorState={editorState}
+                          onChange={onChange}
+                          plugins={plugins}
+                          ref={editor}
+                        />
+                        <MentionSuggestions
+                          onSearchChange={onSearchChange}
+                          suggestions={suggestions}
+                          onAddMention={onAddMention}
+                        />
+                        <EmojiSuggestions />
+                      </div>
+                    </Box>
+                    <Flex position="absolute" top="2px" right="8px">
+                      <EmojiButton />
+                    </Flex>
+                    <input {...getInputProps()} />
+                  </StylesWrapper>
+                </div>
+                {file ? (
+                  <Box p={3} border="1px solid" borderTop="0" borderColor={'hsl(204,25%,90%)'} bg="hsl(204,25%,97%)">
+                    <Flex
+                      alignItems="center"
+                      key={file.name}
+                      borderRadius="3px"
+                      size={100}
+                      bg="hsl(204,25%,94%)"
+                      position="relative"
+                      border="1px solid hsl(204,25%,85%)"
+                    >
+                      <Hover>
+                        {({ hovered, bind }) => (
+                          <Provider theme={reakitTheme}>
+                            <Flex
+                              ml="auto"
+                              color="white"
+                              size={24}
+                              alignItems="center"
+                              justifyContent="center"
+                              position="absolute"
+                              top="4px"
+                              right="4px"
+                              zIndex={99}
+                              borderRadius="100%"
+                              bg="purple"
+                              cursor={hovered ? 'pointer' : 'unset'}
+                              onClick={handleClearFile}
+                              {...bind}
+                            >
+                              <Box position="relative">
+                                <CloseIcon size={20} />
+                                <Tooltip fade slide visible={hovered}>
+                                  <Tooltip.Arrow />
+                                  <Type fontSize={0}>Remove</Type>
+                                </Tooltip>
+                              </Box>
+                            </Flex>
+                          </Provider>
+                        )}
+                      </Hover>
+                      {preview && (
+                        <Box
+                          position="absolute"
+                          width="100%"
+                          display="block"
+                          maxWidth="100%"
+                          left={0}
+                          is="img"
+                          src={preview}
+                          style={{ objectFit: 'cover' }}
+                        />
+                      )}
+                    </Flex>
+                  </Box>
+                ) : null}
               </Box>
-            </Box>
-          ) : null}
-        </Box>
-      </Flex>
-      {focused || hasContent ? (
-        <BottomTray setHasImage={setHasImage} disabled={disabled} handleSubmit={handleSubmit} loading={loading} />
-      ) : null}
-    </Box>
+            </Flex>
+
+            {focused || hasContent ? (
+              <BottomTray
+                open={() => dropzoneRef.current.open()}
+                disabled={disabled}
+                handleSubmit={handleSubmit}
+                loading={loading}
+              />
+            ) : null}
+          </Box>
+        </div>
+      )}
+    </Dropzone>
   );
 };
 
