@@ -32,7 +32,7 @@ module.exports = withBundleAnalyzer({
         runtimeCaching: [
           {
             handler: 'networkFirst',
-            urlPattern: /^https?.*/,
+            urlPattern: /^http?.*/,
           },
         ],
       })

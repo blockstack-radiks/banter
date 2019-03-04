@@ -12,7 +12,6 @@ import { instanceOf } from 'prop-types';
 import { withRouter } from 'next/router';
 import { ReduxBundlerProvider } from 'redux-bundler-hook';
 import withReduxStore from '../common/lib/with-redux-store';
-import { init } from '../common/lib/pushNotifications';
 import Nav from '../components/nav';
 import Footer from '../components/footer';
 import { theme } from '../common/theme';
@@ -94,22 +93,6 @@ class MyApp extends App {
   }
 
   handleStateUsernameUpdate = (username) => this.setState({ username });
-
-  componentDidMount() {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/service-worker.js')
-        .then(function(registration) {
-          console.log('This service worker is registered');
-          init(registration).then((subscription) => {
-            console.log('SUB', subscription);
-          });
-        })
-        .catch(function(err) {
-          console.log('Service worker registration failed, error:', err);
-        });
-    }
-  }
 
   render() {
     const { Component, pageProps, universalCookies, reduxStore } = this.props;
