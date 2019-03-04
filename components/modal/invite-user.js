@@ -58,6 +58,7 @@ const Content = ({ visible, hide, hasDismissed, show }) => {
 
   const emailInputs = usersToInvite.map((username, i, arr) => (
     <Flex
+      bg="white"
       p={4}
       key={username}
       borderBottom={i !== arr.length - 1 ? '1px solid rgb(230, 236, 240)' : 'unset'}
@@ -108,11 +109,11 @@ const Content = ({ visible, hide, hasDismissed, show }) => {
 
   return (
     <Box textAlign="center">
-      <Type m={0} is="h2" maxWidth="60%" lineHeight={1.4} color="purple">
+      <Type color="white" m={0} is="h2" maxWidth="60%" lineHeight={1.4}>
         You mentioned people who haven&apos;t used Banter!
       </Type>
 
-      <Type mt={4} lineHeight={1.6} maxWidth="80%">
+      <Type color="white" mt={4} lineHeight={1.6} maxWidth="80%">
         Would you like to invite them via email? Otherwise, they probably won't ever see your message.
       </Type>
 
@@ -130,7 +131,9 @@ const Content = ({ visible, hide, hasDismissed, show }) => {
         </Box>
 
         <Box mt={6}>
-          <Button mx="auto">Send Invites</Button>
+          <Button invert mx="auto">
+            Send Invites
+          </Button>
         </Box>
       </form>
     </Box>
@@ -139,7 +142,11 @@ const Content = ({ visible, hide, hasDismissed, show }) => {
 
 const InviteUserModal = () => {
   const { doClearLastData } = useConnect('doClearLastData');
-  return <Modal onDismiss={() => setTimeout(() => doClearLastData(), 150)}>{(props) => <Content {...props} />}</Modal>;
+  return (
+    <Modal bg="purple" onDismiss={() => setTimeout(() => doClearLastData(), 150)}>
+      {(props) => <Content {...props} />}
+    </Modal>
+  );
 };
 
 export default InviteUserModal;
