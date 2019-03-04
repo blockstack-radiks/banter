@@ -55,6 +55,8 @@ const StylesWrapper = styled.div`
     border-radius: 12px;
   }
   .draftJsMentionPlugin__mentionSuggestions__2DWjA {
+    max-height: 200px;
+    overflow: auto;
     border: 1px solid #eee;
     margin-top: 0.4em;
     position: absolute;
