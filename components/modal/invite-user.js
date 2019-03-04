@@ -1,28 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Type, Flex } from 'blockstack-ui';
-import CloseIcon from 'mdi-react/CloseIcon';
-import { Backdrop, Overlay, Provider } from 'reakit';
-import theme from 'reakit-theme-default';
+
 import { useConnect } from 'redux-bundler-hook';
 import { User } from 'radiks';
-import StyledModal from './styled';
-import Input from '../../styled/input';
+import Modal from './wrapper';
 import { Button } from '../button';
 import { sendInviteEmails } from '../../common/lib/api';
+import AtIcon from 'mdi-react/AtIcon';
 
-const InviteUserModal = () => {
+const Content = ({ visible, hide, hasDismissed, show }) => {
   const { lastMentions, lastMessage } = useConnect('selectLastMentions', 'selectLastMessage');
   const [usersToInvite, setUsersToInvite] = useState([]);
   const [userEmails, setUserEmails] = useState({});
-  const [isHidden, setIsHidden] = useState(true);
 
   const checkToInvite = async () => {
+    if (lastMentions.length === 0 && usersToInvite === [] && userEmails === []) {
+      return;
+    }
+    if (lastMentions.length === 0) {
+      if (userEmails !== []) {
+        setUserEmails([]);
+      }
+      if (usersToInvite) {
+        setUsersToInvite([]);
+      }
+      return;
+    }
     const usernames = lastMentions.map((m) => m.slice(1));
-    const users = await User.fetchList({
-      username: usernames.join(','),
-    }, { decrypt: false });
-    const _usersToInvite = usernames.filter((username) => users.findIndex((user) => user.attrs.username === username) === -1);
-    console.log(_usersToInvite);
+    const users = await User.fetchList(
+      {
+        username: usernames.join(','),
+      },
+      { decrypt: false }
+    );
+    const _usersToInvite = usernames.filter(
+      (username) => users.findIndex((user) => user.attrs.username === username) === -1
+    );
+
     const newEmails = {};
     _usersToInvite.forEach((username) => {
       newEmails[username] = '';
@@ -33,21 +47,39 @@ const InviteUserModal = () => {
 
   useEffect(() => {
     checkToInvite();
-  }, [lastMentions]);
+  }, [lastMentions, visible]);
 
-  if (usersToInvite.length === 0) {
-    return null;
-  } else if (isHidden) {
-    setIsHidden(false);
+  const hasUsersToInvite = !hasDismissed && usersToInvite && usersToInvite.length > 0;
+
+  if (hasUsersToInvite && !visible) {
+    show();
+  } else if (!hasUsersToInvite && visible) {
   }
 
-  const emailInputs = usersToInvite.map((username) => (
-    <Flex mt={4} key={username}>
-      <Box width={1 / 2}>
-        <Type mt={2}>@{username}</Type>
-      </Box>
-      <Box width={1 / 2}>
-        <Input
+  const emailInputs = usersToInvite.map((username, i, arr) => (
+    <Flex
+      p={4}
+      key={username}
+      borderBottom={i !== arr.length - 1 ? '1px solid rgb(230, 236, 240)' : 'unset'}
+      flexDirection="column"
+    >
+      <Flex alignItems="center" width={1} pb={2}>
+        <Box pr="2px" color="purple" opacity={0.5}>
+          <AtIcon size={20} style={{ display: 'block' }} />
+        </Box>
+        <Type is="label" htmlFor={username} pb="2px" color="purple" fontWeight="bold">
+          {username}
+        </Type>
+      </Flex>
+      <Box flexGrow={1}>
+        <Box
+          is="input"
+          display="block"
+          width={1}
+          p={2}
+          name={username}
+          id={username}
+          border="1px solid hsl(204,25%,80%)"
           value={userEmails[username] || ''}
           onChange={(evt) => {
             const text = evt.target.value;
@@ -57,7 +89,7 @@ const InviteUserModal = () => {
             }));
           }}
           placeholder={`Email of @${username}`}
-          type='email'
+          type="email"
         />
       </Box>
     </Flex>
@@ -71,74 +103,43 @@ const InviteUserModal = () => {
       lastMessage,
       userEmails,
     });
-
     setUsersToInvite([]);
-    setIsHidden(true);
   };
 
   return (
-    <Provider theme={theme}>
-      <Overlay.Container initialState={{ visible: true }}>
-        {(overlay) => {
-          const handleDismiss = () => {
-            setUsersToInvite([]);
-            setIsHidden(true);
-            overlay.hide();
-          };
-          if (!isHidden && !overlay.visible) {
-            overlay.show();
-          }
-          if (isHidden && overlay.visible) {
-            overlay.hide();
-          }
-          return (
-            <Box
-              width={1}
-              minHeight="100vh"
-              position="fixed"
-              zIndex={99999}
-              style={{
-                pointerEvents: overlay.visible ? 'unset' : 'none',
-              }}
-            >
-              <Backdrop fade use={Overlay.Hide} {...overlay} hide={handleDismiss} />
-              <Overlay visible fade slide {...overlay} hide={handleDismiss}>
-                <Box maxWidth={600} p={4}>
-                  <StyledModal.CloseButton
-                    dark
-                    style={{
-                      position: 'absolute',
-                      zIndex: 20,
-                      right: '30px',
-                      top: '25px',
-                    }}
-                    onClick={handleDismiss}
-                  >
-                    <CloseIcon color="#fff" />
-                  </StyledModal.CloseButton>
-                  <Type mb={0} is="h3" color="purple">
-                    You mentioned people who haven&apos;t used Banter!
-                  </Type>
+    <Box textAlign="center">
+      <Type m={0} is="h2" maxWidth="60%" lineHeight={1.4} color="purple">
+        You mentioned people who haven&apos;t used Banter!
+      </Type>
 
-                  <Type mt={3}>
-                    Would you like to invite them?
-                  </Type>
+      <Type mt={4} lineHeight={1.6} maxWidth="80%">
+        Would you like to invite them via email? Otherwise, they probably won't ever see your message.
+      </Type>
 
-                  <form onSubmit={sendInvites}>
-                    {emailInputs}
+      <form onSubmit={sendInvites}>
+        <Box
+          maxHeight="300px"
+          overflow="auto"
+          borderRadius="4px"
+          mt={5}
+          mb={3}
+          border="1px solid rgb(230, 236, 240)"
+          boxShadow="card"
+        >
+          {emailInputs}
+        </Box>
 
-                    <Button mt={4}>
-                      Send Invites
-                    </Button>
-                  </form>
-                </Box>
-              </Overlay>
-            </Box>
-          );
-        }}
-      </Overlay.Container>
-    </Provider>
+        <Box mt={6}>
+          <Button mx="auto">Send Invites</Button>
+        </Box>
+      </form>
+    </Box>
   );
+};
+
+const InviteUserModal = () => {
+  const { doClearLastData } = useConnect('doClearLastData');
+  return <Modal onDismiss={() => setTimeout(() => doClearLastData(), 150)}>{(props) => <Content {...props} />}</Modal>;
 };
 
 export default InviteUserModal;

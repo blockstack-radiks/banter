@@ -7,6 +7,7 @@ const FETCH_MESSAGES_STARTED = 'messages/FETCH_MESSAGES_STARTED';
 const FETCH_MESSAGES_FINISHED = 'messages/FETCH_MESSAGES_FINISHED';
 const MESSAGES_ERROR = 'messages/MESSAGES_ERROR';
 const UPDATE_MESSAGES = 'messages/UPDATE_MESSAGES';
+const CLEAR_LAST_DATA = 'messages/CLEAR_LAST_DATA';
 const UPDATE_MESSAGE_VOTE_COUNT = 'messages/UPDATE_MESSAGE_VOTE_COUNT';
 
 const doError = (error) => ({ type: MESSAGES_ERROR, payload: error });
@@ -51,6 +52,14 @@ export default {
           },
           lastMessage: payload.attrs,
           lastMentions: payload.mentions,
+          lastUpdated: Date.now(),
+        };
+      }
+      if (type === CLEAR_LAST_DATA) {
+        return {
+          ...state,
+          lastMessage: null,
+          lastMentions: [],
           lastUpdated: Date.now(),
         };
       }
@@ -103,6 +112,9 @@ export default {
         votes: [...new Set([vote, ...message.votes])],
       },
     });
+  },
+  doClearLastData: () => async ({ dispatch }) => {
+    dispatch({ type: CLEAR_LAST_DATA });
   },
   doFetchMessages: (query) => async ({ dispatch }) => {
     try {
