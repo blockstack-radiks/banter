@@ -98,9 +98,14 @@ const Content = ({ visible, hide, hasDismissed, show }) => {
     </Flex>
   ));
 
+  const disabled = !Object.values(userEmails).filter((e) => e !== '').length;
+
   const sendInvites = async (evt) => {
     if (evt && evt.preventDefault) {
       evt.preventDefault();
+    }
+    if (disabled) {
+      return null;
     }
     try {
       const success = await sendInviteEmails({
@@ -167,7 +172,7 @@ const Content = ({ visible, hide, hasDismissed, show }) => {
           </Box>
 
           <Box mt={6}>
-            <Button invert mx="auto">
+            <Button disabled={disabled} invert mx="auto">
               Send Invites
             </Button>
           </Box>
