@@ -1,9 +1,12 @@
 const express = require('express');
 const next = require('next');
 const path = require('path');
+const { join } = require('path');
 const expressWS = require('express-ws');
 const secure = require('express-force-https');
 const cookiesMiddleware = require('universal-cookie-express');
+const shrinkRay = require('shrink-ray-current');
+
 require('dotenv').config();
 
 const { setup } = require('radiks-server');
@@ -21,8 +24,17 @@ const port = parseInt(process.env.PORT, 10) || 5000;
 
 app.prepare().then(async () => {
   const server = express();
-  server.use(cookiesMiddleware());
-  server.use(secure);
+  server.use(cookiesMiddleware()).use(secure);
+
+  if (!dev) {
+    server.use(
+      shrinkRay({
+        brotli: {
+          quality: 11,
+        },
+      })
+    );
+  }
 
   expressWS(server);
 
@@ -52,6 +64,11 @@ app.prepare().then(async () => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', '*');
     res.sendFile(path.join(__dirname, '..', 'static', 'manifest.json'));
+  });
+
+  server.get('/service-worker.js', (req, res) => {
+    const filePath = join(__dirname, '..','.next', '/service-worker.js');
+    res.sendFile(filePath);
   });
 
   server.use('/api', makeApiController(RadiksController.DB));

@@ -1,8 +1,10 @@
+import { createSelector } from 'redux-bundler';
 import { fetchMessages } from '../common/lib/api';
 const FETCH_MESSAGES_STARTED = 'messages/FETCH_MESSAGES_STARTED';
 const FETCH_MESSAGES_FINISHED = 'messages/FETCH_MESSAGES_FINISHED';
 const MESSAGES_ERROR = 'messages/MESSAGES_ERROR';
 const UPDATE_MESSAGES = 'messages/UPDATE_MESSAGES';
+const UPDATE_NEW_MESSAGE_COUNT = 'messages/UPDATE_NEW_MESSAGE_COUNT';
 const UPDATE_MESSAGE_VOTE_COUNT = 'messages/UPDATE_MESSAGE_VOTE_COUNT';
 
 const doError = (error) => ({ type: MESSAGES_ERROR, payload: error });
@@ -16,9 +18,16 @@ export default {
       loading: false,
       hasMoreMessages: null,
       error: null,
+      newMessageCount: 0,
     };
 
     return (state = initialData, { type, payload }) => {
+      if (type === UPDATE_NEW_MESSAGE_COUNT) {
+        return {
+          ...state,
+          newMessageCount: payload,
+        };
+      }
       if (type === FETCH_MESSAGES_STARTED) {
         return {
           ...state,
@@ -64,11 +73,28 @@ export default {
       return state;
     };
   },
+  doUpdateMessageCount: (count) => ({ dispatch }) => {
+    dispatch({
+      type: UPDATE_NEW_MESSAGE_COUNT,
+      payload: count,
+    });
+  },
   doAddMessage: (message) => ({ getState, dispatch, store }) => {
     const messages = store.selectMessages(getState());
 
     if (messages.find((m) => m._id === message._id)) {
       return null;
+    }
+    if (!store.selectIsVisible(getState())) {
+      dispatch({
+        type: UPDATE_NEW_MESSAGE_COUNT,
+        payload: store.selectNewMessageCount(getState()) + 1,
+      });
+    } else if (store.selectNewMessageCount(getState()) !== 0) {
+      dispatch({
+        type: UPDATE_NEW_MESSAGE_COUNT,
+        payload: 0,
+      });
     }
     dispatch({
       type: UPDATE_MESSAGES,
@@ -146,6 +172,19 @@ export default {
     }
   },
   selectMessagesRaw: (state) => state.messages.data,
+  selectNewMessageCount: (state) => state.messages.newMessageCount,
   selectMessages: (state) =>
     Object.values(state.messages.data).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)),
+  reactShouldClearNewMessageCount: createSelector(
+    'selectIsVisible',
+    'selectNewMessageCount',
+    (visible, messageCount) => {
+      if (visible && messageCount > 0) {
+        return {
+          actionCreator: 'doUpdateMessageCount',
+          args: [0],
+        };
+      }
+    }
+  ),
 };

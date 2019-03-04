@@ -21,8 +21,8 @@ import { theme } from '../../common/theme';
 import { Provider, Tooltip } from 'reakit';
 import reakitTheme from 'reakit-theme-default';
 import Dropzone from 'react-dropzone';
-
 const dropzoneRef = React.createRef();
+import { generateImageUrl } from '../../common/utils';
 
 const mentionPlugin = createMentionPlugin({
   mentionPrefix: '@',
@@ -118,7 +118,7 @@ const Compose = ({ pluginProps, ...rest }) => {
     allUsernames = usernames.map((username) => ({
       name: username,
       link: `/[::]${username}`,
-      avatar: `/api/avatar/${username}`,
+      avatar: generateImageUrl(username, 80),
     }));
     setSuggestions(allUsernames);
   };

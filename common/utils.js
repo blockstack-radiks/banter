@@ -5,3 +5,6 @@ export const appUrl = () => {
   }
   return radiksServer;
 };
+
+export const generateImageUrl = (username, size) => `https://banter-pub.imgix.net/users/${username}?w=${size}&h=${size}&fit=crop&crop=faces,top,left&auto=format`;
+
