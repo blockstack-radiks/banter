@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { EditorState } from 'draft-js';
+import { EditorState, ContentState } from 'draft-js';
 import { Hover } from 'react-powerplug';
 import Editor from 'draft-js-plugins-editor';
 import createMentionPlugin, { defaultSuggestionsFilter } from 'draft-js-mention-plugin';
@@ -44,6 +44,8 @@ const Compose = ({ pluginProps, ...rest }) => {
   const [query, setQuery] = useState('');
   const [blockstackProfiles, setBlockstackProfiles] = useState([]);
 
+  const maxLength = 240;
+
   const fetchUsernames = async () => {
     const response = await fetch('/api/usernames');
     const usernames = await response.json();
@@ -79,8 +81,20 @@ const Compose = ({ pluginProps, ...rest }) => {
   const editor = useRef(null);
   const editorWrapper = useRef(null);
 
+  const currentContent = editorState.getCurrentContent().getPlainText('');
+  const currentContentCount = editorState.getCurrentContent().getPlainText('').length;
+
   const onChange = (state) => {
-    setEditorState(state);
+    const newContentText = state.getCurrentContent().getPlainText('');
+    const newContentTextCount = newContentText.length;
+    const newContentIsTooLong = newContentTextCount > maxLength;
+    if (newContentIsTooLong) {
+      const truncatedTextContent = newContentText.substring(0, maxLength);
+      const truncatedEditorState = EditorState.createWithContent(ContentState.createFromText(truncatedTextContent));
+      setEditorState(truncatedEditorState);
+    } else {
+      setEditorState(state);
+    }
   };
 
   const onSearchChange = ({ value }) => {
@@ -99,14 +113,12 @@ const Compose = ({ pluginProps, ...rest }) => {
 
   const { user } = useConnect('selectUser');
 
-  const currentContent = editorState.getCurrentContent().getPlainText();
-
   const disabled = !user || currentContent === '';
 
   useOnClickOutside(editorWrapper, () => setFocused(false));
 
   const handleSubmit = async (e) => {
-    const content = editorState.getCurrentContent().getPlainText();
+    const content = editorState.getCurrentContent().getPlainText('');
     if (e && e.preventDefault) {
       e.preventDefault();
     }
@@ -179,8 +191,18 @@ const Compose = ({ pluginProps, ...rest }) => {
           </Box>
         </Flex>
         {focused && (
-          <Flex pt={2}>
+          <Flex pt={2} alignItems="center">
             <Box mr="auto" />
+            {currentContentCount >= maxLength * 0.9 ? (
+              <Box
+                color={currentContentCount === maxLength ? 'red' : 'purple'}
+                opacity={currentContentCount === maxLength ? 1 : 0.5}
+                fontWeight={currentContentCount === maxLength ? 'bold' : '500'}
+                fontSize={1}
+              >
+                {currentContentCount}/240
+              </Box>
+            ) : null}
             <Button disabled={loading || disabled} ml={2} onClick={handleSubmit}>
               Post{loading ? 'ing...' : ''}
             </Button>
