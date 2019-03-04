@@ -25,17 +25,19 @@ const CloseButton = ({ ...rest }) => (
   </Hover>
 );
 
-const ModalWrapper = ({ children, onDismiss, initial = false, bg, ...rest }) => {
+const ModalWrapper = ({ children, onDismiss, persistDismiss = false, initial = false, bg, ...rest }) => {
   const [hasDismissed, setHasDismissed] = useState(false);
   const handleDismissed = () => {
     setHasDismissed(true);
-    setTimeout(() => setHasDismissed(false), 300);
+    if (!persistDismiss) {
+      setTimeout(() => setHasDismissed(false), 300);
+    }
   };
   return (
     <Provider theme={theme}>
       <Overlay.Container
         initialState={{
-          visible: false,
+          visible: initial,
         }}
       >
         {(overlay) => {
