@@ -31,3 +31,25 @@ export const fetchVotes = async (query) => {
   const data = await response.json();
   return data.messages;
 };
+
+export const fetchUser = async (username) => {
+  const { apiServer } = getConfig();
+  const url = `${apiServer}/api/user/${username}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
+};
+
+export const sendInviteEmails = async (data) => {
+  const { apiServer } = getConfig();
+  const url = `${apiServer}/api/invite`;
+  const response = await fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
+  });
+  const { success } = await response.json();
+  return success;
+};

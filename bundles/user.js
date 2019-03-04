@@ -6,14 +6,12 @@ const cookies = new Cookies();
 
 const setUsernameCookie = (username) => {
   if (!username) return null;
-  let d = new Date();
+  const d = new Date();
   d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
   cookies.set('username', username, { expires: d });
 };
 
-const getUsernameCookie = () => {
-  return cookies.get('username');
-};
+const getUsernameCookie = () => cookies.get('username');
 
 const USER_LOGIN_STARTED = 'user/USER_LOGIN_STARTED';
 const USER_LOGIN_FINISHED = 'user/USER_LOGIN_FINISHED';
@@ -161,8 +159,7 @@ export default {
   reactShouldRemoveAuthRequest: createSelector(
     'selectUser',
     'selectUserSigningIn',
-    'selectUserLastUpdated',
-    (user, signingIn, lastUpdated) => {
+    (user, signingIn) => {
       if (!signingIn && user) {
         if (typeof window !== 'undefined' && window.location.href.includes('authResponse')) {
           // this means there is an authRequest that has not been processed yet!
@@ -179,8 +176,7 @@ export default {
         if (typeof window !== 'undefined' && window.location.href.includes('authResponse')) {
           // this means there is an authRequest that has not been processed yet!
           return { actionCreator: 'doHandleLogin' };
-        } else {
-          if (getUsernameCookie()) {
+        } else if (getUsernameCookie()) {
             return { actionCreator: 'doHandleLogin' };
           } else {
             const isReallyLoggedIn =
@@ -189,7 +185,6 @@ export default {
               return { actionCreator: 'doHandleLogin' };
             }
           }
-        }
       }
     }
   ),

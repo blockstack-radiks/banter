@@ -1,13 +1,20 @@
+import * as linkify from 'linkifyjs';
+import mentionPlugin from 'linkifyjs/plugins/mention';
+
 import { createSelector } from 'redux-bundler';
 import { fetchMessages } from '../common/lib/api';
+
 const FETCH_MESSAGES_STARTED = 'messages/FETCH_MESSAGES_STARTED';
 const FETCH_MESSAGES_FINISHED = 'messages/FETCH_MESSAGES_FINISHED';
 const MESSAGES_ERROR = 'messages/MESSAGES_ERROR';
 const UPDATE_MESSAGES = 'messages/UPDATE_MESSAGES';
+const CLEAR_LAST_DATA = 'messages/CLEAR_LAST_DATA';
 const UPDATE_NEW_MESSAGE_COUNT = 'messages/UPDATE_NEW_MESSAGE_COUNT';
 const UPDATE_MESSAGE_VOTE_COUNT = 'messages/UPDATE_MESSAGE_VOTE_COUNT';
 
 const doError = (error) => ({ type: MESSAGES_ERROR, payload: error });
+
+mentionPlugin(linkify);
 
 export default {
   name: 'messages',
@@ -18,6 +25,8 @@ export default {
       loading: false,
       hasMoreMessages: null,
       error: null,
+      lastMessage: null,
+      lastMentions: [],
       newMessageCount: 0,
     };
 
@@ -48,8 +57,18 @@ export default {
           ...state,
           data: {
             ...state.data,
-            [payload._id]: payload,
+            [payload.attrs._id]: payload.attrs,
           },
+          lastMessage: payload.attrs,
+          lastMentions: payload.mentions,
+          lastUpdated: Date.now(),
+        };
+      }
+      if (type === CLEAR_LAST_DATA) {
+        return {
+          ...state,
+          lastMessage: null,
+          lastMentions: [],
           lastUpdated: Date.now(),
         };
       }
@@ -82,6 +101,11 @@ export default {
   doAddMessage: (message) => ({ getState, dispatch, store }) => {
     const messages = store.selectMessages(getState());
 
+    const mentions = linkify
+      .find(message.attrs.content)
+      .filter((match) => match.type === 'mention')
+      .map((mention) => mention.value);
+
     if (messages.find((m) => m._id === message._id)) {
       return null;
     }
@@ -98,7 +122,10 @@ export default {
     }
     dispatch({
       type: UPDATE_MESSAGES,
-      payload: message.attrs,
+      payload: {
+        attrs: message.attrs,
+        mentions,
+      },
     });
   },
   doUpdateMessageVoteCount: (vote) => ({ dispatch, getState, store }) => {
@@ -111,6 +138,9 @@ export default {
         votes: [...new Set([vote, ...message.votes])],
       },
     });
+  },
+  doClearLastData: () => async ({ dispatch }) => {
+    dispatch({ type: CLEAR_LAST_DATA });
   },
   doFetchMessages: (query) => async ({ dispatch }) => {
     try {
@@ -139,9 +169,8 @@ export default {
   },
   doFetchMoreMessages: (createdBy) => async ({ getState, dispatch, store }) => {
     const messages = store.selectMessages(getState());
-    const loading = getState().messages.loading;
-    const hasMoreMessages = getState().messages.hasMoreMessages;
-    if (!hasMoreMessages || loading) return;
+    const { loading, hasMoreMessages } = getState().messages;
+    if (!hasMoreMessages || loading) return null;
     try {
       dispatch({
         type: FETCH_MESSAGES_STARTED,
@@ -170,8 +199,11 @@ export default {
     } catch (e) {
       dispatch(doError(e));
     }
+    return null;
   },
   selectMessagesRaw: (state) => state.messages.data,
+  selectLastMentions: (state) => state.messages.lastMentions,
+  selectLastMessage: (state) => state.messages.lastMessage,
   selectNewMessageCount: (state) => state.messages.newMessageCount,
   selectMessages: (state) =>
     Object.values(state.messages.data).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)),
