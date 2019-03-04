@@ -2,7 +2,7 @@ import React from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import { Hover } from 'react-powerplug';
 
-const Button = ({ children, disabled, ...rest }) => (
+const Button = ({ children, disabled, secondary, invert, ...rest }) => (
   <Hover>
     {({ hovered, bind }) => (
       <Flex
@@ -10,8 +10,8 @@ const Button = ({ children, disabled, ...rest }) => (
         px={3}
         py={2}
         is="button"
-        bg={hovered ? 'purple' : 'pink'}
-        color={hovered ? 'white' : 'purple'}
+        bg={hovered ? (invert ? 'white' : secondary ? 'pink' : 'purple') : 'pink'}
+        color={hovered ? (invert ? 'purple' : 'white') : 'purple'}
         cursor={hovered ? 'pointer' : 'unset'}
         transition="0.08s all ease-in-out"
         borderRadius="3px"
@@ -41,7 +41,7 @@ const SecondaryButton = ({ children, disabled, ...rest }) => (
         py={2}
         is="button"
         bg={hovered ? 'purple' : 'gray.mid'}
-        color='white'
+        color="white"
         cursor={hovered ? 'pointer' : 'unset'}
         transition="0.08s all ease-in-out"
         borderRadius="3px"

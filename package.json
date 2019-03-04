@@ -18,6 +18,7 @@
     "aws-sdk": "^2.413.0",
     "blockstack": "19.0.0-alpha.3",
     "blockstack-ui": "^0.0.77",
+    "body-parser": "^1.18.3",
     "dotenv": "^6.2.0",
     "draft-js": "^0.10.5",
     "draft-js-emoji-plugin": "^2.1.1",
@@ -97,7 +98,8 @@
       "pages/*",
       "components/*",
       "styled/*",
-      "scripts/*"
+      "scripts/*",
+      "bundles/*"
     ]
   },
   "scripts": {

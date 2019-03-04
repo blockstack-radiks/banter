@@ -5,6 +5,7 @@ const { join } = require('path');
 const expressWS = require('express-ws');
 const secure = require('express-force-https');
 const cookiesMiddleware = require('universal-cookie-express');
+const bodyParser = require('body-parser');
 const shrinkRay = require('shrink-ray-current');
 
 require('dotenv').config();
@@ -24,7 +25,9 @@ const port = parseInt(process.env.PORT, 10) || 5000;
 
 app.prepare().then(async () => {
   const server = express();
-  server.use(cookiesMiddleware()).use(secure);
+  server.use(cookiesMiddleware());
+  server.use(secure);
+  server.use(bodyParser.json());
 
   if (!dev) {
     server.use(

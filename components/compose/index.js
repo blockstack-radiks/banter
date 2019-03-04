@@ -13,6 +13,7 @@ import Message from '../../models/Message';
 import { Button } from '../button';
 import { useOnClickOutside } from '../../common/hooks';
 import { theme } from '../../common/theme';
+import InviteUserModal from '../modal/invite-user';
 import { generateImageUrl } from '../../common/utils';
 
 const mentionPlugin = createMentionPlugin({
@@ -40,6 +41,8 @@ const Compose = ({ pluginProps, ...rest }) => {
   const [focused, setFocused] = useState(false);
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const [query, setQuery] = useState('');
+  const [blockstackProfiles, setBlockstackProfiles] = useState([]);
 
   const fetchUsernames = async () => {
     const response = await fetch('/api/usernames');
@@ -56,6 +59,23 @@ const Compose = ({ pluginProps, ...rest }) => {
     fetchUsernames();
   }, []);
 
+  const fetchBlockstackAccounts = async () => {
+    const url = `https://core.blockstack.org/v1/search?query=${query}`;
+    const response = await fetch(url);
+    const { results } = await response.json();
+    if (!results) return;
+    setBlockstackProfiles(results.map((user) => ({
+      name: user.fullyQualifiedName,
+      link: `/[::]${user.fullyQualifiedName}`,
+      avatar: `https://banter-pub.imgix.net/banana.png`,
+    })));
+  };
+
+  useEffect(() => {
+    setBlockstackProfiles([]);
+    fetchBlockstackAccounts();
+  }, [query]);
+
   const editor = useRef(null);
   const editorWrapper = useRef(null);
 
@@ -64,6 +84,7 @@ const Compose = ({ pluginProps, ...rest }) => {
   };
 
   const onSearchChange = ({ value }) => {
+    setQuery(value);
     setSuggestions(defaultSuggestionsFilter(value, allUsernames));
   };
 
@@ -118,6 +139,7 @@ const Compose = ({ pluginProps, ...rest }) => {
     <Box p={4} {...rest}>
       <div style={{ width: '100%', flexGrow: 1 }} ref={editorWrapper}>
         <Flex justifyContent="space-between">
+          <InviteUserModal />
           <Box
             position="relative"
             p={3}
@@ -136,7 +158,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                   className="editor" // eslint-disable-line
                 >
                   <Editor
-                    placeholder="What's on your mind?"
+                    placeholder="Whats on your mind? Invite friends with an @mention!"
                     editorState={editorState}
                     onChange={onChange}
                     plugins={plugins}
@@ -144,7 +166,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                   />
                   <MentionSuggestions
                     onSearchChange={onSearchChange}
-                    suggestions={suggestions}
+                    suggestions={suggestions.concat(blockstackProfiles)}
                     onAddMention={onAddMention}
                   />
                   <EmojiSuggestions />
