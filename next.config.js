@@ -1,5 +1,8 @@
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
+
 let radiksServer = process.env.RADIKS_API_SERVER || 'http://localhost:5000';
+
 if (process.env.HEROKU_APP_NAME) {
   radiksServer = `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`;
 }
@@ -20,5 +23,21 @@ module.exports = withBundleAnalyzer({
   env: {
     RADIKS_API_SERVER: radiksServer,
     HEROKU_APP_NAME: process.env.HEROKU_APP_NAME,
+  },
+  webpack: (config) => {
+    config.plugins.push(
+      new SWPrecacheWebpackPlugin({
+        verbose: true,
+        staticFileGlobsIgnorePatterns: [/\.next\//],
+        runtimeCaching: [
+          {
+            handler: 'networkFirst',
+            urlPattern: /^https?.*/,
+          },
+        ],
+      })
+    );
+
+    return config;
   },
 });

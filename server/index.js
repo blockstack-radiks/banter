@@ -1,6 +1,7 @@
 const express = require('express');
 const next = require('next');
 const path = require('path');
+const { join } = require('path');
 const expressWS = require('express-ws');
 const secure = require('express-force-https');
 const cookiesMiddleware = require('universal-cookie-express');
@@ -63,6 +64,11 @@ app.prepare().then(async () => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', '*');
     res.sendFile(path.join(__dirname, '..', 'static', 'manifest.json'));
+  });
+
+  server.get('/service-worker.js', (req, res) => {
+    const filePath = join(__dirname, '..','.next', '/service-worker.js');
+    res.sendFile(filePath);
   });
 
   server.use('/api', makeApiController(RadiksController.DB));

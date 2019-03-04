@@ -36,6 +36,7 @@
     "nano-css": "^3.5.0",
     "next": "^8.0.3",
     "next-nprogress": "^1.4.0",
+    "next-workbox": "^1.4.1",
     "nodemailer": "^5.1.1",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "nookies": "^2.0.1",
@@ -63,6 +64,7 @@
     "shrink-ray-current": "^3.0.2",
     "styled-components": "^4.1.3",
     "styled-system": "^4.0.1",
+    "sw-precache-webpack-plugin": "^0.11.5",
     "universal-cookie-express": "^3.0.7"
   },
   "devDependencies": {
