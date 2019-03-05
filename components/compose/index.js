@@ -282,7 +282,7 @@ const Compose = ({ pluginProps, ...rest }) => {
 
   const currentContent = editorState.getCurrentContent().getPlainText();
 
-  const hasContent = Object.keys(images).length || currentContent !== '';
+  const hasContent = gifUrl || Object.keys(images).length || currentContent !== '';
 
   const disabled = !user || !hasContent;
 
