@@ -426,6 +426,13 @@ const Compose = ({ pluginProps, ...rest }) => {
     NProgress.done();
   };
 
+  const allSuggestions = [
+    ...new Set([
+      ...suggestions,
+      ...blockstackProfiles.filter((prof) => suggestions.find((user) => user.name !== prof.name)),
+    ]),
+  ];
+
   return (
     <Dropzone accept="image/*" ref={dropzoneRef} onDrop={onDrop}>
       {({ getRootProps, getInputProps, isDragActive }) => (
@@ -485,7 +492,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                         />
                         <MentionSuggestions
                           onSearchChange={onSearchChange}
-                          suggestions={suggestions.concat(blockstackProfiles)}
+                          suggestions={allSuggestions}
                           onAddMention={onAddMention}
                         />
                         <EmojiSuggestions />
