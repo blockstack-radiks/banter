@@ -4,6 +4,7 @@ const express = require('express');
 const request = require('request-promise');
 const { decorateApp } = require('@awaitjs/express');
 const { COLLECTION } = require('radiks-server/app/lib/constants');
+const { uploadImage } = require('./lib/image-uploader');
 
 const { sendMail, inviteEmail } = require('../common/lib/mailer');
 
@@ -104,6 +105,15 @@ const makeApiController = (db) => {
     await Promise.all(sendInvites);
 
     res.json({ success: true });
+  });
+
+  Router.postAsync('/upload', async (req, res) => {
+    const { gaiaUrl, filename } = req.body;
+    await uploadImage(gaiaUrl, filename);
+    res.json({
+      success: true,
+      url: `https://banter-pub.imgix.net/${filename}`,
+    });
   });
 
   return Router;

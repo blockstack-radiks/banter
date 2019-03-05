@@ -13,20 +13,23 @@ import { Gif } from 'styled-icons/material/Gif';
 import { useConnect } from 'redux-bundler-hook';
 import NProgress from 'nprogress';
 import { rgba } from 'polished';
+import { getConfig } from 'radiks';
+import { Provider, Tooltip } from 'reakit';
+import reakitTheme from 'reakit-theme-default';
+import Dropzone from 'react-dropzone';
 import StylesWrapper from './styled';
 import Message from '../../models/Message';
 import { Button } from '../button';
 import { useOnClickOutside } from '../../common/hooks';
 import { theme } from '../../common/theme';
-import { Provider, Tooltip } from 'reakit';
-import reakitTheme from 'reakit-theme-default';
-import Dropzone from 'react-dropzone';
-const dropzoneRef = React.createRef();
+import { uploadPhoto } from '../../common/lib/api';
 
 import InviteUserModal from '../modal/invite-user';
 import GiphyModal from '../modal/giphy';
 
 import { generateImageUrl } from '../../common/utils';
+
+const dropzoneRef = React.createRef();
 
 const mentionPlugin = createMentionPlugin({
   mentionPrefix: '@',
@@ -216,6 +219,7 @@ const Compose = ({ pluginProps, ...rest }) => {
 
   const onDrop = async (acceptedFiles, rejectedFiles) => {
     const fileReader = new FileReader();
+    const { userSession } = getConfig();
 
     fileReader.addEventListener(
       'load',
@@ -224,6 +228,17 @@ const Compose = ({ pluginProps, ...rest }) => {
       },
       false
     );
+
+    const uploadImage = async () => {
+      const [photo] = acceptedFiles;
+      const now = new Date().getTime();
+      const name = `photos/${userSession.loadUserData().username}/${now}-${photo.name}`;
+      const url = await userSession.putFile(name, photo, { encrypt: false, contentType: photo.type });
+      const imgixUrl = await uploadPhoto(url, name);
+      console.log(imgixUrl);
+    };
+
+    uploadImage();
 
     await Promise.all(
       acceptedFiles.map(async (file) => {
@@ -309,7 +324,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                   </StylesWrapper>
                 </div>
                 {file ? (
-                  <Box p={3} border="1px solid" borderTop="0" borderColor={'hsl(204,25%,90%)'} bg="hsl(204,25%,97%)">
+                  <Box p={3} border="1px solid" borderTop="0" borderColor="hsl(204,25%,90%)" bg="hsl(204,25%,97%)">
                     <Flex
                       alignItems="center"
                       key={file.name}
