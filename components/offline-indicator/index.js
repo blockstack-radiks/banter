@@ -16,9 +16,9 @@ const OfflineIndicator = () => {
     };
   }, []);
 
-  // if (online) { 
-  //   return null;
-  // }
+  if (online) { 
+    return null;
+  }
 
   const { href } = document.location;
 
