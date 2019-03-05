@@ -184,7 +184,7 @@ const FilePreview = ({ preview, index, handleClearFiles }) => (
 );
 
 const FilePreviews = ({ images, gifUrl, handleClearFiles }) => {
-  if (Object.keys(images).length === 0) {
+  if (Object.keys(images).length === 0 && !gifUrl) {
     return null;
   }
   const _previews = Object.keys(images).map((index) => (
@@ -293,7 +293,7 @@ const Compose = ({ pluginProps, ...rest }) => {
     if (e && e.preventDefault) {
       e.preventDefault();
     }
-    if (content === '') {
+    if (!hasContent) {
       return null;
     }
     NProgress.start();
