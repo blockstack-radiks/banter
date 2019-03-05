@@ -88,24 +88,27 @@ const EmojiButton = () => (
   </Hover>
 );
 
-const BottomTray = ({ setHasImage, open, loading, disabled, handleSubmit, ...rest }) => (
-  <Flex alignItems="center" pt={2}>
-    <Flex {...rest}>
-      <ImageButton
-        onClick={() => {
-          open();
-        }}
-      />
-      <GiphyModal />
-      <GifButton ml={2} />
-      <LocationButton ml={2} />
+const BottomTray = ({ setHasImage, open, loading, disabled, handleSubmit, ...rest }) => {
+  const [showGify, setShowGify] = useState(false);
+  return (
+    <Flex alignItems="center" pt={2}>
+      <Flex {...rest}>
+        <ImageButton
+          onClick={() => {
+            open();
+          }}
+        />
+        <GiphyModal isVisible={showGify} onDismiss={() => setShowGify(false)} />
+        <GifButton onClick={() => setShowGify(true)} ml={2} />
+        <LocationButton ml={2} />
+      </Flex>
+      <Box mr="auto" />
+      <Button disabled={loading || disabled} ml={2} onClick={handleSubmit}>
+        Post{loading ? 'ing...' : ''}
+      </Button>
     </Flex>
-    <Box mr="auto" />
-    <Button disabled={loading || disabled} ml={2} onClick={handleSubmit}>
-      Post{loading ? 'ing...' : ''}
-    </Button>
-  </Flex>
-);
+  );
+};
 
 const Compose = ({ pluginProps, ...rest }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
