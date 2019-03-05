@@ -17,6 +17,7 @@ import Footer from '../components/footer';
 import { theme } from '../common/theme';
 import NewSignInModal from '../components/modal/new-sign-in';
 import { globalStyles } from '../common/style';
+import OfflineIndicator from '../components/offline-indicator';
 
 mentionPlugin(linkify);
 
@@ -109,6 +110,7 @@ class MyApp extends App {
                 cookies={this.props.cookies}
               >
                 <Nav />
+                <OfflineIndicator />
                 <Component reduxStore={reduxStore} {...pageProps} />
                 <Footer />
               </Wrapper>
