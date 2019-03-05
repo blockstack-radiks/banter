@@ -31,7 +31,7 @@ const OfflineIndicator = () => {
       alignItems="center"
       justifyContent="space-between"
     >
-      <Box width={1} bg="purple" px={4} py={3} borderRadius="3px">
+      <Box width={1} bg="purple" px={4} py={3} borderRadius={2}>
         <Type fontWeight={500} color="white">
           Banter has been updated!
           {' '}
