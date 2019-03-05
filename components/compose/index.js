@@ -41,7 +41,7 @@ const plugins = [mentionPlugin, emojiPlugin];
 
 let allUsernames = [];
 
-const IconButton = ({ tooltip, icons, icon, ...rest }) => (
+const IconButton = ({ tooltip, disabled, icons, icon, ...rest }) => (
   <Provider theme={reakitTheme}>
     <Hover>
       {({ hovered, bind }) => {
@@ -50,7 +50,7 @@ const IconButton = ({ tooltip, icons, icon, ...rest }) => (
           <Box
             p={2}
             position="relative"
-            cursor={hovered ? 'pointer' : 'unset'}
+            cursor={disabled ? 'not-allowed' : hovered ? 'pointer' : 'unset'}
             color="purple"
             border="1px solid"
             borderRadius="100%"
@@ -74,7 +74,14 @@ const IconButton = ({ tooltip, icons, icon, ...rest }) => (
   </Provider>
 );
 
-const ImageButton = ({ ...rest }) => <IconButton icons={[ImageIcon, ImageAddIcon]} tooltip="Add an Image" {...rest} />;
+const ImageButton = ({ disabled, ...rest }) => (
+  <IconButton
+    icons={[ImageIcon, ImageAddIcon]}
+    tooltip={disabled ? 'Upload in Progress' : 'Add an Image'}
+    disabled={disabled}
+    {...rest}
+  />
+);
 const GifButton = ({ ...rest }) => <IconButton icon={Gif} tooltip="Add a GIF" {...rest} />;
 const LocationButton = ({ ...rest }) => <IconButton icon={LocationIcon} tooltip="Add a Location" {...rest} />;
 
@@ -102,16 +109,15 @@ const BottomTray = ({
   return (
     <Flex alignItems="center" pt={2}>
       <Flex {...rest}>
-        {!isSavingImages && (
-          <ImageButton
-            onClick={() => {
-              open();
-            }}
-          />
-        )}
+        <ImageButton
+          onClick={() => {
+            !isSavingImages && open();
+          }}
+          disabled={isSavingImages}
+        />
         <GiphyModal handleOnSelect={handleGifSelect} isVisible={showGify} onDismiss={() => setShowGify(false)} />
         <GifButton onClick={() => setShowGify(true)} ml={2} />
-        <LocationButton ml={2} />
+        {/*<LocationButton ml={2} />*/}
       </Flex>
       <Box mr="auto" />
       <Button disabled={loading || isSavingImages || disabled} ml={2} onClick={handleSubmit}>
