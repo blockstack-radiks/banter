@@ -24,6 +24,7 @@ import Dropzone from 'react-dropzone';
 const dropzoneRef = React.createRef();
 
 import InviteUserModal from '../modal/invite-user';
+import GiphyModal from '../modal/giphy';
 
 import { generateImageUrl } from '../../common/utils';
 
@@ -92,6 +93,7 @@ const BottomTray = ({ setHasImage, open, loading, disabled, handleSubmit, ...res
           open();
         }}
       />
+      <GiphyModal />
       <GifButton ml={2} />
       <LocationButton ml={2} />
     </Flex>
