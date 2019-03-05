@@ -88,22 +88,24 @@ const EmojiButton = () => (
   </Hover>
 );
 
-const BottomTray = ({ setHasImage, open, loading, disabled, handleSubmit, handleGifSelect, ...rest }) => {
+const BottomTray = ({ setHasImage, open, loading, disabled, handleSubmit, handleGifSelect, isSavingImages, ...rest }) => {
   const [showGify, setShowGify] = useState(false);
   return (
     <Flex alignItems="center" pt={2}>
       <Flex {...rest}>
-        <ImageButton
-          onClick={() => {
-            open();
-          }}
-        />
+        {!isSavingImages && (
+          <ImageButton
+            onClick={() => {
+              open();
+            }}
+          />
+        )}
         <GiphyModal handleOnSelect={handleGifSelect} isVisible={showGify} onDismiss={() => setShowGify(false)} />
         <GifButton onClick={() => setShowGify(true)} ml={2} />
         <LocationButton ml={2} />
       </Flex>
       <Box mr="auto" />
-      <Button disabled={loading || disabled} ml={2} onClick={handleSubmit}>
+      <Button disabled={loading || isSavingImages || disabled} ml={2} onClick={handleSubmit}>
         Post{loading ? 'ing...' : ''}
       </Button>
     </Flex>
@@ -170,7 +172,6 @@ const FilePreviews = ({ images, gifUrl, handleClearFiles }) => {
   if (Object.keys(images).length === 0) {
     return null;
   }
-  console.log(images);
   const _previews = Object.keys(images).map((index) => <FilePreview 
     preview={images[index].preview} 
     index={index}
@@ -196,6 +197,7 @@ const Compose = ({ pluginProps, ...rest }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [query, setQuery] = useState('');
   const [blockstackProfiles, setBlockstackProfiles] = useState([]);
+  const [isSavingImages, setIsSavingImages] = useState(false);
 
   const handleClearFiles = (key) => {
     if (key === 'gif') {
@@ -281,14 +283,28 @@ const Compose = ({ pluginProps, ...rest }) => {
     }
     NProgress.start();
     setLoading(true);
+    const imageUrls = Object.keys(images).map((key) => {
+      return images[key].url;
+    });
+    if (gifUrl) {
+      imageUrls.push(gifUrl);
+    }
     const message = new Message({
       content,
       votes: [],
       createdBy: user._id,
     });
+    if (imageUrls.length > 0) {
+      message.update({
+        imageUrls,
+      });
+    }
+    console.log(message.attrs);
     try {
       await message.save();
       setEditorState(EditorState.createEmpty());
+      setImages({});
+      setGifUrl(null);
       NProgress.done();
       setLoading(false);
       setFocused(false);
@@ -314,6 +330,9 @@ const Compose = ({ pluginProps, ...rest }) => {
 
     const imageKeys = Object.keys(images);
     const lastIndex = imageKeys[imageKeys.length - 1] || 0;
+
+    setIsSavingImages(true);
+    NProgress.start();
 
     const uploadImages = acceptedFiles.map((file, index) => {
       return new Promise(async (resolve) => {
@@ -363,16 +382,10 @@ const Compose = ({ pluginProps, ...rest }) => {
 
     await Promise.all(getPreviews);
     await Promise.all(uploadImages);
-    // console.log(imgixUrls);
-    // setImageUrls(imgixUrls);
-  };
 
-  // const previewSources = () => {
-  //   if (!gifUrl) {
-  //     return previews;
-  //   }
-  //   return previews.concat(gifUrl);
-  // };
+    setIsSavingImages(false);
+    NProgress.done();
+  };
 
   return (
     <Dropzone accept="image/*" ref={dropzoneRef} onDrop={onDrop}>
@@ -454,6 +467,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                   disabled={disabled}
                   handleSubmit={handleSubmit}
                   loading={loading}
+                  isSavingImages={isSavingImages}
                   handleGifSelect={(url) => setGifUrl(url)}
                 />
               ) : null}
