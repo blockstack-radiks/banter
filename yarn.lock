@@ -5746,6 +5746,11 @@ launch-editor@2.2.1:
     chalk "^2.3.0"
     shell-quote "^1.6.1"
 
+lazysizes@^4.1.6:
+  version "4.1.6"
+  resolved "https://registry.yarnpkg.com/lazysizes/-/lazysizes-4.1.6.tgz#a8b1e0cc6b6cf3ddc0a0e7c44768aeed27ca343a"
+  integrity sha512-tbW91sxEwTIBp0n6YiWE+/O4uFe2w4X66YG2rm6dVf4wsa1hJkrp34FD1XjynU+9BeKP/o9/VZlj+bls0G1cCg==
+
 lcid@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/lcid/-/lcid-2.0.0.tgz#6ef5d2df60e52f82eb228a4c373e8d1f397253cf"

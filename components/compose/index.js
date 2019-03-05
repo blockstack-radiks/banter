@@ -88,7 +88,16 @@ const EmojiButton = () => (
   </Hover>
 );
 
-const BottomTray = ({ setHasImage, open, loading, disabled, handleSubmit, handleGifSelect, isSavingImages, ...rest }) => {
+const BottomTray = ({
+  setHasImage,
+  open,
+  loading,
+  disabled,
+  handleSubmit,
+  handleGifSelect,
+  isSavingImages,
+  ...rest
+}) => {
   const [showGify, setShowGify] = useState(false);
   return (
     <Flex alignItems="center" pt={2}>
@@ -172,18 +181,18 @@ const FilePreviews = ({ images, gifUrl, handleClearFiles }) => {
   if (Object.keys(images).length === 0) {
     return null;
   }
-  const _previews = Object.keys(images).map((index) => <FilePreview 
-    preview={images[index].preview} 
-    index={index}
-    handleClearFiles={() => handleClearFiles(index)} 
-    key={index}
-  />);
+  const _previews = Object.keys(images).map((index) => (
+    <FilePreview
+      preview={images[index].preview}
+      index={index}
+      handleClearFiles={() => handleClearFiles(index)}
+      key={index}
+    />
+  ));
   return (
     <Flex flexWrap="wrap" p={3} border="1px solid" borderTop="0" borderColor="hsl(204,25%,90%)" bg="hsl(204,25%,97%)">
       {_previews}
-      {gifUrl && (
-        <FilePreview preview={gifUrl} handleClearFiles={() => handleClearFiles('gif')} />
-      )}
+      {gifUrl && <FilePreview preview={gifUrl} handleClearFiles={() => handleClearFiles('gif')} />}
     </Flex>
   );
 };
@@ -203,7 +212,7 @@ const Compose = ({ pluginProps, ...rest }) => {
     if (key === 'gif') {
       return setGifUrl(null);
     }
-    const _images = {...images};
+    const _images = { ...images };
     delete _images[key];
     setImages(_images);
   };
@@ -358,20 +367,38 @@ const Compose = ({ pluginProps, ...rest }) => {
       });
     });
 
-    const getPreviews = acceptedFiles.map((file, index) => {
+    const getPreviews = acceptedFiles.map(async (file, index) => {
       return new Promise(async (resolve) => {
         try {
           const fileReader = new FileReader();
-          fileReader.addEventListener('load', () => {
+          await fileReader.addEventListener('load', async () => {
+            let width, height;
+
+            await new Promise(async (resolve) => {
+              const image = new Image();
+              image.src = fileReader.result;
+              image.onload = function() {
+                height = this.height;
+                width = this.width;
+                console.log(height, width);
+                return resolve(true);
+              };
+            });
+
             setImages((_images) => ({
               ..._images,
               [lastIndex + index]: {
                 ..._images[lastIndex + index],
                 preview: fileReader.result,
+                dimensions: {
+                  width,
+                  height,
+                },
               },
             }));
             resolve(true);
           });
+          console.log(images);
           fileReader.readAsDataURL(file);
         } catch (error) {
           console.error(error);

@@ -7,7 +7,7 @@ import { useConnect } from 'redux-bundler-hook';
 import { Avatar } from '../avatar';
 import { MessageContent as StyledMessageContent } from './styled';
 import { Voting } from './voting';
-
+import {Image} from '../image';
 import { appUrl } from '../../common/utils';
 
 const Username = ({ hoverable, ...rest }) => (
@@ -120,6 +120,15 @@ const Message = ({ message, single, createdBy, email }) => {
       <Details>
         <Meta createdBy={createdBy} username={message.attrs.createdBy} id={message._id} email={email} />
         <MessageContent content={message.attrs.content} email={email} />
+        {message.attrs.imageUrls && message.attrs.imageUrls.length ? (
+          <Box py={2}>
+            {message.attrs.imageUrls
+              .filter((img) => img)
+              .map((img) => {
+                return <Image src={img} />;
+              })}
+          </Box>
+        ) : null}
         <Box>
           <TimeAgo>
             <Link
