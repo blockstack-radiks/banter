@@ -110,20 +110,87 @@ const BottomTray = ({ setHasImage, open, loading, disabled, handleSubmit, handle
   );
 };
 
+const FilePreview = ({ file, preview, handleClearFiles }) => (
+  <Flex
+    alignItems="center"
+    borderRadius="3px"
+    size={100}
+    key={file.name}
+    bg="hsl(204,25%,94%)"
+    position="relative"
+    border="1px solid hsl(204,25%,85%)"
+  >
+    <Hover>
+      {({ hovered, bind }) => (
+        <Provider theme={reakitTheme}>
+          <Flex
+            ml="auto"
+            color="white"
+            size={24}
+            alignItems="center"
+            justifyContent="center"
+            position="absolute"
+            top="4px"
+            right="4px"
+            zIndex={99}
+            borderRadius="100%"
+            bg="purple"
+            cursor={hovered ? 'pointer' : 'unset'}
+            onClick={handleClearFiles}
+            {...bind}
+          >
+            <Box position="relative">
+              <CloseIcon size={20} />
+              <Tooltip fade slide visible={hovered}>
+                <Tooltip.Arrow />
+                <Type fontSize={0}>Remove</Type>
+              </Tooltip>
+            </Box>
+          </Flex>
+        </Provider>
+      )}
+    </Hover>
+    {preview && (
+      <Box
+        position="absolute"
+        width="100%"
+        display="block"
+        maxWidth="100%"
+        left={0}
+        is="img"
+        src={preview}
+        style={{ objectFit: 'cover' }}
+      />
+    )}
+  </Flex>
+);
+
+const FilePreviews = ({ files, previews, handleClearFiles }) => {
+  if (files.length === 0) {
+    return null;
+  }
+  const _previews = files.map((file, index) => <FilePreview file={file} preview={previews[index]} handleClearFiles={handleClearFiles} /> );
+  return (
+    <Box p={3} border="1px solid" borderTop="0" borderColor="hsl(204,25%,90%)" bg="hsl(204,25%,97%)">
+      {_previews}
+    </Box>
+  );
+};
+
 const Compose = ({ pluginProps, ...rest }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [focused, setFocused] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(null);
   const [gifUrl, setGifUrl] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [previews, setPreviews] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
   const [query, setQuery] = useState('');
   const [blockstackProfiles, setBlockstackProfiles] = useState([]);
 
-  const handleClearFile = () => {
-    setPreview(null);
-    setFile(null);
+  const handleClearFiles = () => {
+    setPreviews([]);
+    setFiles([]);
   };
 
   const fetchUsernames = async () => {
@@ -221,39 +288,48 @@ const Compose = ({ pluginProps, ...rest }) => {
     return true;
   };
 
-  const onDrop = async (acceptedFiles, rejectedFiles) => {
-    const fileReader = new FileReader();
+  const onDrop = async (acceptedFiles) => {
     const { userSession } = getConfig();
 
-    fileReader.addEventListener(
-      'load',
-      () => {
-        setPreview(fileReader.result);
-      },
-      false
-    );
-
-    const uploadImage = async () => {
-      const [photo] = acceptedFiles;
+    const uploadImage = async (photo) => {
       const now = new Date().getTime();
       const name = `photos/${userSession.loadUserData().username}/${now}-${photo.name}`;
       const url = await userSession.putFile(name, photo, { encrypt: false, contentType: photo.type });
       const imgixUrl = await uploadPhoto(url, name);
-      console.log(imgixUrl);
+      return imgixUrl;
     };
 
-    uploadImage();
+    const uploadImages = acceptedFiles.map((file) => {
+      return new Promise(async (resolve) => {
+        try {
+          const imgixUrl = await uploadImage(file);
+          resolve(imgixUrl);
+        } catch (error) {
+          console.error(error);
+          resolve(null);
+        }
+      });
+    });
 
-    await Promise.all(
-      acceptedFiles.map(async (file) => {
-        fileReader.readAsDataURL(file);
-        return {
-          ...file,
-        };
-      })
-    );
+    const getPreviews = acceptedFiles.map((file) => {
+      return new Promise(async (resolve) => {
+        try {
+          const fileReader = new FileReader();
+          fileReader.addEventListener('load', () => resolve(fileReader.result));
+          fileReader.readAsDataURL(file);
+        } catch (error) {
+          console.error(error);
+          resolve(null);
+        }
+      });
+    });
 
-    setFile(acceptedFiles[0]);
+    const _previews = await Promise.all(getPreviews);
+    setPreviews(_previews);
+    setFiles(acceptedFiles);
+
+    const imgixUrls = await Promise.all(uploadImages);
+    console.log(imgixUrls);
   };
 
   return (
@@ -327,62 +403,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                     <input {...getInputProps()} />
                   </StylesWrapper>
                 </div>
-                {file ? (
-                  <Box p={3} border="1px solid" borderTop="0" borderColor="hsl(204,25%,90%)" bg="hsl(204,25%,97%)">
-                    <Flex
-                      alignItems="center"
-                      key={file.name}
-                      borderRadius="3px"
-                      size={100}
-                      bg="hsl(204,25%,94%)"
-                      position="relative"
-                      border="1px solid hsl(204,25%,85%)"
-                    >
-                      <Hover>
-                        {({ hovered, bind }) => (
-                          <Provider theme={reakitTheme}>
-                            <Flex
-                              ml="auto"
-                              color="white"
-                              size={24}
-                              alignItems="center"
-                              justifyContent="center"
-                              position="absolute"
-                              top="4px"
-                              right="4px"
-                              zIndex={99}
-                              borderRadius="100%"
-                              bg="purple"
-                              cursor={hovered ? 'pointer' : 'unset'}
-                              onClick={handleClearFile}
-                              {...bind}
-                            >
-                              <Box position="relative">
-                                <CloseIcon size={20} />
-                                <Tooltip fade slide visible={hovered}>
-                                  <Tooltip.Arrow />
-                                  <Type fontSize={0}>Remove</Type>
-                                </Tooltip>
-                              </Box>
-                            </Flex>
-                          </Provider>
-                        )}
-                      </Hover>
-                      {preview && (
-                        <Box
-                          position="absolute"
-                          width="100%"
-                          display="block"
-                          maxWidth="100%"
-                          left={0}
-                          is="img"
-                          src={preview}
-                          style={{ objectFit: 'cover' }}
-                        />
-                      )}
-                    </Flex>
-                  </Box>
-                ) : null}
+                <FilePreviews files={files} previews={previews} handleClearFiles={handleClearFiles} />
               </Box>
             </Flex>
 
