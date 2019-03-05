@@ -5,8 +5,8 @@ import debounce from 'lodash/debounce';
 import Modal from './wrapper';
 
 const urls = {
-  giphySearchUrl: 'http://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC',
-  giphyTrendingUrl: 'http://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC',
+  giphySearchUrl: 'https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC',
+  giphyTrendingUrl: 'https://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC',
 };
 
 const loadTrendingGifs = async () => {
@@ -147,7 +147,14 @@ const Content = ({ hide, handleOnSelect, newUser, hasDismissed, visible, show, i
           />
         </Box>
       </Box>
-      {images ? <GifGrid selectGif={selectGif} query={state.query} images={images} /> : <>Loading...</>}
+
+      {images ? (
+        <GifGrid selectGif={selectGif} query={state.query} images={images} />
+      ) : (
+        <Flex width={800} height={200} alignItems="center" fontWeight="bold" color="purple" justifyContent="center">
+          Loading Gifs...
+        </Flex>
+      )}
     </Box>
   );
 };
