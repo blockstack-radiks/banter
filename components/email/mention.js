@@ -16,7 +16,12 @@ export default ({ message, mention }) => {
       <Flex>
         <Box width={1}>
           <Type.p display="block">
-            Hey @{mention.username}, you&apos;ve been mentioned on
+            Hey 
+            {' '}
+            <Type.a color="purple" href={`${appUrl()}/[::]${mention.username}`}>
+              @{mention.username}
+            </Type.a>
+            , you&apos;ve been mentioned on
             {' '}
             <Type.a color="purple" href={appUrl()}>Banter</Type.a>
             !
