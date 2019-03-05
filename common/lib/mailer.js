@@ -33,13 +33,13 @@ const sendMail = (email) =>
     });
   });
 
-const mentionedEmail = (mention, message) => {
+const mentionedEmail = (mention, message, html) => {
   const url = appUrl();
   return {
     from: FROM,
     to: mention.email,
     subject: `💩You were mentioned by @${message.createdBy}`,
-    // html,
+    html,
     text: `
     You were mentioned in a message on Banter:\n
     @${message.createdBy}: ${message.content}\n
@@ -49,14 +49,14 @@ const mentionedEmail = (mention, message) => {
   };
 };
 
-const updatesEmail = (user, messages) => {
+const updatesEmail = (user, messages, html) => {
   const messageLines = messages.map((message) => `@${message.createdBy}: ${message.content}`);
   const url = appUrl();
   return {
     from: FROM,
     to: user.email,
     subject: `Some 💩from Banter`,
-    // html,
+    html,
     text: `
     Hey ${user.username}! Here's a few recent posts on Banter.\n\n
     ${messageLines.join('\n\n')}\n

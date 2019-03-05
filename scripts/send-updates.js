@@ -4,8 +4,10 @@ const { COLLECTION, CENTRAL_COLLECTION } = require('radiks-server/app/lib/consta
 const moment = require('moment');
 const linkify = require('linkifyjs');
 const mentionPlugin = require('linkifyjs/plugins/mention');
+const emailify = require('react-emailify').default;
 
 const { sendMail, updatesEmail } = require('../common/lib/mailer');
+const UpdatesEmail = require('../components/email/updates').default;
 const { aggregateMessages } = require('../common/lib/aggregators/messages-aggregator');
 
 mentionPlugin(linkify);
@@ -80,12 +82,12 @@ const sendUpdates = async () => {
         email: userSettings.email,
       };
       // const transformedMessages = transformMessageVotes(recentMessages, user.username);
-      // const emailTemplate = emailify(UpdatesEmail);
-      // const html = emailTemplate({
-      //   messages: transformedMessages,
-      //   user,
-      // });
-      await sendMail(updatesEmail(user, recentMessages));
+      const emailTemplate = emailify(UpdatesEmail);
+      const html = emailTemplate({
+        messages: recentMessages,
+        user,
+      });
+      await sendMail(updatesEmail(user, recentMessages, html));
       resolve();
     } catch (error) {
       console.error(error);

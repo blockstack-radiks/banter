@@ -7,7 +7,7 @@ import Nav from './nav';
 import Footer from '../footer';
 
 export default ({ children, hiddenText }) => {
-  const GlobalStyles = globalStyles();
+  const GlobalStyles = globalStyles({ bg: 'white' });
   return (
     <ThemeProvider theme={theme}>
       <html lang="en">
@@ -31,9 +31,9 @@ export default ({ children, hiddenText }) => {
               </div>
             </>
           )}
-          <Nav />
+          {/* <Nav /> */}
           {children}
-          <Footer email />
+          {/* <Footer email /> */}
         </body>
       </html>
     </ThemeProvider>
