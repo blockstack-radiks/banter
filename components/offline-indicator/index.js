@@ -24,18 +24,18 @@ const OfflineIndicator = () => {
 
   return (
     <Flex
-      px={6}
       mb={3}
       mx="auto"
-      maxWidth={650}
+      maxWidth={600} 
+      width={1}
       alignItems="center"
       justifyContent="space-between"
     >
-      <Box width={1} border="1px solid red" borderColor="purple" px={3} py={2} borderRadius="3px">
-        <Type fontWeight={500}>
+      <Box width={1} bg="purple" px={4} py={3} borderRadius="3px">
+        <Type fontWeight={500} color="white">
           Banter has been updated!
           {' '}
-          <Type is="a" href={href} color="purple">Refresh the page</Type>
+          <Type is="a" href={href} color="white">Refresh the page</Type>
           {' '}
           to make sure things work properly.
         </Type>
