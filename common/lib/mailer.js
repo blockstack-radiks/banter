@@ -25,6 +25,8 @@ const sendMail = (email) =>
     const client = nodemailer.createTransport(transport);
     client.sendMail(email, (error, info) => {
       if (error) {
+        console.log('Error sending email:');
+        console.error(error);
         return reject(error);
       }
       return resolve(info);
