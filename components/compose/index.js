@@ -88,7 +88,7 @@ const EmojiButton = () => (
   </Hover>
 );
 
-const BottomTray = ({ setHasImage, open, loading, disabled, handleSubmit, ...rest }) => {
+const BottomTray = ({ setHasImage, open, loading, disabled, handleSubmit, handleGifSelect, ...rest }) => {
   const [showGify, setShowGify] = useState(false);
   return (
     <Flex alignItems="center" pt={2}>
@@ -98,7 +98,7 @@ const BottomTray = ({ setHasImage, open, loading, disabled, handleSubmit, ...res
             open();
           }}
         />
-        <GiphyModal isVisible={showGify} onDismiss={() => setShowGify(false)} />
+        <GiphyModal handleOnSelect={handleGifSelect} isVisible={showGify} onDismiss={() => setShowGify(false)} />
         <GifButton onClick={() => setShowGify(true)} ml={2} />
         <LocationButton ml={2} />
       </Flex>
@@ -116,6 +116,7 @@ const Compose = ({ pluginProps, ...rest }) => {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [gifUrl, setGifUrl] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
   const [query, setQuery] = useState('');
   const [blockstackProfiles, setBlockstackProfiles] = useState([]);
@@ -391,6 +392,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                 disabled={disabled}
                 handleSubmit={handleSubmit}
                 loading={loading}
+                handleGifSelect={(url) => setGifUrl(url)}
               />
             ) : null}
           </Box>

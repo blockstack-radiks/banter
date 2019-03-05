@@ -33,7 +33,7 @@ const searchGifs = async (searchValue) => {
   return gifs;
 };
 
-const GifGrid = ({ images, query, ...rest }) => (
+const GifGrid = ({ images, query, selectGif, ...rest }) => (
   <Box bg="hsl(204,25%,97%)" borderTop="1px solid hsl(204,25%,85%)" maxHeight="500px" overflow="auto">
     <Box color="purple" fontWeight="bold" p={4}>
       {query ? <>Search Results for "{query}"</> : <>Trending Gifs</>}
@@ -63,6 +63,7 @@ const GifGrid = ({ images, query, ...rest }) => (
               cursor={hovered ? 'pointer' : 'unset'}
               transform={hovered ? 'translateY(-5px)' : 'none'}
               transition="0.1s all ease-in-out"
+              onClick={() => selectGif(gif)}
               {...bind}
             >
               <Box width="100%" maxWidth="100%" height="auto" flexShrink="0" is="img" src={gif.preview_gif.url} />
@@ -74,7 +75,7 @@ const GifGrid = ({ images, query, ...rest }) => (
   </Box>
 );
 
-const Content = ({ hide, newUser, hasDismissed, visible, show, isVisible, ...rest }) => {
+const Content = ({ hide, handleOnSelect, newUser, hasDismissed, visible, show, isVisible, ...rest }) => {
   const [state, setState] = useState({
     trending: null,
     query: null,
@@ -86,6 +87,11 @@ const Content = ({ hide, newUser, hasDismissed, visible, show, isVisible, ...res
   } else if (!isVisible && visible) {
     hide();
   }
+
+  const selectGif = (gif) => {
+    handleOnSelect(gif.original.url);
+    hide();
+  };
 
   const updateQuery = debounce((query) => {
     setState((s) => ({
@@ -141,15 +147,15 @@ const Content = ({ hide, newUser, hasDismissed, visible, show, isVisible, ...res
           />
         </Box>
       </Box>
-      {images ? <GifGrid query={state.query} images={images} /> : <>Loading...</>}
+      {images ? <GifGrid selectGif={selectGif} query={state.query} images={images} /> : <>Loading...</>}
     </Box>
   );
 };
 
-const GiphyModal = ({ isVisible, onDismiss }) => {
+const GiphyModal = ({ handleOnSelect, isVisible, onDismiss }) => {
   return (
     <Modal overflow="hidden" maxWidth={800} p={0} onDismiss={onDismiss}>
-      {(props) => <Content {...props} isVisible={isVisible} />}
+      {(props) => <Content {...props} handleOnSelect={handleOnSelect} isVisible={isVisible} />}
     </Modal>
   );
 };
