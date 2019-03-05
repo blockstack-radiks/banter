@@ -150,7 +150,7 @@ export default {
   },
   selectUserRaw: (state) => state.user.data,
   selectUser: (state) => state.user.data,
-  selectUsername: (state) => state.user.data.username,
+  selectUsername: (state) => state.user.data && state.user.data.username,
   selectCookieUsername: (state) => state.user.username,
   selectProfile: (state) => state.user && state.user.data && state.user.data.profile,
   selectUserLoading: (state) => state.user.loading,
