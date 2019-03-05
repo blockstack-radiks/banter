@@ -3,10 +3,6 @@ const mentionPlugin = require('linkifyjs/plugins/mention');
 const { CENTRAL_COLLECTION } = require('radiks-server/app/lib/constants');
 const compact = require('lodash/compact');
 
-const emailify = require('react-emailify').default;
-
-const MentionEmail = require('../../../components/email/mention').default;
-
 const { sendMail, mentionedEmail } = require('../mailer');
 
 mentionPlugin(linkify);

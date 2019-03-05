@@ -50,6 +50,7 @@ const Compose = ({ pluginProps, ...rest }) => {
     const response = await fetch('/api/usernames');
     const usernames = await response.json();
     allUsernames = usernames.map((username) => ({
+      id: username,
       name: username,
       link: `/[::]${username}`,
       avatar: generateImageUrl(username, 80),
@@ -67,6 +68,7 @@ const Compose = ({ pluginProps, ...rest }) => {
     const { results } = await response.json();
     if (!results) return;
     setBlockstackProfiles(results.map((user) => ({
+      id: user.fullyQualifiedName,
       name: user.fullyQualifiedName,
       link: `/[::]${user.fullyQualifiedName}`,
       avatar: generateImageUrl(user.fullyQualifiedName, 80),
