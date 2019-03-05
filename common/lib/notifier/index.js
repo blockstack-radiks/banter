@@ -67,12 +67,7 @@ const handleNewModel = async (db, attrs) => {
     (mention) =>
       new Promise(async (resolve) => {
         try {
-          const emailTemplate = emailify(MentionEmail);
-          const html = emailTemplate({
-            message: attrs,
-            mention,
-          });
-          await sendMail(mentionedEmail(html, mention, attrs));
+          await sendMail(mentionedEmail(mention, attrs));
 
           return resolve(true);
         } catch (error) {

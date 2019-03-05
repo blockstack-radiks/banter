@@ -33,7 +33,7 @@ const sendMail = (email) =>
     });
   });
 
-const mentionedEmail = (html, mention, message) => {
+const mentionedEmail = (mention, message) => {
   const url = appUrl();
   return {
     from: FROM,

@@ -2,13 +2,11 @@ require('dotenv').config();
 const { getDB } = require('radiks-server');
 const { COLLECTION, CENTRAL_COLLECTION } = require('radiks-server/app/lib/constants');
 const moment = require('moment');
-const emailify = require('react-emailify').default;
 const linkify = require('linkifyjs');
 const mentionPlugin = require('linkifyjs/plugins/mention');
 
-const UpdatesEmail = require('../components/email/updates').default;
 const { sendMail, updatesEmail } = require('../common/lib/mailer');
-const { aggregateMessages, transformMessageVotes } = require('../common/lib/aggregators/messages-aggregator');
+const { aggregateMessages } = require('../common/lib/aggregators/messages-aggregator');
 
 mentionPlugin(linkify);
 
@@ -81,13 +79,13 @@ const sendUpdates = async () => {
         username: userSettings._id.split('-')[0],
         email: userSettings.email,
       };
-      const transformedMessages = transformMessageVotes(recentMessages, user.username);
-      const emailTemplate = emailify(UpdatesEmail);
-      const html = emailTemplate({
-        messages: transformedMessages,
-        user,
-      });
-      await sendMail(updatesEmail(user, recentMessages, html));
+      // const transformedMessages = transformMessageVotes(recentMessages, user.username);
+      // const emailTemplate = emailify(UpdatesEmail);
+      // const html = emailTemplate({
+      //   messages: transformedMessages,
+      //   user,
+      // });
+      await sendMail(updatesEmail(user, recentMessages));
       resolve();
     } catch (error) {
       console.error(error);
