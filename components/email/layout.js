@@ -1,10 +1,9 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
+import { Box } from 'blockstack-ui';
 
 import { theme } from '../../common/theme';
 import { globalStyles } from '../../common/style';
-import Nav from './nav';
-import Footer from '../footer';
 
 export default ({ children, hiddenText }) => {
   const GlobalStyles = globalStyles({ bg: 'white' });
@@ -31,9 +30,9 @@ export default ({ children, hiddenText }) => {
               </div>
             </>
           )}
-          {/* <Nav /> */}
-          {children}
-          {/* <Footer email /> */}
+          <Box pl={3} pt={3}>
+            {children}
+          </Box>
         </body>
       </html>
     </ThemeProvider>
