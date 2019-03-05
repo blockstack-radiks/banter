@@ -178,7 +178,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                   />
                   <MentionSuggestions
                     onSearchChange={onSearchChange}
-                    suggestions={suggestions.concat(blockstackProfiles)}
+                    suggestions={[...new Set(suggestions.concat(blockstackProfiles))]}
                     onAddMention={onAddMention}
                   />
                   <EmojiSuggestions />
