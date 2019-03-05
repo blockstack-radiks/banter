@@ -486,7 +486,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                         <EmojiSuggestions />
                       </div>
                     </Box>
-                    <Flex position="absolute" top="2px" right="8px">
+                    <Flex position="absolute" top="2px" zIndex={99999} right="8px">
                       <EmojiButton />
                     </Flex>
                     <input {...getInputProps()} />
