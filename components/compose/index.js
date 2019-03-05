@@ -15,6 +15,7 @@ import NProgress from 'nprogress';
 import { rgba } from 'polished';
 import { getConfig } from 'radiks';
 import { Provider, Tooltip } from 'reakit';
+import debounce from 'lodash/debounce';
 import reakitTheme from 'reakit-theme-default';
 import Dropzone from 'react-dropzone';
 import StylesWrapper from './styled';
@@ -244,17 +245,29 @@ const Compose = ({ pluginProps, ...rest }) => {
     const response = await fetch(url);
     const { results } = await response.json();
     if (!results) return;
-    setBlockstackProfiles(
-      results.map((user) => ({
-        name: user.fullyQualifiedName,
-        link: `/[::]${user.fullyQualifiedName}`,
-        avatar: `https://banter-pub.imgix.net/banana.png`,
-      }))
-    );
+    setBlockstackProfiles([
+      ...results
+        .filter((user) =>
+          suggestions.find((sug) => {
+            if (user && sug) {
+              if (user.fullyQualifiedName === sug.name) {
+                return false; // dup remove
+              } else {
+                return true;
+              }
+            }
+            return true;
+          })
+        )
+        .map((user) => ({
+          name: user.fullyQualifiedName,
+          link: `/[::]${user.fullyQualifiedName}`,
+          avatar: `https://banter-pub.imgix.net/banana.png`,
+        })),
+    ]);
   };
 
   useEffect(() => {
-    setBlockstackProfiles([]);
     fetchBlockstackAccounts();
   }, [query]);
 
@@ -300,7 +313,6 @@ const Compose = ({ pluginProps, ...rest }) => {
     NProgress.start();
     setLoading(true);
     let imageUrls = Object.keys(images).map((key) => {
-      // return images[key].url;
       const { url, dimensions } = images[key];
       if (!url) {
         return false;
@@ -326,7 +338,6 @@ const Compose = ({ pluginProps, ...rest }) => {
         imageUrls,
       });
     }
-    console.log(message.attrs);
     try {
       await message.save();
       setEditorState(EditorState.createEmpty());
@@ -395,7 +406,6 @@ const Compose = ({ pluginProps, ...rest }) => {
 
             image.onload = function getSize() {
               const { height, width } = this;
-              console.log(height, width);
 
               setImages((_images) => ({
                 ..._images,
@@ -411,7 +421,6 @@ const Compose = ({ pluginProps, ...rest }) => {
               resolve(true);
             };
           });
-          console.log(images);
           fileReader.readAsDataURL(file);
         } catch (error) {
           console.error(error);
@@ -427,10 +436,7 @@ const Compose = ({ pluginProps, ...rest }) => {
     NProgress.done();
   };
 
-  const allSuggestions = [
-    ...suggestions,
-    ...blockstackProfiles.filter((prof) => !suggestions.find((user) => user.name === prof.name)),
-  ];
+  const allSuggestions = [...suggestions, ...blockstackProfiles];
 
   return (
     <Dropzone accept="image/*" ref={dropzoneRef} onDrop={onDrop}>
