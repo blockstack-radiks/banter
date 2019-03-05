@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Type, Flex } from 'blockstack-ui';
-
 import { useConnect } from 'redux-bundler-hook';
 import { User } from 'radiks';
-import Modal from './wrapper';
-import { Button } from '../button';
-import { sendInviteEmails } from '../../common/lib/api';
 import AtIcon from 'mdi-react/AtIcon';
 import Poop from 'mdi-react/EmoticonPoopIcon';
 
+import Modal from './wrapper';
+import { Button } from '../button';
+import { sendInviteEmails } from '../../common/lib/api';
+
 const Content = ({ visible, hide, hasDismissed, show }) => {
-  const { lastMentions, lastMessage } = useConnect('selectLastMentions', 'selectLastMessage');
+  const { lastMentions, lastMessage, username } = useConnect('selectLastMentions', 'selectLastMessage', 'selectUsername');
   const [usersToInvite, setUsersToInvite] = useState([]);
   const [complete, setComplete] = useState(false);
   const [userEmails, setUserEmails] = useState({});
 
   const checkToInvite = async () => {
     if (lastMentions.length === 0 && usersToInvite === [] && userEmails === []) {
+      return;
+    }
+    if (lastMessage && lastMessage.createdBy !== username) {
       return;
     }
     if (lastMentions.length === 0) {
@@ -36,12 +39,12 @@ const Content = ({ visible, hide, hasDismissed, show }) => {
       { decrypt: false }
     );
     const _usersToInvite = usernames.filter(
-      (username) => users.findIndex((user) => user.attrs.username === username) === -1
+      (_username) => users.findIndex((user) => user.attrs.username === _username) === -1
     );
 
     const newEmails = {};
-    _usersToInvite.forEach((username) => {
-      newEmails[username] = '';
+    _usersToInvite.forEach((_username) => {
+      newEmails[_username] = '';
     });
     setUserEmails(newEmails);
     setUsersToInvite(_usersToInvite);
@@ -49,7 +52,7 @@ const Content = ({ visible, hide, hasDismissed, show }) => {
 
   useEffect(() => {
     checkToInvite();
-  }, [lastMentions, visible]);
+  }, [lastMentions, visible, lastMessage]);
 
   const hasUsersToInvite = !hasDismissed && usersToInvite && usersToInvite.length > 0;
 

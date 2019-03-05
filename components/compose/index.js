@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { EditorState } from 'draft-js';
+import { EditorState, ContentState } from 'draft-js';
 import { Hover } from 'react-powerplug';
 import Editor from 'draft-js-plugins-editor';
 import createMentionPlugin, { defaultSuggestionsFilter } from 'draft-js-mention-plugin';
@@ -104,6 +104,8 @@ const BottomTray = ({
   handleSubmit,
   handleGifSelect,
   isSavingImages,
+  currentContentCount,
+  maxLength,
   ...rest
 }) => {
   const [showGify, setShowGify] = useState(false);
@@ -119,6 +121,18 @@ const BottomTray = ({
         <GiphyModal handleOnSelect={handleGifSelect} isVisible={showGify} onDismiss={() => setShowGify(false)} />
         <GifButton onClick={() => setShowGify(true)} ml={2} />
         {/* <LocationButton ml={2} /> */}
+        {currentContentCount >= maxLength * 0.9 ? (
+          <Box
+            color={currentContentCount === maxLength ? 'red' : 'purple'}
+            opacity={currentContentCount === maxLength ? 1 : 0.5}
+            fontWeight={currentContentCount === maxLength ? 'bold' : '500'}
+            fontSize={1}
+            mt="11px"
+            ml={3}
+          >
+            {currentContentCount}/240
+          </Box>
+        ) : null}
       </Flex>
       <Box mr="auto" />
       <Button disabled={loading || isSavingImages || disabled} ml={2} onClick={handleSubmit}>
@@ -225,10 +239,13 @@ const Compose = ({ pluginProps, ...rest }) => {
     setImages(_images);
   };
 
+  const maxLength = 240;
+
   const fetchUsernames = async () => {
     const response = await fetch('/api/usernames');
     const usernames = await response.json();
     allUsernames = usernames.map((username) => ({
+      id: username,
       name: username,
       link: `/[::]${username}`,
       avatar: generateImageUrl(username, 80),
@@ -245,26 +262,12 @@ const Compose = ({ pluginProps, ...rest }) => {
     const response = await fetch(url);
     const { results } = await response.json();
     if (!results) return;
-    setBlockstackProfiles([
-      ...results
-        .filter((user) =>
-          suggestions.find((sug) => {
-            if (user && sug) {
-              if (user.fullyQualifiedName === sug.name) {
-                return false; // dup remove
-              } else {
-                return true;
-              }
-            }
-            return true;
-          })
-        )
-        .map((user) => ({
-          name: user.fullyQualifiedName,
-          link: `/[::]${user.fullyQualifiedName}`,
-          avatar: `https://banter-pub.imgix.net/banana.png`,
-        })),
-    ]);
+    setBlockstackProfiles(results.map((user) => ({
+      id: user.fullyQualifiedName,
+      name: user.fullyQualifiedName,
+      link: `/[::]${user.fullyQualifiedName}`,
+      avatar: generateImageUrl(user.fullyQualifiedName, 80),
+    })));
   };
 
   useEffect(() => {
@@ -274,8 +277,20 @@ const Compose = ({ pluginProps, ...rest }) => {
   const editor = useRef(null);
   const editorWrapper = useRef(null);
 
+  const currentContent = editorState.getCurrentContent().getPlainText('');
+  const currentContentCount = editorState.getCurrentContent().getPlainText('').length;
+
   const onChange = (state) => {
-    setEditorState(state);
+    const newContentText = state.getCurrentContent().getPlainText('');
+    const newContentTextCount = newContentText.length;
+    const newContentIsTooLong = newContentTextCount > maxLength;
+    if (newContentIsTooLong) {
+      const truncatedTextContent = newContentText.substring(0, maxLength);
+      const truncatedEditorState = EditorState.createWithContent(ContentState.createFromText(truncatedTextContent));
+      setEditorState(truncatedEditorState);
+    } else {
+      setEditorState(state);
+    }
   };
 
   const onSearchChange = ({ value }) => {
@@ -294,8 +309,6 @@ const Compose = ({ pluginProps, ...rest }) => {
 
   const { user } = useConnect('selectUser');
 
-  const currentContent = editorState.getCurrentContent().getPlainText();
-
   const hasContent = gifUrl || Object.keys(images).length || currentContent !== '';
 
   const disabled = !user || !hasContent;
@@ -303,7 +316,7 @@ const Compose = ({ pluginProps, ...rest }) => {
   useOnClickOutside(editorWrapper, () => setFocused(false));
 
   const handleSubmit = async (e) => {
-    const content = editorState.getCurrentContent().getPlainText();
+    const content = editorState.getCurrentContent().getPlainText('');
     if (e && e.preventDefault) {
       e.preventDefault();
     }
@@ -436,7 +449,18 @@ const Compose = ({ pluginProps, ...rest }) => {
     NProgress.done();
   };
 
-  const allSuggestions = [...suggestions, ...blockstackProfiles];
+  const getUniqueSuggestions = () => {
+    const flags = {};
+    let allSuggestions = suggestions.concat(blockstackProfiles);
+    allSuggestions = allSuggestions.filter((suggestion) => {
+      if (flags[suggestion.name]) {
+        return false;
+      }
+      flags[suggestion.name] = true;
+      return true;
+    });
+    return allSuggestions;
+  };
 
   return (
     <Dropzone accept="image/*" ref={dropzoneRef} onDrop={onDrop}>
@@ -497,7 +521,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                         />
                         <MentionSuggestions
                           onSearchChange={onSearchChange}
-                          suggestions={allSuggestions}
+                          suggestions={getUniqueSuggestions()}
                           onAddMention={onAddMention}
                         />
                         <EmojiSuggestions />
@@ -520,6 +544,8 @@ const Compose = ({ pluginProps, ...rest }) => {
                   loading={loading}
                   isSavingImages={isSavingImages}
                   handleGifSelect={(url) => setGifUrl(url)}
+                  currentContentCount={currentContentCount}
+                  maxLength={maxLength}
                 />
               ) : null}
             </div>

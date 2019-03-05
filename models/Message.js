@@ -16,6 +16,6 @@ export default class Message extends Model {
   };
 
   ago() {
-    return fromNow(this.attrs.createdAt);
+    return fromNow(this.attrs.createdAt, { max: 1, suffix: true });
   }
 }
