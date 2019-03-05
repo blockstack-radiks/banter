@@ -119,6 +119,7 @@ const FilePreview = ({ preview, handleClearFiles }) => (
     bg="hsl(204,25%,94%)"
     position="relative"
     border="1px solid hsl(204,25%,85%)"
+    mr={2}
   >
     <Hover>
       {({ hovered, bind }) => (
@@ -171,9 +172,9 @@ const FilePreviews = ({ previews, handleClearFiles }) => {
   }
   const _previews = previews.map((preview) => <FilePreview preview={preview} handleClearFiles={handleClearFiles} /> );
   return (
-    <Box p={3} border="1px solid" borderTop="0" borderColor="hsl(204,25%,90%)" bg="hsl(204,25%,97%)">
+    <Flex flexWrap="wrap" p={3} border="1px solid" borderTop="0" borderColor="hsl(204,25%,90%)" bg="hsl(204,25%,97%)">
       {_previews}
-    </Box>
+    </Flex>
   );
 };
 
