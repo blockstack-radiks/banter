@@ -117,7 +117,7 @@ const BottomTray = ({
         />
         <GiphyModal handleOnSelect={handleGifSelect} isVisible={showGify} onDismiss={() => setShowGify(false)} />
         <GifButton onClick={() => setShowGify(true)} ml={2} />
-        {/*<LocationButton ml={2} />*/}
+        {/* <LocationButton ml={2} /> */}
       </Flex>
       <Box mr="auto" />
       <Button disabled={loading || isSavingImages || disabled} ml={2} onClick={handleSubmit}>
@@ -298,11 +298,22 @@ const Compose = ({ pluginProps, ...rest }) => {
     }
     NProgress.start();
     setLoading(true);
-    const imageUrls = Object.keys(images).map((key) => {
-      return images[key].url;
+    let imageUrls = Object.keys(images).map((key) => {
+      // return images[key].url;
+      const { url, dimensions } = images[key];
+      if (!url) {
+        return false;
+      }
+      return {
+        url,
+        dimensions,
+      };
     });
+    imageUrls = imageUrls.filter(Boolean); // aka 'compact'
     if (gifUrl) {
-      imageUrls.push(gifUrl);
+      imageUrls.push({
+        url: gifUrl,
+      });
     }
     const message = new Message({
       content,
@@ -337,8 +348,7 @@ const Compose = ({ pluginProps, ...rest }) => {
 
     const uploadImage = async (photo) => {
       const now = new Date().getTime();
-      const photoName = encodeURIComponent(photo.name);
-      const name = `photos/${userSession.loadUserData().username}/${now}-${photoName}`;
+      const name = `photos/${userSession.loadUserData().username}/${now}-${photo.name}`;
       const url = await userSession.putFile(name, photo, { encrypt: false, contentType: photo.type });
       const imgixUrl = await uploadPhoto(url, name);
       return imgixUrl;
@@ -378,32 +388,27 @@ const Compose = ({ pluginProps, ...rest }) => {
       return new Promise(async (resolve) => {
         try {
           const fileReader = new FileReader();
-          await fileReader.addEventListener('load', async () => {
-            let width, height;
+          fileReader.addEventListener('load', async () => {
+            const image = new Image();
+            image.src = fileReader.result;
 
-            await new Promise(async (resolve) => {
-              const image = new Image();
-              image.src = fileReader.result;
-              image.onload = function() {
-                height = this.height;
-                width = this.width;
-                console.log(height, width);
-                return resolve(true);
-              };
-            });
+            image.onload = function getSize() {
+              const { height, width } = this;
+              console.log(height, width);
 
-            setImages((_images) => ({
-              ..._images,
-              [lastIndex + index]: {
-                ..._images[lastIndex + index],
-                preview: fileReader.result,
-                dimensions: {
-                  width,
-                  height,
+              setImages((_images) => ({
+                ..._images,
+                [lastIndex + index]: {
+                  ..._images[lastIndex + index],
+                  preview: fileReader.result,
+                  dimensions: {
+                    width,
+                    height,
+                  },
                 },
-              },
-            }));
-            resolve(true);
+              }));
+              resolve(true);
+            };
           });
           console.log(images);
           fileReader.readAsDataURL(file);
