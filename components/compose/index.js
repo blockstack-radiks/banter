@@ -69,7 +69,7 @@ const Compose = ({ pluginProps, ...rest }) => {
     setBlockstackProfiles(results.map((user) => ({
       name: user.fullyQualifiedName,
       link: `/[::]${user.fullyQualifiedName}`,
-      avatar: `https://banter-pub.imgix.net/banana.png`,
+      avatar: generateImageUrl(user.fullyQualifiedName, 80),
     })));
   };
 
@@ -147,6 +147,19 @@ const Compose = ({ pluginProps, ...rest }) => {
     return true;
   };
 
+  const getUniqueSuggestions = () => {
+    const flags = {};
+    let allSuggestions = suggestions.concat(blockstackProfiles);
+    allSuggestions = allSuggestions.filter((suggestion) => {
+      if (flags[suggestion.name]) {
+        return false;
+      }
+      flags[suggestion.name] = true;
+      return true;
+    });
+    return allSuggestions;
+  };
+
   return (
     <Box p={4} {...rest}>
       <div style={{ width: '100%', flexGrow: 1 }} ref={editorWrapper}>
@@ -178,7 +191,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                   />
                   <MentionSuggestions
                     onSearchChange={onSearchChange}
-                    suggestions={[...new Set(suggestions.concat(blockstackProfiles))]}
+                    suggestions={getUniqueSuggestions()}
                     onAddMention={onAddMention}
                   />
                   <EmojiSuggestions />
