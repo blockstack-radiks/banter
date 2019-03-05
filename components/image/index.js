@@ -43,7 +43,7 @@ const Image = ({ src, ...rest }) => {
   const preview = `${url}?auto=format&w=100&blur=100`;
 
   return (
-    <ImageWrapper width={1} position="relative">
+    <ImageWrapper width={1} position="relative" {...rest}>
       <HighResImage className="lazyload" data-src={highRes} />
       <PreviewImage src={preview} />
     </ImageWrapper>

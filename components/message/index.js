@@ -111,6 +111,40 @@ const Container = ({ single, ...rest }) => (
   <Flex px={3} py={3} alignItems="flex-start" borderTop={single ? 'none' : '1px solid rgb(230, 236, 240)'} {...rest} />
 );
 
+const Media = ({ images, ...rest }) => {
+  return (
+    <Flex py={2}>
+      {images.length === 1 ? (
+        <Box width={1}>
+          <Image src={images[0]} />
+        </Box>
+      ) : images.length === 2 ? (
+        <>
+          <Box mr="5px" width="50%">
+            <Image src={images[0]} />
+          </Box>
+          <Box width="50%">
+            <Image src={images[1]} />
+          </Box>
+        </>
+      ) : (
+        <Box width={1}>
+          <Box mb={'5px'}>
+            <Image src={images[0]} />
+          </Box>
+          <Flex width={1}>
+            {images
+              .filter((img) => img)
+              .map((img, i) => {
+                return i !== 0 ? <Image mr={i !== images.length - 1 ? '5px' : undefined} src={img} /> : null;
+              })}
+          </Flex>
+        </Box>
+      )}
+    </Flex>
+  );
+};
+
 const Message = ({ message, single, createdBy, email }) => {
   const { cookieUsername: username } = useConnect('selectCookieUsername');
 
@@ -122,15 +156,7 @@ const Message = ({ message, single, createdBy, email }) => {
         {message.attrs.content && message.attrs.content !== '' ? (
           <MessageContent content={message.attrs.content} email={email} />
         ) : null}
-        {message.attrs.imageUrls && message.attrs.imageUrls.length ? (
-          <Box py={2}>
-            {message.attrs.imageUrls
-              .filter((img) => img)
-              .map((img) => {
-                return <Image src={img} />;
-              })}
-          </Box>
-        ) : null}
+        {message.attrs.imageUrls && message.attrs.imageUrls.length ? <Media images={message.attrs.imageUrls} /> : null}
         <Box>
           <TimeAgo>
             <Link
