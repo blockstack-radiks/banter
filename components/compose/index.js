@@ -110,12 +110,12 @@ const BottomTray = ({ setHasImage, open, loading, disabled, handleSubmit, handle
   );
 };
 
-const FilePreview = ({ file, preview, handleClearFiles }) => (
+const FilePreview = ({ preview, handleClearFiles }) => (
   <Flex
     alignItems="center"
     borderRadius="3px"
     size={100}
-    key={file.name}
+    key={preview}
     bg="hsl(204,25%,94%)"
     position="relative"
     border="1px solid hsl(204,25%,85%)"
@@ -165,11 +165,11 @@ const FilePreview = ({ file, preview, handleClearFiles }) => (
   </Flex>
 );
 
-const FilePreviews = ({ files, previews, handleClearFiles }) => {
-  if (files.length === 0) {
+const FilePreviews = ({ previews, handleClearFiles }) => {
+  if (previews.length === 0) {
     return null;
   }
-  const _previews = files.map((file, index) => <FilePreview file={file} preview={previews[index]} handleClearFiles={handleClearFiles} /> );
+  const _previews = previews.map((preview) => <FilePreview preview={preview} handleClearFiles={handleClearFiles} /> );
   return (
     <Box p={3} border="1px solid" borderTop="0" borderColor="hsl(204,25%,90%)" bg="hsl(204,25%,97%)">
       {_previews}
@@ -182,15 +182,14 @@ const Compose = ({ pluginProps, ...rest }) => {
   const [focused, setFocused] = useState(true);
   const [loading, setLoading] = useState(false);
   const [gifUrl, setGifUrl] = useState(null);
-  const [files, setFiles] = useState([]);
-  const [previews, setPreviews] = useState(null);
+  const [previews, setPreviews] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [query, setQuery] = useState('');
   const [blockstackProfiles, setBlockstackProfiles] = useState([]);
 
   const handleClearFiles = () => {
     setPreviews([]);
-    setFiles([]);
+    // setFiles([]);
   };
 
   const fetchUsernames = async () => {
@@ -326,10 +325,17 @@ const Compose = ({ pluginProps, ...rest }) => {
 
     const _previews = await Promise.all(getPreviews);
     setPreviews(_previews);
-    setFiles(acceptedFiles);
+    // setFiles(acceptedFiles);
 
     const imgixUrls = await Promise.all(uploadImages);
     console.log(imgixUrls);
+  };
+
+  const previewSources = () => {
+    if (!gifUrl) {
+      return previews;
+    }
+    return previews.concat(gifUrl);
   };
 
   return (
@@ -403,7 +409,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                     <input {...getInputProps()} />
                   </StylesWrapper>
                 </div>
-                <FilePreviews files={files} previews={previews} handleClearFiles={handleClearFiles} />
+                <FilePreviews previews={previewSources()} handleClearFiles={handleClearFiles} />
               </Box>
             </Flex>
 
