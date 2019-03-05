@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box } from 'blockstack-ui';
 import Message from '../models/Message';
+import { Login } from '../components/login';
 import MessageComponent from '../components/message';
 
 class MessagePage extends React.Component {
@@ -13,6 +14,7 @@ class MessagePage extends React.Component {
   render() {
     const { messageAttrs } = this.props;
     const message = new Message(messageAttrs);
+
     return (
       <Box
         border="1px solid rgb(230, 236, 240)"
@@ -23,7 +25,8 @@ class MessagePage extends React.Component {
         borderRadius={2}
         boxShadow="card"
       >
-        <MessageComponent single message={message} />
+        <Login px={4} checkForState action="reply" />
+        <MessageComponent message={message} />
       </Box>
     );
   }
