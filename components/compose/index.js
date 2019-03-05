@@ -15,7 +15,6 @@ import NProgress from 'nprogress';
 import { rgba } from 'polished';
 import { getConfig } from 'radiks';
 import { Provider, Tooltip } from 'reakit';
-import debounce from 'lodash/debounce';
 import reakitTheme from 'reakit-theme-default';
 import Dropzone from 'react-dropzone';
 import StylesWrapper from './styled';
@@ -112,14 +111,14 @@ const BottomTray = ({
   return (
     <Flex alignItems="center" pt={2}>
       <Flex {...rest}>
-        <ImageButton
-          onClick={() => {
-            !isSavingImages && open();
-          }}
-          disabled={isSavingImages}
-        />
-        <GiphyModal handleOnSelect={handleGifSelect} isVisible={showGify} onDismiss={() => setShowGify(false)} />
-        <GifButton onClick={() => setShowGify(true)} ml={2} />
+        {/*<ImageButton*/}
+        {/*onClick={() => {*/}
+        {/*!isSavingImages && open();*/}
+        {/*}}*/}
+        {/*disabled={isSavingImages}*/}
+        {/*/>*/}
+        {/*<GiphyModal handleOnSelect={handleGifSelect} isVisible={showGify} onDismiss={() => setShowGify(false)} />*/}
+        {/*<GifButton onClick={() => setShowGify(true)} ml={2} />*/}
         {/* <LocationButton ml={2} /> */}
       </Flex>
       <Box mr="auto" />
@@ -463,7 +462,7 @@ const Compose = ({ pluginProps, ...rest }) => {
   };
 
   return (
-    <Dropzone accept="image/*" ref={dropzoneRef} onDrop={onDrop}>
+    <Dropzone disabled accept="image/*" ref={dropzoneRef} onDrop={onDrop}>
       {({ getRootProps, getInputProps, isDragActive }) => (
         <div
           {...getRootProps({
