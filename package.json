@@ -53,6 +53,7 @@
     "react-dom": "^16.8.3",
     "react-dropzone": "^9.0.0",
     "react-emailify": "^0.0.1",
+    "react-images": "^0.5.19",
     "react-powerplug": "^1.0.0",
     "react-use": "^5.5.4",
     "react-visibility-sensor": "^5.0.2",

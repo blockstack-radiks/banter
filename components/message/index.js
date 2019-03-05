@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import Linkify from 'linkifyjs/react';
 import { Hover } from 'react-powerplug';
@@ -9,6 +9,7 @@ import { MessageContent as StyledMessageContent } from './styled';
 import { Voting } from './voting';
 import { Image } from '../image';
 import { appUrl } from '../../common/utils';
+import Lightbox from 'react-images';
 
 const Username = ({ hoverable, ...rest }) => (
   <Hover>
@@ -112,36 +113,73 @@ const Container = ({ single, ...rest }) => (
 );
 
 const Media = ({ images, ...rest }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [initialImage, setInitialImage] = useState(0);
+
+  const doOpenLightbox = (index) => {
+    if (index) {
+      setInitialImage(index);
+    }
+    setIsOpen(true);
+  };
+  const doCloseLightbox = () => {
+    setIsOpen(false);
+    setInitialImage(0);
+  };
+
+  const handleNext = () => {
+    setInitialImage((s) => s + 1);
+  };
+  const handlePrev = () => {
+    setInitialImage((s) => s - 1);
+  };
+
   return (
-    <Flex py={2}>
-      {images.length === 1 ? (
-        <Box width={1}>
-          <Image src={images[0]} />
-        </Box>
-      ) : images.length === 2 ? (
-        <>
-          <Box mr="5px" width="50%">
-            <Image src={images[0]} />
+    <>
+      <Lightbox
+        currentImage={initialImage}
+        onClose={doCloseLightbox}
+        images={images.map((image) => ({ src: image.url }))}
+        isOpen={isOpen}
+        onClickNext={handleNext}
+        onClickPrev={handlePrev}
+      />
+      <Flex py={2}>
+        {images.length === 1 ? (
+          <Box width={1}>
+            <Image onClick={() => doOpenLightbox(0)} src={images[0]} />
           </Box>
-          <Box width="50%">
-            <Image src={images[1]} />
+        ) : images.length === 2 ? (
+          <>
+            <Box mr="5px" width="50%">
+              <Image onClick={() => doOpenLightbox(0)} src={images[0]} />
+            </Box>
+            <Box width="50%">
+              <Image onClick={() => doOpenLightbox(1)} src={images[1]} />
+            </Box>
+          </>
+        ) : (
+          <Box width={1}>
+            <Box onClick={() => doOpenLightbox(0)} mb={'5px'}>
+              <Image src={images[0]} />
+            </Box>
+            <Flex width={1}>
+              {images
+                .filter((img) => img)
+                .map((img, i) => {
+                  return i !== 0 && i < 4 ? (
+                    <Image
+                      onClick={() => doOpenLightbox(i)}
+                      mr={i !== images.length - 1 ? '5px' : undefined}
+                      src={img}
+                    />
+                  ) : null;
+                })}
+            </Flex>
           </Box>
-        </>
-      ) : (
-        <Box width={1}>
-          <Box mb={'5px'}>
-            <Image src={images[0]} />
-          </Box>
-          <Flex width={1}>
-            {images
-              .filter((img) => img)
-              .map((img, i) => {
-                return i !== 0 ? <Image mr={i !== images.length - 1 ? '5px' : undefined} src={img} /> : null;
-              })}
-          </Flex>
-        </Box>
-      )}
-    </Flex>
+        )}
+      </Flex>
+    </>
   );
 };
 
