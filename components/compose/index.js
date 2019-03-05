@@ -331,7 +331,8 @@ const Compose = ({ pluginProps, ...rest }) => {
 
     const uploadImage = async (photo) => {
       const now = new Date().getTime();
-      const name = `photos/${userSession.loadUserData().username}/${now}-${photo.name}`;
+      const photoName = encodeURIComponent(photo.name);
+      const name = `photos/${userSession.loadUserData().username}/${now}-${photoName}`;
       const url = await userSession.putFile(name, photo, { encrypt: false, contentType: photo.type });
       const imgixUrl = await uploadPhoto(url, name);
       return imgixUrl;
