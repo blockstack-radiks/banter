@@ -25,7 +25,7 @@ class MessagePage extends React.Component {
         borderRadius={2}
         boxShadow="card"
       >
-        <Login px={4} checkForState action="reply" />
+        <Login px={4} checkForState action="join the conversation" />
         <MessageComponent message={message} />
       </Box>
     );
