@@ -27,10 +27,14 @@ const HighResImage = ({ ...rest }) => (
 const Image = ({ src, ...rest }) => {
   const isImgix = src.includes('imgix');
   if (!isImgix) {
-    return <Box is="img" src={src} {...rest} />;
+    return (
+      <Box width={1}>
+        <Box is="img" width={1} display="block" src={src} {...rest} />
+      </Box>
+    );
   }
 
-  const highRes = src + '?auto=format';
+  const highRes = src + '?auto=format&fit=max&w=800';
   const preview = src + '?auto=format&w=100&blur=100';
 
   return (
