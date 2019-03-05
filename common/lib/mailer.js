@@ -33,13 +33,13 @@ const sendMail = (email) =>
     });
   });
 
-const mentionedEmail = (mention, message) => {
+const mentionedEmail = (mention, message, html) => {
   const url = appUrl();
   return {
     from: FROM,
     to: mention.email,
     subject: `💩You were mentioned by @${message.createdBy}`,
-    // html,
+    html,
     text: `
     You were mentioned in a message on Banter:\n
     @${message.createdBy}: ${message.content}\n

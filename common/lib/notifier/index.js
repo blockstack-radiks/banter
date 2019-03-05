@@ -2,6 +2,9 @@ const linkify = require('linkifyjs');
 const mentionPlugin = require('linkifyjs/plugins/mention');
 const { CENTRAL_COLLECTION } = require('radiks-server/app/lib/constants');
 const compact = require('lodash/compact');
+const emailify = require('react-emailify').default;
+
+const MentionEmail = require('../../../components/email/mention').default;
 
 const { sendMail, mentionedEmail } = require('../mailer');
 
@@ -63,7 +66,12 @@ const handleNewModel = async (db, attrs) => {
     (mention) =>
       new Promise(async (resolve) => {
         try {
-          await sendMail(mentionedEmail(mention, attrs));
+          const emailTemplate = emailify(MentionEmail);
+          const html = emailTemplate({
+            message: attrs,
+            mention,
+          });
+          await sendMail(mentionedEmail(mention, attrs, html));
 
           return resolve(true);
         } catch (error) {
