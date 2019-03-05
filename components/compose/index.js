@@ -137,6 +137,7 @@ const FilePreview = ({ preview, index, handleClearFiles }) => (
     position="relative"
     border="1px solid hsl(204,25%,85%)"
     mr={2}
+    overflow="hidden"
   >
     <Hover>
       {({ hovered, bind }) => (
@@ -427,10 +428,8 @@ const Compose = ({ pluginProps, ...rest }) => {
   };
 
   const allSuggestions = [
-    ...new Set([
-      ...suggestions,
-      ...blockstackProfiles.filter((prof) => suggestions.find((user) => user.name !== prof.name)),
-    ]),
+    ...suggestions,
+    ...blockstackProfiles.filter((prof) => !suggestions.find((user) => user.name === prof.name)),
   ];
 
   return (
