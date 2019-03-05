@@ -170,7 +170,7 @@ const FilePreviews = ({ previews, handleClearFiles }) => {
   if (previews.length === 0) {
     return null;
   }
-  const _previews = previews.map((preview) => <FilePreview preview={preview} handleClearFiles={handleClearFiles} /> );
+  const _previews = previews.map((preview) => <FilePreview preview={preview} handleClearFiles={handleClearFiles} />);
   return (
     <Flex flexWrap="wrap" p={3} border="1px solid" borderTop="0" borderColor="hsl(204,25%,90%)" bg="hsl(204,25%,97%)">
       {_previews}
@@ -180,7 +180,7 @@ const FilePreviews = ({ previews, handleClearFiles }) => {
 
 const Compose = ({ pluginProps, ...rest }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const [focused, setFocused] = useState(true);
+  const [focused, setFocused] = useState(false);
   const [loading, setLoading] = useState(false);
   const [gifUrl, setGifUrl] = useState(null);
   const [previews, setPreviews] = useState([]);
@@ -252,9 +252,9 @@ const Compose = ({ pluginProps, ...rest }) => {
 
   const currentContent = editorState.getCurrentContent().getPlainText();
 
-  // const hasContent = currentContent !== '';
-  const hasContent = true;
-  const disabled = !user || currentContent === '';
+  const hasContent = previews.length || currentContent !== '';
+
+  const disabled = !user || !hasContent;
 
   useOnClickOutside(editorWrapper, () => setFocused(false));
 
@@ -372,9 +372,9 @@ const Compose = ({ pluginProps, ...rest }) => {
                 </Type>
               </Flex>
             </Flex>
-            <Flex justifyContent="space-between">
-              <Box position="relative" is="form" flexGrow={1} onSubmit={handleSubmit}>
-                <div style={{ width: '100%', flexGrow: 1 }} ref={editorWrapper}>
+            <div style={{ width: '100%', flexGrow: 1 }} ref={editorWrapper}>
+              <Flex justifyContent="space-between">
+                <Box position="relative" is="form" flexGrow={1} onSubmit={handleSubmit}>
                   <StylesWrapper>
                     <Box
                       p={3}
@@ -409,20 +409,20 @@ const Compose = ({ pluginProps, ...rest }) => {
                     </Flex>
                     <input {...getInputProps()} />
                   </StylesWrapper>
-                </div>
-                <FilePreviews previews={previewSources()} handleClearFiles={handleClearFiles} />
-              </Box>
-            </Flex>
+                  <FilePreviews previews={previewSources()} handleClearFiles={handleClearFiles} />
+                </Box>
+              </Flex>
 
-            {focused || hasContent ? (
-              <BottomTray
-                open={() => dropzoneRef.current.open()}
-                disabled={disabled}
-                handleSubmit={handleSubmit}
-                loading={loading}
-                handleGifSelect={(url) => setGifUrl(url)}
-              />
-            ) : null}
+              {focused || hasContent ? (
+                <BottomTray
+                  open={() => dropzoneRef.current.open()}
+                  disabled={disabled}
+                  handleSubmit={handleSubmit}
+                  loading={loading}
+                  handleGifSelect={(url) => setGifUrl(url)}
+                />
+              ) : null}
+            </div>
           </Box>
         </div>
       )}
