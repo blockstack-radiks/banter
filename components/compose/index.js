@@ -121,20 +121,18 @@ const BottomTray = ({
         <GiphyModal handleOnSelect={handleGifSelect} isVisible={showGify} onDismiss={() => setShowGify(false)} />
         <GifButton onClick={() => setShowGify(true)} ml={2} />
         {/* <LocationButton ml={2} /> */}
-        {currentContentCount >= maxLength * 0.9 ? (
-          <Box
-            color={currentContentCount === maxLength ? 'red' : 'purple'}
-            opacity={currentContentCount === maxLength ? 1 : 0.5}
-            fontWeight={currentContentCount === maxLength ? 'bold' : '500'}
-            fontSize={1}
-            mt="11px"
-            ml={3}
-          >
-            {currentContentCount}/240
-          </Box>
-        ) : null}
       </Flex>
       <Box mr="auto" />
+      {currentContentCount >= maxLength * 0.9 ? (
+        <Box
+          color={currentContentCount === maxLength ? 'red' : 'purple'}
+          opacity={currentContentCount === maxLength ? 1 : 0.5}
+          fontWeight={currentContentCount === maxLength ? 'bold' : '500'}
+          fontSize={1}
+        >
+          {currentContentCount}/240
+        </Box>
+      ) : null}
       <Button disabled={loading || isSavingImages || disabled} ml={2} onClick={handleSubmit}>
         {isSavingImages ? <>Uploading...</> : <>Post{loading ? 'ing...' : ''}</>}
       </Button>
@@ -262,12 +260,14 @@ const Compose = ({ pluginProps, ...rest }) => {
     const response = await fetch(url);
     const { results } = await response.json();
     if (!results) return;
-    setBlockstackProfiles(results.map((user) => ({
-      id: user.fullyQualifiedName,
-      name: user.fullyQualifiedName,
-      link: `/[::]${user.fullyQualifiedName}`,
-      avatar: generateImageUrl(user.fullyQualifiedName, 80),
-    })));
+    setBlockstackProfiles(
+      results.map((user) => ({
+        id: user.fullyQualifiedName,
+        name: user.fullyQualifiedName,
+        link: `/[::]${user.fullyQualifiedName}`,
+        avatar: generateImageUrl(user.fullyQualifiedName, 80),
+      }))
+    );
   };
 
   useEffect(() => {
