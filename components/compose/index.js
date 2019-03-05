@@ -115,7 +115,7 @@ const BottomTray = ({
       </Flex>
       <Box mr="auto" />
       <Button disabled={loading || isSavingImages || disabled} ml={2} onClick={handleSubmit}>
-        Post{loading ? 'ing...' : ''}
+        {isSavingImages ? <>Uploading...</> : <>Post{loading ? 'ing...' : ''}</>}
       </Button>
     </Flex>
   );
