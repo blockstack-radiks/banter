@@ -22,6 +22,7 @@ export default class MyDocument extends Document {
           <Main />
           <NextScript />
           <script src="/static/nprogress.js" async defer />
+          <script src="/static/lazysizes.js" async defer />
         </body>
       </html>
     );

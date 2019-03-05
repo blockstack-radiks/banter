@@ -18,7 +18,7 @@ const uploadImage = async (uri, pathname) => new Promise(async (resolve) => {
       transform: (body, _response) => ({
         body,
         headers: _response.headers,
-      })
+      }),
     });  
 
     s3.putObject({
@@ -49,5 +49,6 @@ const handleUserSave = async (radiksCollection, user) => {
 };
 
 module.exports = {
+  uploadImage,
   handleUserSave,
 };

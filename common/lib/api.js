@@ -53,3 +53,20 @@ export const sendInviteEmails = async (data) => {
   const { success } = await response.json();
   return success;
 };
+
+export const uploadPhoto = async (gaiaUrl, filename) => {
+  const { apiServer } = getConfig();
+  const serverUrl = `${apiServer}/api/upload`;
+  const response = await fetch(serverUrl, {
+    method: 'POST',
+    body: JSON.stringify({
+      gaiaUrl,
+      filename,
+    }),
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
+  });
+  const { url } = await response.json();
+  return url;
+};

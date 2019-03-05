@@ -10,7 +10,11 @@ import { Button } from '../button';
 import { sendInviteEmails } from '../../common/lib/api';
 
 const Content = ({ visible, hide, hasDismissed, show }) => {
-  const { lastMentions, lastMessage, username } = useConnect('selectLastMentions', 'selectLastMessage', 'selectUsername');
+  const { lastMentions, lastMessage, username } = useConnect(
+    'selectLastMentions',
+    'selectLastMessage',
+    'selectUsername'
+  );
   const [usersToInvite, setUsersToInvite] = useState([]);
   const [complete, setComplete] = useState(false);
   const [userEmails, setUserEmails] = useState({});
@@ -29,6 +33,7 @@ const Content = ({ visible, hide, hasDismissed, show }) => {
       if (usersToInvite) {
         setUsersToInvite([]);
       }
+      console.log('fail 3');
       return;
     }
     const usernames = lastMentions.map((m) => m.slice(1));
@@ -52,7 +57,7 @@ const Content = ({ visible, hide, hasDismissed, show }) => {
 
   useEffect(() => {
     checkToInvite();
-  }, [lastMentions, visible, lastMessage]);
+  }, [lastMentions]);
 
   const hasUsersToInvite = !hasDismissed && usersToInvite && usersToInvite.length > 0;
 
@@ -175,7 +180,7 @@ const Content = ({ visible, hide, hasDismissed, show }) => {
           </Box>
 
           <Box mt={6}>
-            <Button disabled={disabled} invert mx="auto">
+            <Button onClick={sendInvites} disabled={disabled} invert mx="auto">
               Send Invites
             </Button>
           </Box>
