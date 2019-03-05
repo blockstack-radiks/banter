@@ -110,12 +110,12 @@ const BottomTray = ({ setHasImage, open, loading, disabled, handleSubmit, handle
   );
 };
 
-const FilePreview = ({ preview, handleClearFiles }) => (
+const FilePreview = ({ preview, index, handleClearFiles }) => (
   <Flex
     alignItems="center"
     borderRadius="3px"
     size={100}
-    key={preview}
+    key={index}
     bg="hsl(204,25%,94%)"
     position="relative"
     border="1px solid hsl(204,25%,85%)"
@@ -166,14 +166,23 @@ const FilePreview = ({ preview, handleClearFiles }) => (
   </Flex>
 );
 
-const FilePreviews = ({ previews, handleClearFiles }) => {
-  if (previews.length === 0) {
+const FilePreviews = ({ images, gifUrl, handleClearFiles }) => {
+  if (Object.keys(images).length === 0) {
     return null;
   }
-  const _previews = previews.map((preview) => <FilePreview preview={preview} handleClearFiles={handleClearFiles} />);
+  console.log(images);
+  const _previews = Object.keys(images).map((index) => <FilePreview 
+    preview={images[index].preview} 
+    index={index}
+    handleClearFiles={() => handleClearFiles(index)} 
+    key={index}
+  />);
   return (
     <Flex flexWrap="wrap" p={3} border="1px solid" borderTop="0" borderColor="hsl(204,25%,90%)" bg="hsl(204,25%,97%)">
       {_previews}
+      {gifUrl && (
+        <FilePreview preview={gifUrl} handleClearFiles={() => handleClearFiles('gif')} />
+      )}
     </Flex>
   );
 };
@@ -183,14 +192,18 @@ const Compose = ({ pluginProps, ...rest }) => {
   const [focused, setFocused] = useState(false);
   const [loading, setLoading] = useState(false);
   const [gifUrl, setGifUrl] = useState(null);
-  const [previews, setPreviews] = useState([]);
+  const [images, setImages] = useState({});
   const [suggestions, setSuggestions] = useState([]);
   const [query, setQuery] = useState('');
   const [blockstackProfiles, setBlockstackProfiles] = useState([]);
 
-  const handleClearFiles = () => {
-    setPreviews([]);
-    // setFiles([]);
+  const handleClearFiles = (key) => {
+    if (key === 'gif') {
+      return setGifUrl(null);
+    }
+    const _images = {...images};
+    delete _images[key];
+    setImages(_images);
   };
 
   const fetchUsernames = async () => {
@@ -252,7 +265,7 @@ const Compose = ({ pluginProps, ...rest }) => {
 
   const currentContent = editorState.getCurrentContent().getPlainText();
 
-  const hasContent = previews.length || currentContent !== '';
+  const hasContent = Object.keys(images).length || currentContent !== '';
 
   const disabled = !user || !hasContent;
 
@@ -299,10 +312,25 @@ const Compose = ({ pluginProps, ...rest }) => {
       return imgixUrl;
     };
 
-    const uploadImages = acceptedFiles.map((file) => {
+    const imageKeys = Object.keys(images);
+    const lastIndex = imageKeys[imageKeys.length - 1] || 0;
+
+    const uploadImages = acceptedFiles.map((file, index) => {
       return new Promise(async (resolve) => {
         try {
           const imgixUrl = await uploadImage(file);
+          setImages((_images) => {
+            if (_images[lastIndex + index]) {
+              return {
+                ..._images,
+                [lastIndex + index]: {
+                  ..._images[lastIndex + index],
+                  url: imgixUrl,
+                },
+              };
+            }
+            return _images;
+          });
           resolve(imgixUrl);
         } catch (error) {
           console.error(error);
@@ -311,11 +339,20 @@ const Compose = ({ pluginProps, ...rest }) => {
       });
     });
 
-    const getPreviews = acceptedFiles.map((file) => {
+    const getPreviews = acceptedFiles.map((file, index) => {
       return new Promise(async (resolve) => {
         try {
           const fileReader = new FileReader();
-          fileReader.addEventListener('load', () => resolve(fileReader.result));
+          fileReader.addEventListener('load', () => {
+            setImages((_images) => ({
+              ..._images,
+              [lastIndex + index]: {
+                ..._images[lastIndex + index],
+                preview: fileReader.result,
+              },
+            }));
+            resolve(true);
+          });
           fileReader.readAsDataURL(file);
         } catch (error) {
           console.error(error);
@@ -324,20 +361,18 @@ const Compose = ({ pluginProps, ...rest }) => {
       });
     });
 
-    const _previews = await Promise.all(getPreviews);
-    setPreviews(_previews);
-    // setFiles(acceptedFiles);
-
-    const imgixUrls = await Promise.all(uploadImages);
-    console.log(imgixUrls);
+    await Promise.all(getPreviews);
+    await Promise.all(uploadImages);
+    // console.log(imgixUrls);
+    // setImageUrls(imgixUrls);
   };
 
-  const previewSources = () => {
-    if (!gifUrl) {
-      return previews;
-    }
-    return previews.concat(gifUrl);
-  };
+  // const previewSources = () => {
+  //   if (!gifUrl) {
+  //     return previews;
+  //   }
+  //   return previews.concat(gifUrl);
+  // };
 
   return (
     <Dropzone accept="image/*" ref={dropzoneRef} onDrop={onDrop}>
@@ -409,7 +444,7 @@ const Compose = ({ pluginProps, ...rest }) => {
                     </Flex>
                     <input {...getInputProps()} />
                   </StylesWrapper>
-                  <FilePreviews previews={previewSources()} handleClearFiles={handleClearFiles} />
+                  <FilePreviews images={images} gifUrl={gifUrl} handleClearFiles={handleClearFiles} />
                 </Box>
               </Flex>
 
