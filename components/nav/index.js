@@ -2,38 +2,9 @@ import React from 'react';
 import { Box, Flex, Type } from 'blockstack-ui';
 import { Hover } from 'react-powerplug';
 import Link from 'next/link';
-import { useConnect } from 'redux-bundler-hook';
 import { Provider, Popover } from 'reakit';
 import theme from 'reakit-theme-default';
-import { Avatar } from '../avatar';
 import { ProfileDropdown } from '../profile-dropdown';
-
-const DropdownItem = ({ href, passHref, as, ...rest }) => {
-  const WrapperComponent = href ? Link : Box;
-  return (
-    <Hover>
-      {({ hovered, bind }) => (
-        <WrapperComponent href={href} as={as} passHref={passHref}>
-          <Box
-            py={1}
-            width={1}
-            display="block"
-            color="purple"
-            is={href ? 'a' : Box}
-            opacity={hovered ? 1 : 0.75}
-            style={{
-              textDecoration: 'none',
-            }}
-            cursor={hovered ? 'pointer' : 'unset'}
-            {...bind}
-            textAlign="right"
-            {...rest}
-          />
-        </WrapperComponent>
-      )}
-    </Hover>
-  );
-};
 
 export const Logo = ({ width = '28px', height = '28px' }) => (
   <svg
@@ -53,8 +24,6 @@ export const Logo = ({ width = '28px', height = '28px' }) => (
 );
 
 const Nav = ({ ...rest }) => {
-  const { doLogout, cookieUsername: username } = useConnect('doLogout', 'selectCookieUsername');
-
   return (
     <Provider theme={theme}>
       <Flex

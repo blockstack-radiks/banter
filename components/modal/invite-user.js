@@ -9,14 +9,13 @@ import Modal from './wrapper';
 import { Button } from '../button';
 import { sendInviteEmails } from '../../common/lib/api';
 
-const Content = ({ visible, hide, hasDismissed, show }) => {
+const Content = ({ visible, complete, setComplete, hide, hasDismissed, show }) => {
   const { lastMentions, lastMessage, username } = useConnect(
     'selectLastMentions',
     'selectLastMessage',
     'selectUsername'
   );
   const [usersToInvite, setUsersToInvite] = useState([]);
-  const [complete, setComplete] = useState(false);
   const [userEmails, setUserEmails] = useState({});
 
   const checkToInvite = async () => {
@@ -33,7 +32,6 @@ const Content = ({ visible, hide, hasDismissed, show }) => {
       if (usersToInvite) {
         setUsersToInvite([]);
       }
-      console.log('fail 3');
       return;
     }
     const usernames = lastMentions.map((m) => m.slice(1));
@@ -198,9 +196,19 @@ const Content = ({ visible, hide, hasDismissed, show }) => {
 
 const InviteUserModal = () => {
   const { doClearLastData } = useConnect('doClearLastData');
+  const [complete, setComplete] = useState(false);
+
   return (
-    <Modal bg="purple" onDismiss={() => setTimeout(() => doClearLastData(), 150)}>
-      {(props) => <Content {...props} />}
+    <Modal
+      bg="purple"
+      onDismiss={() =>
+        setTimeout(() => {
+          doClearLastData();
+          setComplete(false);
+        }, 150)
+      }
+    >
+      {(props) => <Content complete={complete} setComplete={setComplete} {...props} />}
     </Modal>
   );
 };

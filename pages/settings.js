@@ -7,14 +7,26 @@ import Input from '../styled/input';
 import Checkbox from '../components/checkbox';
 import { Button } from '../components/button';
 import { USER_SETTINGS, defaultUserSettings } from '../common/constants';
+import { useConnect } from 'redux-bundler-hook';
+import { Login } from '../components/login';
 
 const SettingsPage = ({ ...rest }) => {
+  const { cookieUsername } = useConnect('selectCookieUsername');
   const [state, setState] = useState(defaultUserSettings);
 
   const [initialLoad, setIntialLoad] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
   const [edited, setEdited] = useState(false);
+
+  if (!cookieUsername) {
+    // not logged in
+    return (
+      <Card width={[1]} maxWidth={600} mx="auto" background="white" px={2} my={2} {...rest}>
+        <Login />
+      </Card>
+    );
+  }
 
   useEffect(() => {
     if (!initialLoad) {

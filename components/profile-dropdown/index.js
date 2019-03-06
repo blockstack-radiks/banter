@@ -110,7 +110,8 @@ const UserItem = ({ popover, ...rest }) => {
           {...popover}
           style={{
             outline: 'none',
-            position: 'static',
+            position: 'relative',
+            zIndex: 9999
           }}
         >
           <Flex alignItems="center" cursor={hovered ? 'pointer' : 'unset'} {...bind}>
