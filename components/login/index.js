@@ -3,10 +3,17 @@ import { Box, Flex, Type } from 'blockstack-ui';
 import { useConnect } from 'redux-bundler-hook';
 import { Button } from '../button';
 
-const Login = ({ handleLogin, ...rest }) => {
-  const { userLoading } = useConnect('selectUserLoading');
-
+const Login = ({ checkForState, action="get started", ...rest }) => {
+  const args = ['selectUserLoading', 'doLogin'];
+  if (checkForState) {
+    args.push('selectCookieUsername');
+  }
+  const { userLoading, doLogin, cookieUsername } = useConnect(...args);
   const [loading, setLoading] = useState(false);
+
+  if (checkForState && cookieUsername) {
+    return null;
+  }
 
   return (
     <Flex alignItems="center" justifyContent="space-between" py={3} px={3} textAlign="center" {...rest}>
@@ -20,14 +27,14 @@ const Login = ({ handleLogin, ...rest }) => {
         <>
           <Box>
             <Type color="#574b90" fontWeight={500}>
-              Login with Blockstack to get started.
+              Login with Blockstack to {action}.
             </Type>
           </Box>
           <Box>
             <Button
               minWidth={120}
               onClick={() => {
-                handleLogin();
+                doLogin();
                 setLoading(true);
               }}
             >
