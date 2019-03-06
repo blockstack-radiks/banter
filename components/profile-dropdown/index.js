@@ -9,12 +9,17 @@ import ProfileIcon from 'mdi-react/AccountCircleIcon';
 import LogoutIcon from 'mdi-react/LogoutIcon';
 import { Avatar } from '../avatar';
 
-const DropdownItem = ({ children, icon: Icon, href, as, ...rest }) => {
+const DropdownItem = ({ children, icon: Icon, href, as, passHref, ...rest }) => {
   const WrapperComponent = href ? Link : Box;
+  const wrapperProps = {};
+  if (href) {
+    wrapperProps.prefetch = true;
+    wrapperProps.passHref = true;
+  }
   return (
     <Hover>
       {({ hovered, bind }) => (
-        <WrapperComponent href={href} as={as} prefetch={!!href} passHref={!!href}>
+        <WrapperComponent href={href} as={as} {...wrapperProps}>
           <Flex
             py={2}
             width={1}
@@ -111,7 +116,7 @@ const UserItem = ({ popover, ...rest }) => {
           style={{
             outline: 'none',
             position: 'relative',
-            zIndex: 9999
+            zIndex: 9999,
           }}
         >
           <Flex alignItems="center" cursor={hovered ? 'pointer' : 'unset'} {...bind}>
@@ -119,7 +124,6 @@ const UserItem = ({ popover, ...rest }) => {
               <Box
                 title="Your Profile"
                 size={31}
-                is="a"
                 display="block"
                 border="2px solid"
                 borderColor={hovered || popover.visible ? 'white' : 'transparent'}

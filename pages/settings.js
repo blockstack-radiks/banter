@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { Box, Type } from 'blockstack-ui';
 import { Central } from 'radiks';
+import { useConnect } from 'redux-bundler-hook';
 import { Card } from '../components/card';
 import Input from '../styled/input';
 import Checkbox from '../components/checkbox';
 import { Button } from '../components/button';
 import { USER_SETTINGS, defaultUserSettings } from '../common/constants';
-import { useConnect } from 'redux-bundler-hook';
 import { Login } from '../components/login';
 
-const SettingsPage = ({ ...rest }) => {
+const SettingsPage = ({ userSession, reduxStore, ...rest }) => {
   const { cookieUsername } = useConnect('selectCookieUsername');
   const [state, setState] = useState(defaultUserSettings);
 

@@ -12,7 +12,6 @@ import SocialAccounts from '../components/social-accounts';
 
 class UserPage extends React.Component {
   static propTypes = {
-    rawMessages: PropTypes.array.isRequired,
     user: PropTypes.object.isRequired,
   };
 
@@ -36,7 +35,7 @@ class UserPage extends React.Component {
   };
 
   render() {
-    const { rawMessages, user } = this.props;
+    const { user } = this.props;
     const { profile } = user.attrs;
     const hasName = profile.name && profile.name.length > 0;
 
@@ -63,7 +62,7 @@ class UserPage extends React.Component {
             </Card>
           </Box>
           <Box ml={[0, 3]} width={1} flexGrow={1}>
-            <Feed borderTop={0} hideCompose rawMessages={rawMessages} createdBy={user.attrs.username} />
+            <Feed borderTop={0} hideCompose createdBy={user.attrs.username} />
           </Box>
         </Flex>
       </>
