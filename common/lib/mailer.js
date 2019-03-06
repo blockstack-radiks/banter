@@ -2,6 +2,9 @@ import { appUrl } from '../utils';
 
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
+const emailify = require('react-emailify').default;
+
+const InviteEmail = require('../../components/email/invite').default;
 
 const FROM = '💩Banter <hello@banter.pub>';
 
@@ -70,10 +73,16 @@ const updatesEmail = (user, messages, html) => {
 
 const inviteEmail = (lastMessage, username, email) => {
   const url = appUrl();
+  const emailTemplate = emailify(InviteEmail);
+  const html = emailTemplate({
+    message: lastMessage,
+    username,
+  });
   return {
     from: FROM,
     to: email,
     subject: "You've been invited to Banter!",
+    html,
     text: `
       Hey @${username}, you've been invited to Banter!\n\n
       @${lastMessage.createdBy} mentioned you in a message:\n\n
