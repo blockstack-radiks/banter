@@ -29,11 +29,11 @@ export default ({ children, hiddenText }) => {
             </>
           )}
           <Container minHeight="100vh" fontSize="16px" width={1}>
-            <Row minHeight="100vh">
-              <Section minHeight="100vh" lineHeight="1.5" width={1} pt={3} mx="auto" align="center">
-                <Container minHeight="100vh" width={1} maxWidth={600}>
+            <Row>
+              <Section lineHeight="1.5" width={1} pt={3} mx="auto" align="center">
+                <Container width={1} maxWidth={600}>
                   <Row minHeight="100vh">
-                    <Section minHeight="100vh" lineHeight="1.5" px={6} py={6} width={1} maxWidth={600} pt={3} mx="auto">
+                    <Section lineHeight="1.5" px={6} py={6} width={1} maxWidth={600} pt={3} mx="auto">
                       <Container width={1}>
                         <Row>
                           <Section mx="auto">

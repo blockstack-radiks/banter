@@ -1,20 +1,9 @@
 import React from 'react';
-import { Type, Flex, Box } from 'blockstack-ui';
-import Linkify from 'linkifyjs/react';
+import { Type } from 'blockstack-ui';
 import Message from '../../models/Message';
 import Layout from './layout';
-import { appUrl } from '../../common/utils';
 import { Block, Message as MessageComponent, Header, Footer } from './shared';
 
-{
-  /*<Type.a color="purple" href={`${appUrl()}/messages/${_message._id}`}>*/
-}
-{
-  /*View this message on Banter*/
-}
-{
-  /*</Type.a>*/
-}
 export default ({ message, mention: user }) => {
   const _message = new Message(message);
 
