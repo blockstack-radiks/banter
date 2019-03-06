@@ -50,25 +50,27 @@ const Hr = ({ ...rest }) => (
   </Block>
 );
 
-const MessageContent = ({ children, ...rest }) => (
-  <Type is="a" {...rest}>
-    <Linkify
-      options={{
-        format: (value) => {
-          return <Link style={{ wordBreak: 'break-all' }}>{value}</Link>;
-        },
-        formatHref: (href, type) => {
-          if (type === 'mention') {
-            return `${appUrl()}/[::]${href.slice(1)}`;
-          }
-          return href;
-        },
-        defaultProtocol: 'https',
-      }}
-    >
-      {children}
-    </Linkify>
-  </Type>
+const MessageContent = ({ children }) => (
+  <Linkify
+    options={{
+      format: (value) => {
+        return (
+          <Type is="span" display="inline" style={{ wordBreak: 'break-all' }}>
+            {value}
+          </Type>
+        );
+      },
+      formatHref: (href, type) => {
+        if (type === 'mention') {
+          return `${appUrl()}/[::]${href.slice(1)}`;
+        }
+        return href;
+      },
+      defaultProtocol: 'https',
+    }}
+  >
+    {children}
+  </Linkify>
 );
 
 const Message = ({ message, isLast, ...rest }) => (
