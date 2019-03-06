@@ -86,6 +86,7 @@ const StylesWrapper = styled.div`
     padding-right: 25px;
     * {
       hyphens: auto;
+      word-break: break-word;
     }
   }
 
