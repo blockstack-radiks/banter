@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, Flex, Type } from 'blockstack-ui';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import { User } from 'radiks';
 import { Card } from '../components/card';
 import Feed from '../components/feed';
 import { fetchUser } from '../common/lib/api';

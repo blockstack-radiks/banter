@@ -1,8 +1,8 @@
 import React from 'react';
 import { Type, Flex, Box } from 'blockstack-ui';
+import Linkify from 'linkifyjs/react';
 import { appUrl } from '../../common/utils';
 import { Avatar } from '../avatar';
-import Linkify from 'linkifyjs/react';
 
 const Table = (props) => <Box {...props} is="table" />;
 const TBody = (props) => <Box is="tbody" {...props} />;
@@ -35,7 +35,7 @@ const TextBlock = ({ ...rest }) => (
 
 const Link = ({ ...rest }) => <Type is="a" color="purple" {...rest} />;
 
-const Author = ({ author, ...rest }) => (
+const Author = ({ author }) => (
   <Flex alignItems="center">
     <Box pr={2}>
       <Avatar size={32} username={author} />
@@ -44,7 +44,7 @@ const Author = ({ author, ...rest }) => (
   </Flex>
 );
 
-const Hr = ({ ...rest }) => (
+const Hr = () => (
   <Block>
     <Box is="hr" border="1px solid" borderColor="purple" />
   </Block>
@@ -118,7 +118,7 @@ const Footer = ({ ...rest }) => (
   </Block>
 );
 
-const Header = ({ user, title, ...rest }) => (
+const Header = ({ user, title }) => (
   <Container width={1}>
     <Row width={1}>
       <Section>

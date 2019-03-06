@@ -9,7 +9,7 @@ import { Button, SecondaryButton } from '../button';
 import { USER_SETTINGS, defaultUserSettings } from '../../common/constants';
 import Modal from './wrapper';
 
-const Content = ({ hide, newUser, hasDismissed, visible, show, ...rest }) => {
+const Content = ({ hide, newUser, hasDismissed, visible, show }) => {
   const [email, setEmail] = useState('');
   const [saving, setSaving] = useState(false);
   if (newUser && !visible && !hasDismissed) {

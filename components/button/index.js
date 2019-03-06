@@ -2,6 +2,23 @@ import React from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import { Hover } from 'react-powerplug';
 
+const getBg = (hovered, invert, secondary) => {
+  if (hovered) {
+    if (invert) return 'white';
+    if (secondary) return 'pink';
+    return 'purple';
+  }
+  return 'pink';
+};
+
+const getColor = (hovered, invert) => {
+  if (hovered) {
+    if (invert) return 'purple';
+    return 'white';
+  }
+  return 'purple';
+};
+
 const Button = ({ children, disabled, secondary, invert, ...rest }) => (
   <Hover>
     {({ hovered, bind }) => (
@@ -10,8 +27,8 @@ const Button = ({ children, disabled, secondary, invert, ...rest }) => (
         px={3}
         py={2}
         is="button"
-        bg={hovered ? (invert ? 'white' : secondary ? 'pink' : 'purple') : 'pink'}
-        color={hovered ? (invert ? 'purple' : 'white') : 'purple'}
+        bg={getBg(hovered, invert, secondary)}
+        color={getColor(hovered, invert)}
         cursor={hovered ? 'pointer' : 'unset'}
         transition="0.08s all ease-in-out"
         borderRadius="3px"

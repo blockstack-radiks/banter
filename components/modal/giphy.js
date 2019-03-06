@@ -15,28 +15,28 @@ const loadTrendingGifs = async () => {
     method: 'get',
   });
   const { data } = await res.json();
-  const trending = data.map((g, i) => g.images);
+  const trending = data.map((g) => g.images);
   return trending;
 };
 
 const searchGifs = async (searchValue) => {
   const { giphySearchUrl } = urls;
   if (searchValue.length < 1) {
-    return;
+    return [];
   }
-  let urlWithQuery = giphySearchUrl + '&q=' + searchValue.replace(' ', '+');
+  const urlWithQuery = `${giphySearchUrl  }&q=${  searchValue.replace(' ', '+')}`;
   const res = await fetch(urlWithQuery, {
     method: 'get',
   });
   const { data } = await res.json();
-  const gifs = data.map((g, i) => g.images);
+  const gifs = data.map((g) => g.images);
   return gifs;
 };
 
-const GifGrid = ({ images, query, selectGif, ...rest }) => (
+const GifGrid = ({ images, query, selectGif }) => (
   <Box bg="hsl(204,25%,97%)" borderTop="1px solid hsl(204,25%,85%)" maxHeight="500px" overflow="auto">
     <Box color="purple" fontWeight="bold" p={4}>
-      {query ? <>Search Results for "{query}"</> : <>Trending Gifs</>}
+      {query ? <>Search Results for &quot;{query}&quot;</> : <>Trending Gifs</>}
     </Box>
     <Box
       px={4}
@@ -75,7 +75,7 @@ const GifGrid = ({ images, query, selectGif, ...rest }) => (
   </Box>
 );
 
-const Content = ({ hide, handleOnSelect, newUser, hasDismissed, visible, show, isVisible, ...rest }) => {
+const Content = ({ hide, handleOnSelect, visible, show, isVisible }) => {
   const [state, setState] = useState({
     trending: null,
     query: null,

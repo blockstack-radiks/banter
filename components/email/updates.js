@@ -9,7 +9,7 @@ const Messages = ({ messages }) => {
   return (
     <Block py={4}>
       {_messages.map((message, i) => (
-        <MessageComponent isLast={i === _messages.length - 1} message={message} key={i} />
+        <MessageComponent isLast={i === _messages.length - 1} message={message} key={message._id} />
       ))}
     </Block>
   );

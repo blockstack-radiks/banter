@@ -4,6 +4,7 @@ import { Type } from 'blockstack-ui';
 import { theme } from '../../common/theme';
 import { globalStyles } from '../../common/style';
 import { Container, Row, Section } from './shared';
+import Poop from '../poop';
 
 export default ({ children, hiddenText }) => {
   const GlobalStyles = globalStyles({ bg: 'white' });
@@ -47,7 +48,7 @@ export default ({ children, hiddenText }) => {
                         <Row>
                           <Section mx="auto">
                             <Type color="purple" py={1} is="h1" fontSize={3}>
-                              💩 Banter
+                              <Poop /> Banter
                             </Type>
                           </Section>
                         </Row>

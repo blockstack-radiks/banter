@@ -5,11 +5,7 @@ import Editor from 'draft-js-plugins-editor';
 import createMentionPlugin, { defaultSuggestionsFilter } from 'draft-js-mention-plugin';
 import createEmojiPlugin from 'draft-js-emoji-plugin';
 import { Box, Flex, Type } from 'blockstack-ui';
-import LocationIcon from 'mdi-react/LocationIcon';
-import ImageIcon from 'mdi-react/ImageOutlineIcon';
-import ImageAddIcon from 'mdi-react/ImageAddIcon';
 import CloseIcon from 'mdi-react/CloseIcon';
-import { Gif } from 'styled-icons/material/Gif';
 import { useConnect } from 'redux-bundler-hook';
 import NProgress from 'nprogress';
 import { rgba } from 'polished';
@@ -19,13 +15,14 @@ import reakitTheme from 'reakit-theme-default';
 import Dropzone from 'react-dropzone';
 import StylesWrapper from './styled';
 import Message from '../../models/Message';
-import { Button } from '../button';
+import { BottomTray } from './bottom-tray';
+
 import { useOnClickOutside } from '../../common/hooks';
 import { theme } from '../../common/theme';
 import { uploadPhoto } from '../../common/lib/api';
 
 import InviteUserModal from '../modal/invite-user';
-import GiphyModal from '../modal/giphy';
+// import GiphyModal from '../modal/giphy';
 
 import { generateImageUrl } from '../../common/utils';
 
@@ -41,50 +38,6 @@ const plugins = [mentionPlugin, emojiPlugin];
 
 let allUsernames = [];
 
-const IconButton = ({ tooltip, disabled, icons, icon, ...rest }) => (
-  <Provider theme={reakitTheme}>
-    <Hover>
-      {({ hovered, bind }) => {
-        const Icon = icons && icons.length ? (hovered ? icons[1] : icons[0]) : icon;
-        return (
-          <Box
-            p={2}
-            position="relative"
-            cursor={disabled ? 'not-allowed' : hovered ? 'pointer' : 'unset'}
-            color="purple"
-            border="1px solid"
-            borderRadius="100%"
-            boxShadow={hovered ? 'card' : 'none'}
-            borderColor={hovered ? 'hsl(204,25%,85%)' : 'hsl(204,25%,90%)'}
-            transition="0.1s all ease-in-out"
-            {...bind}
-            {...rest}
-          >
-            <Icon style={{ display: 'block' }} size={20} />
-            {tooltip ? (
-              <Tooltip fade slide visible={hovered}>
-                <Tooltip.Arrow />
-                <Type fontSize={0}>{tooltip}</Type>
-              </Tooltip>
-            ) : null}
-          </Box>
-        );
-      }}
-    </Hover>
-  </Provider>
-);
-
-const ImageButton = ({ disabled, ...rest }) => (
-  <IconButton
-    icons={[ImageIcon, ImageAddIcon]}
-    tooltip={disabled ? 'Upload in Progress' : 'Add an Image'}
-    disabled={disabled}
-    {...rest}
-  />
-);
-const GifButton = ({ ...rest }) => <IconButton icon={Gif} tooltip="Add a GIF" {...rest} />;
-const LocationButton = ({ ...rest }) => <IconButton icon={LocationIcon} tooltip="Add a Location" {...rest} />;
-
 const EmojiButton = () => (
   <Hover>
     {({ hovered, bind }) => (
@@ -94,50 +47,6 @@ const EmojiButton = () => (
     )}
   </Hover>
 );
-
-const BottomTray = ({
-  setHasImage,
-  open,
-  loading,
-  disabled,
-  handleSubmit,
-  handleGifSelect,
-  isSavingImages,
-  currentContentCount,
-  maxLength,
-  ...rest
-}) => {
-  const [showGify, setShowGify] = useState(false);
-  return (
-    <Flex alignItems="center" pt={2}>
-      <Flex {...rest}>
-        {/*<ImageButton*/}
-        {/*onClick={() => {*/}
-        {/*!isSavingImages && open();*/}
-        {/*}}*/}
-        {/*disabled={isSavingImages}*/}
-        {/*/>*/}
-        {/*<GiphyModal handleOnSelect={handleGifSelect} isVisible={showGify} onDismiss={() => setShowGify(false)} />*/}
-        {/*<GifButton onClick={() => setShowGify(true)} ml={2} />*/}
-        {/* <LocationButton ml={2} /> */}
-      </Flex>
-      <Box mr="auto" />
-      {currentContentCount >= maxLength * 0.9 ? (
-        <Box
-          color={currentContentCount === maxLength ? 'red' : 'purple'}
-          opacity={currentContentCount === maxLength ? 1 : 0.5}
-          fontWeight={currentContentCount === maxLength ? 'bold' : '500'}
-          fontSize={1}
-        >
-          {currentContentCount}/240
-        </Box>
-      ) : null}
-      <Button disabled={loading || isSavingImages || disabled} ml={2} onClick={handleSubmit}>
-        {isSavingImages ? <>Uploading...</> : <>Post{loading ? 'ing...' : ''}</>}
-      </Button>
-    </Flex>
-  );
-};
 
 const FilePreview = ({ preview, index, handleClearFiles }) => (
   <Flex
@@ -229,7 +138,8 @@ const Compose = ({ pluginProps, ...rest }) => {
 
   const handleClearFiles = (key) => {
     if (key === 'gif') {
-      return setGifUrl(null);
+      setGifUrl(null);
+      return;
     }
     const _images = { ...images };
     delete _images[key];

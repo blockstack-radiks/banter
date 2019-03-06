@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Flex, Type } from 'blockstack-ui';
 import { Hover } from 'react-powerplug';
 import Link from 'next/link';
-import { Provider, Popover } from 'reakit';
+import { Provider } from 'reakit';
 import theme from 'reakit-theme-default';
 import { ProfileDropdown } from '../profile-dropdown';
 

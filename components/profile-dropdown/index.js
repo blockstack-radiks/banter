@@ -48,7 +48,7 @@ const DropdownItem = ({ children, icon: Icon, href, as, passHref, ...rest }) => 
     </Hover>
   );
 };
-const DropdownItems = ({ ...rest }) => {
+const DropdownItems = () => {
   const { cookieUsername: username, profile, doLogout } = useConnect(
     'selectCookieUsername',
     'selectProfile',
@@ -104,7 +104,7 @@ const DropdownItems = ({ ...rest }) => {
   );
 };
 
-const UserItem = ({ popover, ...rest }) => {
+const UserItem = ({ popover }) => {
   const { cookieUsername: username } = useConnect('selectCookieUsername');
 
   return (
@@ -145,7 +145,7 @@ const UserItem = ({ popover, ...rest }) => {
   );
 };
 
-const ProfileDropdown = ({ ...rest }) => {
+const ProfileDropdown = () => {
   const { cookieUsername: username } = useConnect('selectCookieUsername');
 
   return username ? (

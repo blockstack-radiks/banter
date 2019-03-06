@@ -4,12 +4,12 @@ import Linkify from 'linkifyjs/react';
 import { Hover } from 'react-powerplug';
 import Link from 'next/link';
 import { useConnect } from 'redux-bundler-hook';
+import Lightbox from 'react-images';
 import { Avatar } from '../avatar';
 import { MessageContent as StyledMessageContent } from './styled';
 import { Voting } from './voting';
 import { Image } from '../image';
 import { appUrl } from '../../common/utils';
-import Lightbox from 'react-images';
 
 const Username = ({ hoverable, ...rest }) => (
   <Hover>
@@ -86,7 +86,7 @@ const MessageContent = ({ content, email, ...rest }) => (
   <StyledMessageContent {...rest} color="gray">
     <Linkify
       options={{
-        format: (value, type) => {
+        format: (value) => {
           return <Type style={{ wordBreak: 'break-all' }}>{value}</Type>;
         },
         formatHref: (href, type) => {
@@ -112,7 +112,7 @@ const Container = ({ single, ...rest }) => (
   <Flex px={3} py={3} alignItems="flex-start" borderTop={single ? 'none' : '1px solid rgb(230, 236, 240)'} {...rest} />
 );
 
-const Media = ({ images, ...rest }) => {
+const Media = ({ images }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [initialImage, setInitialImage] = useState(0);
 
@@ -134,6 +134,48 @@ const Media = ({ images, ...rest }) => {
     setInitialImage((s) => s - 1);
   };
 
+  const Images = () => {
+    if (images.length === 1) {
+      return (
+        <Box width={1}>
+          <Image onClick={() => doOpenLightbox(0)} src={images[0]} />
+        </Box>
+      );
+    }
+    if (images.length === 1) {
+      return (
+        <>
+          <Box mr="5px" width="50%">
+            <Image onClick={() => doOpenLightbox(0)} src={images[0]} />
+          </Box>
+          <Box width="50%">
+            <Image onClick={() => doOpenLightbox(1)} src={images[1]} />
+          </Box>
+        </>
+      );
+    }
+    return (
+      <Box width={1}>
+        <Box onClick={() => doOpenLightbox(0)} mb="5px">
+          <Image src={images[0]} />
+        </Box>
+        <Flex width={1}>
+          {images
+            .filter((img) => img)
+            .map((img, i) => {
+              return i !== 0 && i < 4 ? (
+                <Image
+                  onClick={() => doOpenLightbox(i)}
+                  mr={i !== images.length - 1 ? '5px' : undefined}
+                  src={img}
+                />
+              ) : null;
+            })}
+        </Flex>
+      </Box>
+    );
+  };
+
   return (
     <>
       <Lightbox
@@ -145,39 +187,7 @@ const Media = ({ images, ...rest }) => {
         onClickPrev={handlePrev}
       />
       <Flex py={2}>
-        {images.length === 1 ? (
-          <Box width={1}>
-            <Image onClick={() => doOpenLightbox(0)} src={images[0]} />
-          </Box>
-        ) : images.length === 2 ? (
-          <>
-            <Box mr="5px" width="50%">
-              <Image onClick={() => doOpenLightbox(0)} src={images[0]} />
-            </Box>
-            <Box width="50%">
-              <Image onClick={() => doOpenLightbox(1)} src={images[1]} />
-            </Box>
-          </>
-        ) : (
-          <Box width={1}>
-            <Box onClick={() => doOpenLightbox(0)} mb={'5px'}>
-              <Image src={images[0]} />
-            </Box>
-            <Flex width={1}>
-              {images
-                .filter((img) => img)
-                .map((img, i) => {
-                  return i !== 0 && i < 4 ? (
-                    <Image
-                      onClick={() => doOpenLightbox(i)}
-                      mr={i !== images.length - 1 ? '5px' : undefined}
-                      src={img}
-                    />
-                  ) : null;
-                })}
-            </Flex>
-          </Box>
-        )}
+        <Images />
       </Flex>
     </>
   );

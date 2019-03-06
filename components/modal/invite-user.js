@@ -61,14 +61,13 @@ const Content = ({ visible, complete, setComplete, hide, hasDismissed, show }) =
 
   if (hasUsersToInvite && !visible) {
     show();
-  } else if (!hasUsersToInvite && visible) {
   }
 
-  const emailInputs = usersToInvite.map((username, i, arr) => (
+  const emailInputs = usersToInvite.map((_username, i, arr) => (
     <Flex
       bg="white"
       p={4}
-      key={username}
+      key={_username}
       borderBottom={i !== arr.length - 1 ? '1px solid rgb(230, 236, 240)' : 'unset'}
       flexDirection="column"
     >
@@ -76,8 +75,8 @@ const Content = ({ visible, complete, setComplete, hide, hasDismissed, show }) =
         <Box pr="2px" color="purple" opacity={0.5}>
           <AtIcon size={20} style={{ display: 'block' }} />
         </Box>
-        <Type is="label" htmlFor={username} pb="2px" color="purple" fontWeight="bold">
-          {username}
+        <Type is="label" htmlFor={_username} pb="2px" color="purple" fontWeight="bold">
+          {_username}
         </Type>
       </Flex>
       <Box flexGrow={1}>
@@ -86,18 +85,18 @@ const Content = ({ visible, complete, setComplete, hide, hasDismissed, show }) =
           display="block"
           width={1}
           p={2}
-          name={username}
-          id={username}
+          name={_username}
+          id={_username}
           border="1px solid hsl(204,25%,80%)"
-          value={userEmails[username] || ''}
+          value={userEmails[_username] || ''}
           onChange={(evt) => {
             const text = evt.target.value;
             setUserEmails((oldState) => ({
               ...oldState,
-              [username]: text,
+              [_username]: text,
             }));
           }}
-          placeholder={`Email of @${username}`}
+          placeholder={`Email of @${_username}`}
           type="email"
         />
       </Box>
@@ -111,7 +110,7 @@ const Content = ({ visible, complete, setComplete, hide, hasDismissed, show }) =
       evt.preventDefault();
     }
     if (disabled) {
-      return null;
+      return;
     }
     try {
       const success = await sendInviteEmails({
@@ -156,9 +155,9 @@ const Content = ({ visible, complete, setComplete, hide, hasDismissed, show }) =
         {' '}
         <Type color="white" mt={4} lineHeight={1.6} maxWidth="80%">
           {!complete ? (
-            <>Would you like to invite them via email? Otherwise, they probably won't ever see your message.</>
+            <>Would you like to invite them via email? Otherwise, they probably won&apos;t ever see your message.</>
           ) : (
-            <>Your invite(s) have been sent! We'll let them know that you're talking about them.</>
+            <>Your invite(s) have been sent! We&apos;ll let them know that you&apos;re talking about them.</>
           )}
         </Type>
       </Box>

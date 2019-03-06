@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { Box } from 'blockstack-ui';
 import styled from 'styled-components';
 
