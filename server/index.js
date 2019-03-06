@@ -6,7 +6,7 @@ const expressWS = require('express-ws');
 const secure = require('express-force-https');
 const cookiesMiddleware = require('universal-cookie-express');
 const bodyParser = require('body-parser');
-const shrinkRay = require('shrink-ray-current');
+// const shrinkRay = require('shrink-ray-current');
 
 require('dotenv').config();
 
@@ -29,15 +29,15 @@ app.prepare().then(async () => {
   server.use(secure);
   server.use(bodyParser.json());
 
-  if (!dev) {
-    server.use(
-      shrinkRay({
-        brotli: {
-          quality: 11,
-        },
-      })
-    );
-  }
+  // if (!dev) {
+  //   server.use(
+  //     shrinkRay({
+  //       brotli: {
+  //         quality: 11,
+  //       },
+  //     })
+  //   );
+  // }
 
   expressWS(server);
 
