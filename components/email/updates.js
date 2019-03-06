@@ -15,7 +15,7 @@ const Messages = ({ messages }) => {
 };
 
 export default ({ user, messages }) => (
-  <Layout hiddenText="💩 Post digest from Banter.">
+  <Layout hiddenText="Here's a digest of recent top posts on Banter.">
     <Header user={user} title="Some recent 💩." />
     <Messages messages={messages} />
     <Footer />

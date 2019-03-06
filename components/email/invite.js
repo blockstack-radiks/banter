@@ -11,9 +11,10 @@ export default ({ message, mention: user }) => {
     <Layout hiddenText={_message.attrs.content}>
       <Header user={user} title="You've been invited." />
       <Block pb={4}>
-        <Type color="purple">Someone is talking 💩 about you on Banter!</Type>
+        <Type color="purple">Someone is talking 💩 about you on Banter! Join the conversation.</Type>
       </Block>
       <MessageComponent message={_message} isLast />
       <Footer />
     </Layout>
   );
+};
