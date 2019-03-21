@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Flex, Box, Type } from 'blockstack-ui';
 import { useConnect } from 'redux-bundler-hook';
 import DownvoteFilledIcon from 'mdi-react/EmoticonPoopIcon';
-import Vote from '../models/Vote';
+import Head from 'next/head';
 import dynamic from 'next/dynamic';
+import Vote from '../models/Vote';
 import Message from '../models/Message';
 import MessageComponent from './message';
 import { Button } from './button';
 import { Login } from './login';
-import Head from 'next/head';
 
 const Compose = dynamic(() => import('./compose'), {
   loading: () => (
