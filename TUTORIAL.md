@@ -90,7 +90,7 @@ This will tell our express server to use the radiks middleware. Since we already
 
 In our front-end code, that runs in the client's browser, we need to add some code to configure radiks and tell it where to fetch and store data.
 
-At the top of the file, after our `import` calls (around line 7), there is already a `UserSession` object. This is a concept that is part of blockstack.js, and is used as a 'root object' for calling all user-specific methods, like `loadUserData()` and `redirectToSignIn()`. We need to pass this to radiks.
+At the top of the file `/pages/_app.js`, after our `import` calls (around line 7), there is already a `UserSession` object. This is a concept that is part of blockstack.js, and is used as a 'root object' for calling all user-specific methods, like `loadUserData()` and `redirectToSignIn()`. We need to pass this to radiks.
 
 At line 16, in the `getInitialProps` method, add the following code that calls the `configure()` radiks method:
 
@@ -108,6 +108,8 @@ We also need to add the same exact code snippet from above inside the `component
 ## The model
 
 A core component of building apps with radiks is using models. This allows you to define a schema around the data of your application. For example, our application has "tweets", which we'll just call "messages".
+
+This tutorial already has a very basic `Message` class created in `/models/Message.js`, which we'll add to for this tutorial.
 
 The schema of our message is very simple - it only has a `content` field, which contains the message content. This field is `decrypted`, because it's meant to be public. The datatype for this field is `String`.
 
