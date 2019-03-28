@@ -1346,6 +1346,35 @@ bitcoinjs-lib@^4:
     varuint-bitcoin "^1.0.4"
     wif "^2.0.1"
 
+blockstack@19.0.0:
+  version "19.0.0"
+  resolved "https://registry.yarnpkg.com/blockstack/-/blockstack-19.0.0.tgz#a14f02a4a61dd6549b276246706e6ef30fdc05c3"
+  integrity sha512-saVzJYjm60EH6+cOHbegIE+kjMcni1AtPfn8Cnl+1MCOukG08lx/Jem+c7uHHPeYwoOkX9fGuho1rpdZ/uuJzw==
+  dependencies:
+    ajv "^4.11.5"
+    babel-runtime "^6.26.0"
+    bigi "^1.4.2"
+    bip32 "^1.0.2"
+    bip39 "^2.5.0"
+    bitcoinjs-lib "^4"
+    cheerio "^0.22.0"
+    cross-fetch "^2.2.2"
+    ecurve "^1.0.6"
+    elliptic "^6.4.0"
+    es6-promise "^4.2.4"
+    form-data "^2.3.2"
+    jsontokens "^0.7.8"
+    promise "^7.1.1"
+    query-string "^4.3.2"
+    request "^2.87.0"
+    ripemd160 "^2.0.1"
+    schema-inspector "^1.6.4"
+    sprintf-js "^1.0.3"
+    triplesec "^3.0.26"
+    uuid "^3.2.1"
+    validator "^7.0.0"
+    zone-file "^0.2.2"
+
 blockstack@19.0.0-alpha.3:
   version "19.0.0-alpha.3"
   resolved "https://registry.yarnpkg.com/blockstack/-/blockstack-19.0.0-alpha.3.tgz#06a965445329e7724c689cf8c221243621c938f7"
@@ -4700,7 +4729,7 @@ radiks-server@0.1.8:
     wolfy87-eventemitter "^5.2.5"
     yargs "^12.0.1"
 
-radiks@0.2.0-beta.4:
+radiks@0.2.0-alpha.4:
   version "0.2.0-alpha.4"
   resolved "https://registry.yarnpkg.com/radiks/-/radiks-0.2.0-alpha.4.tgz#0d0d0c7de669ddc565b034b8c943029ba36fa480"
   integrity sha512-n7NpB561ZQsZZWTfDPfHhlozTYX6jaSDXxifN51Ia3y6uWzaaeDl1MglBWqll8qTdw+7MGV8uRnGrsWtkLEe4Q==

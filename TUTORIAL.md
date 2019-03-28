@@ -180,7 +180,7 @@ Add this code inside the `login` method:
 
 ~~~javascript
 const { userSession } = getConfig();
-userSession.redirectToSignIn(redirect, manifest);
+userSession.redirectToSignIn();
 ~~~
 
 Most of this is generic blockstack.js code, but we're pulling our `userSession` variable from `getConfig`, which is a radiks method. This grabs the same info that we passed to `configure` previously. With the `userSession` variable, we can then call `redirectToSignIn()`. After calling this, the user will be redirected to the Blockstack Browser for authentication.
