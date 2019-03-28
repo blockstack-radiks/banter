@@ -9,7 +9,11 @@ import Message from '../models/Message';
 
 export default class Feed extends React.Component {
   static propTypes = {
-    messages: PropTypes.array.isRequired,
+    messages: PropTypes.array,
+  }
+
+  static defaultProps = {
+    messages: [],
   }
 
   state = {
@@ -35,7 +39,6 @@ export default class Feed extends React.Component {
   newMessageListener(message) {
     const { messages } = this.state;
     if (!this.state.createdMessageIDs[message._id]) {
-      // const message = new Message(message);
       messages.unshift(message);
       this.setState({ messages });
     }
@@ -48,10 +51,10 @@ export default class Feed extends React.Component {
       createdBy: this.state.currentUser._id,
     });
     const { messages, createdMessageIDs } = this.state;
-    createdMessageIDs[message._id] = true;
-    await message.save();
     messages.unshift(message);
+    createdMessageIDs[message._id] = true;
     this.setState({ messages, createdMessageIDs, newMessage: '' });
+    await message.save();
   }
 
   messages() {

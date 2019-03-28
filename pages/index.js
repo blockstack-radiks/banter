@@ -11,7 +11,11 @@ import Feed from '../components/feed';
 
 class Home extends React.Component {
   static propTypes = {
-    messages: PropTypes.array.isRequired,
+    messages: PropTypes.array,
+  }
+
+  static defaultProps = {
+    messages: [],
   }
 
   state = {
@@ -32,7 +36,6 @@ class Home extends React.Component {
     const { userSession } = getConfig();
     if (userSession.isUserSignedIn()) {
       const currentUser = userSession.loadUserData();
-      await User.createWithCurrentUser();
       this.setState({ currentUser });
     } else if (userSession.isSignInPending()) {
       const currentUser = await userSession.handlePendingSignIn();
@@ -42,14 +45,10 @@ class Home extends React.Component {
   }
 
   login = () => {
-    const scopes = [
-      'store_write',
-      'publish_data',
-    ];
     const redirect = window.location.origin;
     const manifest = `${window.location.origin}/manifest.json`;
     const { userSession } = getConfig();
-    userSession.redirectToSignIn(redirect, manifest, scopes);
+    userSession.redirectToSignIn(redirect, manifest);
   }
 
   logout = () => {
