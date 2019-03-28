@@ -17,9 +17,6 @@ app.prepare().then(async () => {
   const server = express();
   expressWS(server);
 
-  const RadiksController = await setup();
-  server.use('/radiks', RadiksController);
-
   server.use((req, res, _next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', '*');

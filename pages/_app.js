@@ -13,11 +13,6 @@ class MyApp extends App {
       userSession,
     };
 
-    configure({
-      apiServer: process.env.RADIKS_API_SERVER,
-      userSession,
-    });
-
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
@@ -26,10 +21,6 @@ class MyApp extends App {
   }
 
   componentWillMount() {
-    configure({
-      apiServer: process.env.RADIKS_API_SERVER,
-      userSession,
-    });
   }
 
   render() {

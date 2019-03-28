@@ -23,40 +23,15 @@ class Home extends React.Component {
   }
 
   static async getInitialProps() {
-    const messages = await Message.fetchList({
-      sort: '-createdAt',
-      limit: 10,
-    }, { decrypt: false });
-    return {
-      messages,
-    };
   }
 
   async componentDidMount() {
-    const { userSession } = getConfig();
-    if (userSession.isUserSignedIn()) {
-      const currentUser = userSession.loadUserData();
-      this.setState({ currentUser });
-    } else if (userSession.isSignInPending()) {
-      const currentUser = await userSession.handlePendingSignIn();
-      await User.createWithCurrentUser();
-      this.setState({ currentUser });
-    }
   }
 
   login = () => {
-    const redirect = window.location.origin;
-    const manifest = `${window.location.origin}/manifest.json`;
-    const { userSession } = getConfig();
-    userSession.redirectToSignIn(redirect, manifest);
   }
 
   logout = () => {
-    const { userSession } = getConfig();
-    userSession.signUserOut();
-    this.setState({
-      currentUser: null,
-    });
   }
 
   render() {

@@ -33,28 +33,9 @@ export default class Feed extends React.Component {
     this.setState({
       currentUser: User.currentUser(),
     });
-    Message.addStreamListener(this.newMessageListener.bind(this));
-  }
-
-  newMessageListener(message) {
-    const { messages } = this.state;
-    if (!this.state.createdMessageIDs[message._id]) {
-      messages.unshift(message);
-      this.setState({ messages });
-    }
   }
 
   async submit() {
-    const { newMessage } = this.state;
-    const message = new Message({
-      content: newMessage,
-      createdBy: this.state.currentUser._id,
-    });
-    const { messages, createdMessageIDs } = this.state;
-    messages.unshift(message);
-    createdMessageIDs[message._id] = true;
-    this.setState({ messages, createdMessageIDs, newMessage: '' });
-    await message.save();
   }
 
   messages() {
@@ -66,7 +47,6 @@ export default class Feed extends React.Component {
           says:
         </Text.p>
         <Text.em>{message.attrs.content}</Text.em>
-        <Text.small display="block" mt={1}>{message.ago()}</Text.small>
       </div>
     ));
   }
