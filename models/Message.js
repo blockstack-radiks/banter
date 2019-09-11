@@ -2,6 +2,8 @@ import Model from 'radiks/lib/model';
 import fromNow from 'fromnow';
 
 export default class Message extends Model {
+  static validateUsername = true;
+
   static className = 'Message';
 
   static schema = {

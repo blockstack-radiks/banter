@@ -16,7 +16,7 @@
     "@fortawesome/react-fontawesome": "^0.1.4",
     "@zeit/next-bundle-analyzer": "^0.1.2",
     "aws-sdk": "^2.413.0",
-    "blockstack": "19.0.0-alpha.3",
+    "blockstack": "^19.2.2",
     "blockstack-ui": "^0.0.77",
     "body-parser": "^1.18.3",
     "dayjs": "^1.8.9",
