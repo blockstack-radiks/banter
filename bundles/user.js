@@ -102,16 +102,17 @@ export default {
       });
       const vaultUrl = process.env.APP_ENV === 'development' ? 'http://localhost:8080' : undefined;
       const icon = `${document.location.origin}/static/cat.png`;
+      const { userSession } = getConfig();
       authenticate({
         redirectTo: '/',
         manifestPath: '/manifest.json',
         vaultUrl,
+        userSession,
         appDetails: {
           name: 'Banter',
           icon,
         },
-        finished: async ({ userSession }) => {
-          console.log(userSession.loadUserData());
+        finished: async () => {
           const cookieUsername = store.selectCookieUsername(getState());
           const currentUser = await User.createWithCurrentUser();
           if (cookieUsername !== currentUser.attrs.username) {
