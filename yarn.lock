@@ -1176,10 +1176,10 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@blockstack/connect@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-0.1.3.tgz#6aadd3e1f9d6fe9af546b717cc9745f6e25861be"
-  integrity sha512-3bfSj5BbD5H5X1OZPTh/oKbnMaTXdgghRSVooyDBvUKA9SKbZxSChrbdyXIcRs3HoC7zRqBWa9CtzsAuqRZ1Pg==
+"@blockstack/connect@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-0.1.5.tgz#ae9b1609889d00a9ea90fa1710683115c12514b1"
+  integrity sha512-qL11H4G9NhdAXRx9uXuvuzCfNdS3d7VwFuK/QwwdnY5c0rkgp9GfHgHMa32v5asWFPAsIbunMPEJtcjn4npBrg==
 
 "@emotion/is-prop-valid@^0.7.3":
   version "0.7.3"
