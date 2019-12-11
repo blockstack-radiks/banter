@@ -1,6 +1,7 @@
 import { getConfig, User } from 'radiks';
 import { createSelector } from 'redux-bundler';
 import { Cookies } from 'react-cookie';
+import { authenticate } from '@blockstack/connect';
 
 const cookies = new Cookies();
 
@@ -94,16 +95,34 @@ export default {
       });
     }
   },
-  doLogin: () => ({ dispatch, getState, store }) => {
+  doLogin: () => ({ dispatch, store, getState }) => {
     if (typeof window !== 'undefined') {
       dispatch({
         type: USER_LOGIN_STARTED,
       });
-      const scopes = ['store_write', 'publish_data'];
-      const redirect = window.location.origin;
-      const manifest = `${window.location.origin}/manifest.json`;
-      const { userSession } = getConfig();
-      userSession.redirectToSignIn(redirect, manifest, scopes);
+      const vaultUrl = process.env.APP_ENV === 'development' ? 'http://localhost:8080' : undefined;
+      const icon = `${document.location.origin}/static/cat.png`;
+      authenticate({
+        redirectTo: '/',
+        manifestPath: '/manifest.json',
+        vaultUrl,
+        appDetails: {
+          name: 'Banter',
+          icon,
+        },
+        finished: async ({ userSession }) => {
+          console.log(userSession.loadUserData());
+          const cookieUsername = store.selectCookieUsername(getState());
+          const currentUser = await User.createWithCurrentUser();
+          if (cookieUsername !== currentUser.attrs.username) {
+            setUsernameCookie(JSON.stringify(currentUser.attrs.username));
+          }
+          dispatch({
+            type: USER_LOGIN_FINISHED,
+            payload: currentUser.attrs,
+          });
+        },
+      });
     }
   },
   doSetLoginLoading: () => ({ dispatch }) => {

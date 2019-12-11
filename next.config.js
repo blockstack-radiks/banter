@@ -23,6 +23,7 @@ module.exports = withBundleAnalyzer({
   env: {
     RADIKS_API_SERVER: radiksServer,
     HEROKU_APP_NAME: process.env.HEROKU_APP_NAME,
+    APP_ENV: process.env.NODE_ENV || 'development',
   },
   webpack: (config) => {
     config.plugins.push(
