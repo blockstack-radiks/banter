@@ -5,7 +5,7 @@ const aggregateMessages = async (radiksData, query) => {
   const match = {
     $match: {
       radiksType: 'Message',
-      id: {
+      _id: {
         $nin: (process.env.BANNED_IDS || '').split(','),
       },
     },
