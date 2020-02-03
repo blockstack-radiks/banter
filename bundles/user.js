@@ -1,7 +1,7 @@
 import { getConfig, User } from 'radiks';
 import { createSelector } from 'redux-bundler';
 import { Cookies } from 'react-cookie';
-import { authenticate } from '@blockstack/connect';
+import { showBlockstackConnect } from '@blockstack/connect';
 
 const cookies = new Cookies();
 
@@ -103,7 +103,7 @@ export default {
       const vaultUrl = process.env.APP_ENV === 'development' ? 'http://localhost:8080' : undefined;
       const icon = `${document.location.origin}/static/cat.png`;
       const { userSession } = getConfig();
-      authenticate({
+      showBlockstackConnect({
         redirectTo: '/',
         manifestPath: '/manifest.json',
         vaultUrl,
