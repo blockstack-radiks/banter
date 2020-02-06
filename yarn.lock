@@ -1263,20 +1263,20 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@blockstack/connect@^0.3.1-beta.1":
-  version "0.3.1-beta.1"
-  resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-0.3.1-beta.1.tgz#9076f9f7941b182bf6e6041b8471bae915eb7248"
-  integrity sha512-eKIae+sSOJo9hN0iP6ULxuxnZ5Yf72xV+jn1KohVabeQ+LyRToxlufCnG6ZE1yoSAfr70D7QbDY9jWbTYXJauw==
+"@blockstack/connect@^0.3.0", "@blockstack/connect@^0.3.5":
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-0.3.5.tgz#3f8f693688774c58025c3a37bc878fb80bc7fc96"
+  integrity sha512-Jd3vyMTvS15fA5eQHBqf0O8eT+Aa6ZLtgfv1zWEegSVFItM6FZFFEVu/SmvfM56dF8MaRrFZH0f8eQg1lSUOFA==
   dependencies:
-    "@blockstack/ui" "^1.0.0-alpha.27"
-    mdi-react "^6.6.0"
+    "@blockstack/connect" "^0.3.0"
+    "@blockstack/ui" "^1.0.0-alpha.31"
     styled-components "^5.0.0"
     use-events "^1.4.1"
 
-"@blockstack/ui@^1.0.0-alpha.27":
-  version "1.0.0-alpha.27"
-  resolved "https://registry.yarnpkg.com/@blockstack/ui/-/ui-1.0.0-alpha.27.tgz#1471a085b3f68285c0a8d79cb9ee292a40141106"
-  integrity sha512-DCih4GkfEojd8FPY8538BzcGtETWrYpPln8Yv9XKAsFoEeIbgju4rdJufzUnwvbX3P4fApS/z9cIlZ+5meX4bg==
+"@blockstack/ui@^1.0.0-alpha.31":
+  version "1.0.0-alpha.31"
+  resolved "https://registry.yarnpkg.com/@blockstack/ui/-/ui-1.0.0-alpha.31.tgz#7c969b40b77eca18f3cb644ceb54d5543418da47"
+  integrity sha512-FiNEVJKMmNtIqq1KWA85WSkVQiXs9eIs3UTTmtojRsvsRw6DeuLUQrRK00QFtrAd4rWhnK5L6wZBa6wdX9ivXQ==
   dependencies:
     "@styled-system/css" "5.1.4"
     "@types/color" "^3.0.1"
@@ -6224,11 +6224,6 @@ mdi-react@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/mdi-react/-/mdi-react-5.2.0.tgz#a46d83434aae0f9229365b4db98b6950b6775ebf"
   integrity sha512-q0zeUZbissoRVouq9JYSTrr/+2qk2P0dJI9N2m/TvZDX5RMcwHsVxffiqisjlo2m6cbXiCzAQaGaGmjoPfC4Pg==
-
-mdi-react@^6.6.0:
-  version "6.6.0"
-  resolved "https://registry.yarnpkg.com/mdi-react/-/mdi-react-6.6.0.tgz#423d770f956119aa2e4c7e4c121508209c36e5d0"
-  integrity sha512-HF+Madrr2bROpLoAJaM5kLA3tevXmvnC3aCO5bb3czu6Tc5OogW3kpgpVAX64CAMVkgzWUd+IjCNKWMbAHdvCA==
 
 mdn-data@~1.1.0:
   version "1.1.4"
