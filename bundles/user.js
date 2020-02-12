@@ -100,7 +100,7 @@ export default {
       dispatch({
         type: USER_LOGIN_STARTED,
       });
-      const prodUrl = 'https://deploy-preview-69--hungry-beaver-5538cb.netlify.com';
+      const prodUrl = 'https://vault.hankstoever.com';
       const vaultUrl = process.env.APP_ENV === 'development' ? 'http://localhost:8080' : prodUrl;
       const icon = `${document.location.origin}/static/cat.png`;
       const { userSession } = getConfig();
