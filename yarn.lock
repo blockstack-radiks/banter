@@ -1263,22 +1263,11 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@blockstack/connect@^0.3.0":
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-0.3.5.tgz#3f8f693688774c58025c3a37bc878fb80bc7fc96"
-  integrity sha512-Jd3vyMTvS15fA5eQHBqf0O8eT+Aa6ZLtgfv1zWEegSVFItM6FZFFEVu/SmvfM56dF8MaRrFZH0f8eQg1lSUOFA==
+"@blockstack/connect@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-1.0.0.tgz#4ba92c446969e503cbb11d370380f187cac66a64"
+  integrity sha512-OaMpZtb5PNv6ma2LsgCSHTX5GgudPo8SM/ZHH+Xn7Kw3vEXwzZhcZH2m3G8QfjrQ3QkEn47eHtb2svlleb770w==
   dependencies:
-    "@blockstack/connect" "^0.3.0"
-    "@blockstack/ui" "^1.0.0-alpha.31"
-    styled-components "^5.0.0"
-    use-events "^1.4.1"
-
-"@blockstack/connect@^0.3.6":
-  version "0.3.6"
-  resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-0.3.6.tgz#efc8eb972ff8f435fef28f348da601512892b676"
-  integrity sha512-HuN4b/+mR7+n7my+NCwjrX0P9Js1Ip3n+nJFUyRNkQase74P0jtW1iyhAtYVftlvOcPXMoO0YXlq297OdnZAGg==
-  dependencies:
-    "@blockstack/connect" "^0.3.0"
     "@blockstack/ui" "^1.0.0-alpha.31"
     styled-components "^5.0.0"
     use-events "^1.4.1"

@@ -102,13 +102,13 @@ export default {
       });
       // const prodUrl = 'https://vault.hankstoever.com';
       const prodUrl = 'https://deploy-preview-113--hungry-beaver-5538cb.netlify.com';
-      const vaultUrl = process.env.APP_ENV === 'development' ? 'http://localhost:8080' : prodUrl;
+      const authOrigin = process.env.APP_ENV === 'development' ? 'http://localhost:8080' : prodUrl;
       const icon = `${document.location.origin}/static/cat.png`;
       const { userSession } = getConfig();
       showBlockstackConnect({
         redirectTo: '/',
         manifestPath: '/manifest.json',
-        vaultUrl,
+        authOrigin,
         userSession,
         appDetails: {
           name: 'Banter',
