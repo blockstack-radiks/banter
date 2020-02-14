@@ -101,7 +101,8 @@ export default {
         type: USER_LOGIN_STARTED,
       });
       // const prodUrl = 'https://vault.hankstoever.com';
-      const prodUrl = 'https://deploy-preview-144--stacks-authenticator.netlify.com/';
+      // const prodUrl = 'https://deploy-preview-144--stacks-authenticator.netlify.com/';
+      const prodUrl = undefined;
       const authOrigin = process.env.APP_ENV === 'development' ? 'http://localhost:8080' : prodUrl;
       const icon = `${document.location.origin}/static/cat.png`;
       const { userSession } = getConfig();
