@@ -1263,10 +1263,10 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@blockstack/connect@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-1.0.2.tgz#055fc2afaa01f1ac765d942c9ab1ebb9a39b665f"
-  integrity sha512-EPVV1eXNQ2lpn7arEnt3K3BaAfMAH+FIG0pZGDimtJBeJ7UMufH8K83Rures+QQeFZ/DeOEOZ//xd0M0dsGOBA==
+"@blockstack/connect@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-1.0.3.tgz#88b884d4e814a5c28f641ef7785dd0f770fcc52a"
+  integrity sha512-1wcFr8WAt2I7gGMr3ryYQWAULE2qgGJTOXrgRvjryubecBbbiByKeLSLxkqZEEDZ4J5Pz0xLy8NN62om/ZFqow==
   dependencies:
     "@blockstack/ui" "^1.0.0-alpha.31"
     styled-components "^5.0.0"
