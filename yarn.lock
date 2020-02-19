@@ -1293,6 +1293,24 @@
     use-events "^1.4.1"
     use-onclickoutside "^0.3.1"
 
+"@blockstack/ui@^1.0.0-alpha.35":
+  version "1.0.0-alpha.35"
+  resolved "https://registry.yarnpkg.com/@blockstack/ui/-/ui-1.0.0-alpha.35.tgz#56920c6f28ffb8aefd1d7caf24bb898e6569703f"
+  integrity sha512-FjZz72652/eTe97wqQt7MpfZG7UknzJBnfeKeOpu1kZohyt14i/FOfBkk1fh0bS+GR/EAutFOzDMohT5GXY69w==
+  dependencies:
+    "@styled-system/css" "5.1.5"
+    "@types/color" "^3.0.1"
+    "@types/styled-components" "^4.4.3"
+    "@types/styled-system" "^5.1.6"
+    "@types/styled-system__css" "^5.0.4"
+    color "3.1.2"
+    prop-types "^15.7.2"
+    react-spring "8.0.27"
+    styled-system "5.1.5"
+    use-dark-mode "2.3.1"
+    use-events "^1.4.1"
+    use-onclickoutside "^0.3.1"
+
 "@emotion/is-prop-valid@^0.7.3":
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-0.7.3.tgz#a6bf4fa5387cbba59d44e698a4680f481a8da6cc"
@@ -7826,7 +7844,7 @@ react-dom@^16.4.2:
     prop-types "^15.6.2"
     scheduler "^0.13.2"
 
-react-dom@^16.5.2, react-dom@^16.8.3:
+react-dom@^16.5.2:
   version "16.8.3"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.8.3.tgz#ae236029e66210783ac81999d3015dfc475b9c32"
   integrity sha512-ttMem9yJL4/lpItZAQ2NTFAbV7frotHk5DZEHXUOws2rMmrsvh1Na7ThGT0dTzUIl6pqTOi5tYREfL8AEna3lA==
@@ -7989,7 +8007,7 @@ react@^16.4.2:
     prop-types "^15.6.2"
     scheduler "^0.13.2"
 
-react@^16.5.2, react@^16.8.3:
+react@^16.5.2:
   version "16.8.3"
   resolved "https://registry.yarnpkg.com/react/-/react-16.8.3.tgz#c6f988a2ce895375de216edcfaedd6b9a76451d9"
   integrity sha512-3UoSIsEq8yTJuSu0luO1QQWYbgGEILm+eJl2QN/VLDi7hL+EN18M3q3oVZwmVzzBJ3DkM7RMdRwBmZZ+b4IzSA==

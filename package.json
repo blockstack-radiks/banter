@@ -11,6 +11,7 @@
     "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
     "@blockstack/connect": "^1.0.8",
+    "@blockstack/ui": "^1.0.0-alpha.35",
     "@fortawesome/fontawesome-svg-core": "^1.2.15",
     "@fortawesome/free-brands-svg-icons": "^5.7.2",
     "@fortawesome/free-solid-svg-icons": "^5.7.2",
@@ -51,9 +52,9 @@
     "qs": "^6.6.0",
     "radiks": "0.2.2-beta.1",
     "radiks-server": "0.3.0-beta.1",
-    "react": "^16.8.3",
+    "react": "^16.12.0",
     "react-cookie": "^3.0.8",
-    "react-dom": "^16.8.3",
+    "react-dom": "^16.12.0",
     "react-dropzone": "^9.0.0",
     "react-emailify": "^0.0.1",
     "react-images": "^0.5.19",
@@ -72,7 +73,8 @@
     "styled-icons": "^7.4.0",
     "styled-system": "^4.0.1",
     "sw-precache-webpack-plugin": "^0.11.5",
-    "universal-cookie-express": "^3.0.7"
+    "universal-cookie-express": "^3.0.7",
+    "use-events": "^1.4.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
