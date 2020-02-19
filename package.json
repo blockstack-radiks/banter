@@ -10,7 +10,7 @@
     "@babel/plugin-proposal-class-properties": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
-    "@blockstack/connect": "^1.0.8",
+    "@blockstack/connect": "^1.0.6",
     "@blockstack/ui": "^1.0.0-alpha.35",
     "@fortawesome/fontawesome-svg-core": "^1.2.15",
     "@fortawesome/free-brands-svg-icons": "^5.7.2",

@@ -1263,7 +1263,7 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@blockstack/connect@^1.0.8":
+"@blockstack/connect@^1.0.6":
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/@blockstack/connect/-/connect-1.0.8.tgz#9f4c5e68f574d0cbb62a6d2b94591f45add66454"
   integrity sha512-xoPnb9VxvSswXUvbXRFj5r3q1xTj+6kfiedkZhKmVTEfhMEjpWcHAsZbqj+1MIagMJKiCJlYW7jdtsLQqn/xFA==
