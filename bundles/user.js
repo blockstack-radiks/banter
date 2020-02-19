@@ -1,7 +1,6 @@
 import { getConfig, User } from 'radiks';
 import { createSelector } from 'redux-bundler';
 import { Cookies } from 'react-cookie';
-import { showBlockstackConnect } from '@blockstack/connect';
 
 const cookies = new Cookies();
 
@@ -96,38 +95,26 @@ export default {
     }
   },
   doLogin: () => ({ dispatch, store, getState }) => {
-    if (typeof window !== 'undefined') {
-      dispatch({
-        type: USER_LOGIN_STARTED,
-      });
-      // const prodUrl = 'https://vault.hankstoever.com';
-      // const prodUrl = 'https://deploy-preview-200--stacks-authenticator.netlify.com/';
-      const prodUrl = undefined;
-      const authOrigin = process.env.APP_ENV === 'development' ? 'http://localhost:8080' : prodUrl;
-      const icon = `${document.location.origin}/static/cat.png`;
-      const { userSession } = getConfig();
-      showBlockstackConnect({
-        redirectTo: '/',
-        manifestPath: '/manifest.json',
-        authOrigin,
-        userSession,
-        appDetails: {
-          name: 'Banter',
-          icon,
-        },
-        finished: async () => {
-          const cookieUsername = store.selectCookieUsername(getState());
-          const currentUser = await User.createWithCurrentUser();
-          if (cookieUsername !== currentUser.attrs.username) {
-            setUsernameCookie(JSON.stringify(currentUser.attrs.username));
-          }
-          dispatch({
-            type: USER_LOGIN_FINISHED,
-            payload: currentUser.attrs,
-          });
-        },
-      });
+    // if (typeof window !== 'undefined') {
+    //   dispatch({
+    //     type: USER_LOGIN_STARTED,
+    //   });
+    //   // const prodUrl = 'https://vault.hankstoever.com';
+    //   // const prodUrl = 'https://deploy-preview-200--stacks-authenticator.netlify.com/';
+    //
+    //
+    // }
+  },
+  doFinishLogin: () => async ({ dispatch, store, getState }) => {
+    const cookieUsername = store.selectCookieUsername(getState());
+    const currentUser = await User.createWithCurrentUser();
+    if (cookieUsername !== currentUser.attrs.username) {
+      setUsernameCookie(JSON.stringify(currentUser.attrs.username));
     }
+    dispatch({
+      type: USER_LOGIN_FINISHED,
+      payload: currentUser.attrs,
+    });
   },
   doSetLoginLoading: () => ({ dispatch }) => {
     dispatch({
@@ -200,14 +187,14 @@ export default {
           // this means there is an authRequest that has not been processed yet!
           return { actionCreator: 'doHandleLogin' };
         } else if (getUsernameCookie()) {
+          return { actionCreator: 'doHandleLogin' };
+        } else {
+          const isReallyLoggedIn =
+            typeof window !== 'undefined' && localStorage && localStorage.getItem('blockstack-session');
+          if (isReallyLoggedIn) {
             return { actionCreator: 'doHandleLogin' };
-          } else {
-            const isReallyLoggedIn =
-              typeof window !== 'undefined' && localStorage && localStorage.getItem('blockstack-session');
-            if (isReallyLoggedIn) {
-              return { actionCreator: 'doHandleLogin' };
-            }
           }
+        }
       }
     }
   ),

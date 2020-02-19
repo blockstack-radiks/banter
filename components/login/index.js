@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Box, Flex, Type } from 'blockstack-ui';
+import { useConnect as useBlockstackConnect } from '@blockstack/connect';
 import { useConnect } from 'redux-bundler-hook';
 import { Button } from '../button';
 
-const Login = ({ checkForState, action="Get Started", ...rest }) => {
+
+const Login = ({ checkForState, action = 'Get Started', ...rest }) => {
   const args = ['selectUserLoading', 'doLogin'];
   if (checkForState) {
     args.push('selectCookieUsername');
@@ -15,6 +17,8 @@ const Login = ({ checkForState, action="Get Started", ...rest }) => {
     return null;
   }
 
+  const { doOpenAuth } = useBlockstackConnect();
+
   return (
     <Flex alignItems="center" justifyContent="space-between" py={3} px={3} textAlign="center" {...rest}>
       {!loading && userLoading ? (
@@ -25,14 +29,12 @@ const Login = ({ checkForState, action="Get Started", ...rest }) => {
         </Box>
       ) : (
         <>
-          <Box>
-          </Box>
+          <Box />
           <Box>
             <Button
               minWidth={120}
               onClick={() => {
-                doLogin();
-                setLoading(true);
+                doOpenAuth();
               }}
             >
               {loading ? 'Loading...' : 'Get Started'}

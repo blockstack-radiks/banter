@@ -4,10 +4,28 @@ import { ServerStyleSheet } from 'styled-components';
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
-    const initialProps = await Document.getInitialProps(ctx);
     const sheet = new ServerStyleSheet();
-    const styleTags = sheet.getStyleElement();
-    return { ...initialProps, styleTags };
+    const originalRenderPage = ctx.renderPage;
+
+    try {
+      ctx.renderPage = () =>
+        originalRenderPage({
+          enhanceApp: (App) => (props) => sheet.collectStyles(<App {...props} />),
+        });
+
+      const initialProps = await Document.getInitialProps(ctx);
+      return {
+        ...initialProps,
+        styles: (
+          <>
+            {initialProps.styles}
+            {sheet.getStyleElement()}
+          </>
+        ),
+      };
+    } finally {
+      sheet.seal();
+    }
   }
 
   render() {
@@ -15,7 +33,7 @@ export default class MyDocument extends Document {
       <html style={{ background: '#f8a5c2' }} lang="en">
         <Head>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          {this.props.styleTags}
+          {this.props.styles}
           <link rel="icon" href="/static/cat.png" type="image/png" />
         </Head>
         <body className="custom">
