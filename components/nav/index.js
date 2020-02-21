@@ -48,9 +48,17 @@ const Nav = ({ ...rest }) => {
                     color={hovered ? 'white' : 'purple'}
                     textDecoration="none"
                     transition="0.1s all ease-in-out"
+                    display="flex"
+                    alignItems="center"
                   >
                     <Logo />
-                    <Type display={['none', 'inline-block']} ml={2}>
+                    <Type
+                      display={['none', 'inline-block']}
+                      fontSize="16px"
+                      fontWeight="bold"
+                      ml={2}
+                      transform="translateY(6px)"
+                    >
                       Banter
                     </Type>
                   </Type>
