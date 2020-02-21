@@ -1,10 +1,11 @@
-import App, { Container } from 'next/app';
+import App from 'next/app';
 import { decodeToken } from 'jsontokens';
 import React from 'react';
+import { Connect } from '@blockstack/connect';
 import { ThemeProvider } from 'styled-components';
 import { Box } from 'blockstack-ui';
 import { UserSession, AppConfig } from 'blockstack';
-import { configure } from 'radiks';
+import { getConfig, User, configure } from 'radiks';
 import * as linkify from 'linkifyjs';
 import mentionPlugin from 'linkifyjs/plugins/mention';
 import { CookiesProvider, withCookies, Cookies } from 'react-cookie';
@@ -78,7 +79,16 @@ class MyApp extends App {
 
   state = {
     username: this.props.username,
+    url: '',
   };
+
+  componentDidMount() {
+    if (this.state.url === '') {
+      this.setState({
+        url: document.location.origin,
+      });
+    }
+  }
 
   componentWillMount() {
     const userSession = makeUserSession();
@@ -98,12 +108,29 @@ class MyApp extends App {
   render() {
     const { Component, pageProps, universalCookies, reduxStore } = this.props;
 
+    const prodUrl = undefined;
+    const authOrigin = process.env.APP_ENV === 'development' ? 'http://localhost:8080' : prodUrl;
+    const icon = `${this.state.url}/static/cat.png`;
+    const { userSession } = getConfig();
+
+    const authOptions = {
+      redirectTo: '/',
+      manifestPath: '/manifest.json',
+      authOrigin,
+      userSession,
+      appDetails: {
+        name: 'Banter',
+        icon,
+      },
+      finished: reduxStore.doFinishLogin,
+    };
+
     return (
       <ThemeProvider theme={theme}>
-        <Container>
-          <GlobalStyles />
-          <ReduxBundlerProvider store={reduxStore}>
-            <CookiesProvider cookie={universalCookies}>
+        <GlobalStyles />
+        <ReduxBundlerProvider store={reduxStore}>
+          <CookiesProvider cookie={universalCookies}>
+            <Connect authOptions={authOptions}>
               <Wrapper
                 handleStateUsernameUpdate={this.handleStateUsernameUpdate}
                 username={this.state.username}
@@ -114,9 +141,9 @@ class MyApp extends App {
                 <Component reduxStore={reduxStore} {...pageProps} />
                 <Footer />
               </Wrapper>
-            </CookiesProvider>
-          </ReduxBundlerProvider>
-        </Container>
+            </Connect>
+          </CookiesProvider>
+        </ReduxBundlerProvider>
       </ThemeProvider>
     );
   }
