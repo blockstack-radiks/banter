@@ -22,8 +22,8 @@ const Compose = dynamic(() => import('./compose'), {
 });
 
 const TopArea = () => {
-  const { doLogin, cookieUsername } = useConnect('doLogin', 'selectCookieUsername');
-  return !cookieUsername ? <Login px={4} handleLogin={doLogin} /> : <Compose />;
+  const { cookieUsername } = useConnect('selectCookieUsername');
+  return !cookieUsername ? <Login px={4} /> : <Compose />;
 };
 
 const Messages = ({ createdBy }) => {

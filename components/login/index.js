@@ -4,14 +4,12 @@ import { useConnect as useBlockstackConnect } from '@blockstack/connect';
 import { useConnect } from 'redux-bundler-hook';
 import { Button } from '../button';
 
-
-const Login = ({ checkForState, action = 'Get Started', ...rest }) => {
+const Login = ({ checkForState, ...rest }) => {
   const args = ['selectUserLoading', 'doLogin'];
   if (checkForState) {
     args.push('selectCookieUsername');
   }
-  const { userLoading, doLogin, cookieUsername } = useConnect(...args);
-  const [loading, setLoading] = useState(false);
+  const { userLoading, cookieUsername } = useConnect(...args);
 
   if (checkForState && cookieUsername) {
     return null;
@@ -21,7 +19,7 @@ const Login = ({ checkForState, action = 'Get Started', ...rest }) => {
 
   return (
     <Flex alignItems="center" justifyContent="space-between" py={3} px={3} textAlign="center" {...rest}>
-      {!loading && userLoading ? (
+      {userLoading ? (
         <Box>
           <Type color="#574b90" fontWeight={500}>
             Signing In...
@@ -37,7 +35,7 @@ const Login = ({ checkForState, action = 'Get Started', ...rest }) => {
                 doOpenAuth();
               }}
             >
-              {loading ? 'Loading...' : 'Get Started'}
+              Get Started
             </Button>
           </Box>
         </>

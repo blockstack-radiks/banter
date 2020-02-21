@@ -94,17 +94,6 @@ export default {
       });
     }
   },
-  doLogin: () => ({ dispatch, store, getState }) => {
-    // if (typeof window !== 'undefined') {
-    //   dispatch({
-    //     type: USER_LOGIN_STARTED,
-    //   });
-    //   // const prodUrl = 'https://vault.hankstoever.com';
-    //   // const prodUrl = 'https://deploy-preview-200--stacks-authenticator.netlify.com/';
-    //
-    //
-    // }
-  },
   doFinishLogin: () => async ({ dispatch, store, getState }) => {
     const cookieUsername = store.selectCookieUsername(getState());
     const currentUser = await User.createWithCurrentUser();
