@@ -41,7 +41,7 @@
     "mdi-react": "^5.2.0",
     "moment": "^2.24.0",
     "nano-css": "^3.5.0",
-    "next": "^9.2.2",
+    "next": "^9.3.2",
     "next-nprogress": "^1.4.0",
     "next-workbox": "^1.4.1",
     "nodemailer": "^5.1.1",
