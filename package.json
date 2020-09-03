@@ -35,7 +35,7 @@
     "grid-styled": "^5.0.2",
     "immer": "^2.1.0",
     "jsontokens": "^1.0.0",
-    "lazysizes": "^4.1.6",
+    "lazysizes": "^5.2.1",
     "linkifyjs": "^2.1.8",
     "lodash": "^4.17.15",
     "mdi-react": "^5.2.0",
