@@ -37,7 +37,7 @@
     "jsontokens": "^1.0.0",
     "lazysizes": "^4.1.6",
     "linkifyjs": "^2.1.8",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "mdi-react": "^5.2.0",
     "moment": "^2.24.0",
     "nano-css": "^3.5.0",
